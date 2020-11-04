@@ -1,0 +1,26 @@
+{
+  "name": "privi_ethereum",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Get-Cache/CacheProtocolBlockchain.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Get-Cache/CacheProtocolBlockchain/issues"
+  },
+  "homepage": "https://github.com/Get-Cache/CacheProtocolBlockchain#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.2.0",
+    "truffle-hdwallet-provider": "^1.0.17"
+  }
+}
