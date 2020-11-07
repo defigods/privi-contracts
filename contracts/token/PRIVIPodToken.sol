@@ -2,7 +2,6 @@
 
 pragma solidity ^0.6.12;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/GSN/Context.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
@@ -17,8 +16,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
  * roles, as well as the default admin role, which will let it grant both minter
  * and moderator roles to other accounts.
  */
-contract PRIVIPodToken is Context, ERC20Burnable, AccessControl {    
-    bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
+contract PRIVIPodToken is Context, ERC20Burnable {
+    
     string constant TOKEN_NAME = 'PRIVIPodToken';
     string constant TOKEN_SYMBOL = 'PPT';
 
@@ -33,6 +32,7 @@ contract PRIVIPodToken is Context, ERC20Burnable, AccessControl {
     address public investToken;
     bool public isPodActive;
     uint256 public totalTokenStaked;
+    uint256 public liquidationDate;
     mapping(address => stakeTracker) public stakedBalances;
     mapping(uint256 => uint256) public interestPerCycle; // cycle -> interest amount
     mapping(address => mapping(uint256 => bool)) public accountCyclePaid; // address -> (cycle => claimed)
@@ -42,13 +42,17 @@ contract PRIVIPodToken is Context, ERC20Burnable, AccessControl {
      *
      * See {ERC20-constructor}.
      */
-    constructor(address factory, address token) public ERC20(TOKEN_NAME, TOKEN_SYMBOL) {
-        // setting initial roles
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MODERATOR_ROLE, _msgSender());
+    constructor(address factory, address token, uint256 date) public ERC20(TOKEN_NAME, TOKEN_SYMBOL) {
         // set initial states
         parentFactory = factory;
         investToken = token;
+        liquidationDate = date;
+        isPodActive = true;
+    }
+    
+    modifier onlyFactory() {
+        require(_msgSender() == parentFactory, "RIVIPodToken: Only Factory can call this function.");
+        _;
     }
 
     modifier updateStakingInterest(address account, uint256 cycleNumber) {
@@ -58,18 +62,18 @@ contract PRIVIPodToken is Context, ERC20Burnable, AccessControl {
         if (cycleNumber > stakedBalances[account].lastCyclePaid) {
                         
             if (stakedBalances[account].tokenStaked > 0) {
+                accountCyclePaid[account][cycleNumber] = true;       
+                stakedBalances[account].lastCyclePaid = cycleNumber;
                 stakedBalances[account].rewards = interestPerCycle[cycleNumber].mul(stakedBalances[account].tokenStaked);
             }
-            accountCyclePaid[account][cycleNumber] = true;       
-            stakedBalances[account].lastCyclePaid = cycleNumber;
+            
             
             //emit CycleRewardPaid(account, stakedBalances[account].rewards);                                                     
         }
         _;
     }
 
-    function setCycleInterest(uint256 cycle, uint256 amount) public {
-        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodToken: must have MODERATOR_ROLE.");
+    function setCycleInterest(uint256 cycle, uint256 amount) public /* onlyFactory */ {
         interestPerCycle[cycle] = amount;
     }
 
@@ -82,9 +86,8 @@ contract PRIVIPodToken is Context, ERC20Burnable, AccessControl {
      *
      * - call must have approved the amount 
      */
-    function invest(uint256 amount) public {
-        ERC20(investToken).transferFrom(_msgSender(), address(this), amount); 
-        _mint(_msgSender(), amount);
+    function invest(address account, uint256 amount) public /* onlyFactory */ {
+        _mint(account, amount);
     }
 
     function stake(uint256 amount) public {
@@ -94,11 +97,31 @@ contract PRIVIPodToken is Context, ERC20Burnable, AccessControl {
         //emit Staked(_msgSender(), amount, _totalTokenStaked);
     }
 
+    function getStakedBalance() public view returns(uint256 staked) { 
+        staked = stakedBalances[_msgSender()].tokenStaked;
+    }
+
     function unStake(uint256 amount, uint256 cycleNumber) public updateStakingInterest(_msgSender(), cycleNumber) {
         totalTokenStaked = totalTokenStaked.sub(amount);
         stakedBalances[_msgSender()].tokenStaked = stakedBalances[_msgSender()].tokenStaked.sub(amount);
         _transfer(address(this), _msgSender(), amount);
         //emit unStaked(_msgSender(), amount);
+    }
+    
+    function getUnStakingInterest(uint256[] calldata cycles) public view returns(uint256 rewards) {
+        uint256 totalReward = 0;
+        for (uint256 i=0; i<cycles.length; i++) {
+            require(accountCyclePaid[_msgSender()][i] == false, "PRIVIPodToken: Interest for the current cycle is already paid.");
+            totalReward = totalReward.add( interestPerCycle[cycles[i]].mul(stakedBalances[_msgSender()].tokenStaked) );
+        }
+        rewards = totalReward;
+    }
+
+    function claimInterest(uint256 cycle) public updateStakingInterest(_msgSender(), cycle) {
+        uint256 reward = stakedBalances[_msgSender()].rewards;
+        stakedBalances[_msgSender()].rewards = 0;
+        _mint(_msgSender(), reward);
+        // emit Rewards(_msgSender(), reward);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual override(ERC20) {
