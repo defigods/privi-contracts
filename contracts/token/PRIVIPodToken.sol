@@ -33,9 +33,11 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     bool public isPodActive;
     uint256 public totalTokenStaked;
     uint256 public liquidationDate;
+    uint256 public lastCycleNumber;
+    //uint256 public cycleLengthInDays;
     mapping(address => stakeTracker) public stakedBalances;
     mapping(uint256 => uint256) public interestPerCycle; // cycle -> interest amount
-    mapping(address => mapping(uint256 => bool)) public accountCyclePaid; // address -> (cycle => claimed)
+    // mapping(address => mapping(uint256 => bool)) public accountCyclePaid; // address -> (cycle => claimed)
 
     /**
      * @dev Set parentfactory and investToken addresses.
@@ -55,26 +57,21 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         _;
     }
 
-    modifier updateStakingInterest(address account, uint256 cycleNumber) {
-        require(accountCyclePaid[account][cycleNumber] == false, "PRIVIPodToken: Interest for the current cycle is already paid.");
-        require(interestPerCycle[cycleNumber] > 0 , "PRIVIPodToken: Interest is not set for this cycle yet.");
-        
-        if (cycleNumber > stakedBalances[account].lastCyclePaid) {
-                        
-            if (stakedBalances[account].tokenStaked > 0) {
-                accountCyclePaid[account][cycleNumber] = true;       
-                stakedBalances[account].lastCyclePaid = cycleNumber;
-                stakedBalances[account].rewards = interestPerCycle[cycleNumber].mul(stakedBalances[account].tokenStaked);
-            }
-            
-            
-            //emit CycleRewardPaid(account, stakedBalances[account].rewards);                                                     
+    modifier updateStakingInterest(address account) {
+        // if it is first time i.e there is no staked; this modifier passes
+        // if there is staked; this modifier calculate the remaining rewards if there is any
+        if (stakedBalances[account].tokenStaked > 0) {
+            (uint256 rewards, , ) = getUnPaidStakingInterest();
+            stakedBalances[account].rewards = stakedBalances[account].rewards.add(rewards);
+            stakedBalances[account].lastCyclePaid = lastCycleNumber;
         }
         _;
     }
 
-    function setCycleInterest(uint256 cycle, uint256 amount) public /* onlyFactory */ {
-        interestPerCycle[cycle] = amount;
+    function setCycleInterest(uint256 cycle, uint256 rewardAmountPerCycle) public /* onlyFactory */ {
+        require(cycle == lastCycleNumber.add(1), "PRIVIPodToken: Cycle number is not the next cycle number.");
+        lastCycleNumber = cycle;
+        interestPerCycle[cycle] = rewardAmountPerCycle;
     }
 
     /**
@@ -90,8 +87,9 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         _mint(account, amount);
     }
 
-    function stake(uint256 amount) public {
+    function stake(uint256 amount) public updateStakingInterest(_msgSender()) {
         totalTokenStaked = totalTokenStaked.add(amount);
+        stakedBalances[_msgSender()].lastCyclePaid = lastCycleNumber;
         stakedBalances[_msgSender()].tokenStaked = stakedBalances[_msgSender()].tokenStaked.add(amount);
         _transfer(_msgSender(), address(this), amount);
         //emit Staked(_msgSender(), amount, _totalTokenStaked);
@@ -101,23 +99,29 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         staked = stakedBalances[_msgSender()].tokenStaked;
     }
 
-    function unStake(uint256 amount, uint256 cycleNumber) public updateStakingInterest(_msgSender(), cycleNumber) {
+    function unStake(uint256 amount) public updateStakingInterest(_msgSender()) {
         totalTokenStaked = totalTokenStaked.sub(amount);
         stakedBalances[_msgSender()].tokenStaked = stakedBalances[_msgSender()].tokenStaked.sub(amount);
         _transfer(address(this), _msgSender(), amount);
         //emit unStaked(_msgSender(), amount);
     }
     
-    function getUnStakingInterest(uint256[] calldata cycles) public view returns(uint256 rewards) {
+    function getUnPaidStakingInterest() public view returns(uint256 rewards, uint256 startCycle, uint256 endCycles) {
+        
         uint256 totalReward = 0;
-        for (uint256 i=0; i<cycles.length; i++) {
-            require(accountCyclePaid[_msgSender()][i] == false, "PRIVIPodToken: Interest for the current cycle is already paid.");
-            totalReward = totalReward.add( interestPerCycle[cycles[i]].mul(stakedBalances[_msgSender()].tokenStaked) );
-        }
+        startCycle = stakedBalances[_msgSender()].lastCyclePaid.add(1);
+        endCycles = startCycle.add(lastCycleNumber.sub(stakedBalances[_msgSender()].lastCyclePaid));
+        //if ( stakedBalances[_msgSender()].lastCyclePaid.add(1) < lastCycleNumber.sub(stakedBalances[_msgSender()].lastCyclePaid) ) {
+            for (uint256 i = startCycle; i <= endCycles; i++) {
+                //require(accountCyclePaid[_msgSender()][i] == false, "PRIVIPodToken: Interest for the current cycle is already paid.");
+                totalReward = totalReward.add( interestPerCycle[i].mul(stakedBalances[_msgSender()].tokenStaked) );
+            }
+        //}
+        
         rewards = totalReward;
     }
 
-    function claimInterest(uint256 cycle) public updateStakingInterest(_msgSender(), cycle) {
+    function claimInterest() public updateStakingInterest(_msgSender()) {
         uint256 reward = stakedBalances[_msgSender()].rewards;
         stakedBalances[_msgSender()].rewards = 0;
         _mint(_msgSender(), reward);
