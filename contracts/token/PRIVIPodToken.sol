@@ -65,6 +65,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
             stakedBalances[account].rewards = stakedBalances[account].rewards.add(rewards);
             stakedBalances[account].lastCyclePaid = lastCycleNumber;
         }
+        // we can have a condition for in case invetor want to invest mid-cycle
         _;
     }
 
@@ -73,17 +74,14 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         uint256 totalReward = 0;
         startCycle = stakedBalances[_msgSender()].lastCyclePaid.add(1);
         endCycles = startCycle.add(lastCycleNumber.sub(stakedBalances[_msgSender()].lastCyclePaid));
-        //if ( stakedBalances[_msgSender()].lastCyclePaid.add(1) < lastCycleNumber.sub(stakedBalances[_msgSender()].lastCyclePaid) ) {
             for (uint256 i = startCycle; i <= endCycles; i++) {
-                //require(accountCyclePaid[_msgSender()][i] == false, "PRIVIPodToken: Interest for the current cycle is already paid.");
                 totalReward = totalReward.add( interestPerCycle[i].mul(stakedBalances[_msgSender()].tokenStaked) );
             }
-        //}
         
         rewards = totalReward;
     }
 
-    function setCycleInterest(uint256 cycle, uint256 rewardAmountPerCycle) public /* onlyFactory */ {
+    function setCycleInterest(uint256 cycle, uint256 rewardAmountPerCycle) public  onlyFactory {
         require(cycle == lastCycleNumber.add(1), "PRIVIPodToken: Cycle number is not the next cycle number.");
         lastCycleNumber = cycle;
         interestPerCycle[cycle] = rewardAmountPerCycle;
@@ -98,7 +96,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
      *
      * - call must have approved the amount 
      */
-    function invest(address account, uint256 amount) public /* onlyFactory */ {
+    function invest(address account, uint256 amount) public onlyFactory  {
         _mint(account, amount);
     }
 
