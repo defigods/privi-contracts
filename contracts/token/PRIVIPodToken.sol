@@ -68,6 +68,21 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         _;
     }
 
+    function getUnPaidStakingInterest() public view returns(uint256 rewards, uint256 startCycle, uint256 endCycles) {
+        
+        uint256 totalReward = 0;
+        startCycle = stakedBalances[_msgSender()].lastCyclePaid.add(1);
+        endCycles = startCycle.add(lastCycleNumber.sub(stakedBalances[_msgSender()].lastCyclePaid));
+        //if ( stakedBalances[_msgSender()].lastCyclePaid.add(1) < lastCycleNumber.sub(stakedBalances[_msgSender()].lastCyclePaid) ) {
+            for (uint256 i = startCycle; i <= endCycles; i++) {
+                //require(accountCyclePaid[_msgSender()][i] == false, "PRIVIPodToken: Interest for the current cycle is already paid.");
+                totalReward = totalReward.add( interestPerCycle[i].mul(stakedBalances[_msgSender()].tokenStaked) );
+            }
+        //}
+        
+        rewards = totalReward;
+    }
+
     function setCycleInterest(uint256 cycle, uint256 rewardAmountPerCycle) public /* onlyFactory */ {
         require(cycle == lastCycleNumber.add(1), "PRIVIPodToken: Cycle number is not the next cycle number.");
         lastCycleNumber = cycle;
@@ -105,27 +120,12 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         _transfer(address(this), _msgSender(), amount);
         //emit unStaked(_msgSender(), amount);
     }
-    
-    function getUnPaidStakingInterest() public view returns(uint256 rewards, uint256 startCycle, uint256 endCycles) {
-        
-        uint256 totalReward = 0;
-        startCycle = stakedBalances[_msgSender()].lastCyclePaid.add(1);
-        endCycles = startCycle.add(lastCycleNumber.sub(stakedBalances[_msgSender()].lastCyclePaid));
-        //if ( stakedBalances[_msgSender()].lastCyclePaid.add(1) < lastCycleNumber.sub(stakedBalances[_msgSender()].lastCyclePaid) ) {
-            for (uint256 i = startCycle; i <= endCycles; i++) {
-                //require(accountCyclePaid[_msgSender()][i] == false, "PRIVIPodToken: Interest for the current cycle is already paid.");
-                totalReward = totalReward.add( interestPerCycle[i].mul(stakedBalances[_msgSender()].tokenStaked) );
-            }
-        //}
-        
-        rewards = totalReward;
-    }
 
     function claimInterest() public updateStakingInterest(_msgSender()) {
         uint256 reward = stakedBalances[_msgSender()].rewards;
         stakedBalances[_msgSender()].rewards = 0;
         _mint(_msgSender(), reward);
-        // emit Rewards(_msgSender(), reward);
+        // emit InterestClaimed(_msgSender(), reward);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual override(ERC20) {
