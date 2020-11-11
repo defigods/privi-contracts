@@ -3,12 +3,19 @@
 pragma solidity ^0.6.12;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./token/PRIVIPodToken.sol";
 
 contract PRIVIFactory is AccessControl {
+    using SafeMath for uint256;
+    
     bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
     
+    uint256 public totalPodCreated;
     mapping (string => address) public podTokenAddresses;
+
+    event PodCreated(string indexed podId, address podAddress, uint256 endDate);
+    
     
     /**
      * @dev Grants `DEFAULT_ADMIN_ROLE` and `MODERATOR_ROLE` to the
@@ -28,12 +35,14 @@ contract PRIVIFactory is AccessControl {
      *
      * - pod should not exist before.
      */
-    function createPodToken(string calldata podId, address investToken, uint256 endDate) public returns (address podAddress){
+    function createPod(string calldata podId, address investToken, uint256 endDate) public returns (address podAddress){
         // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to invest for investor");
         require(podTokenAddresses[podId] == address(0), "PRIVIFactory: Pod already exists.");
         PRIVIPodToken podToken = new PRIVIPodToken(address(this), investToken , endDate);
         podAddress = address(podToken);
+        totalPodCreated.add(1);
         podTokenAddresses[podId] = podAddress;
+        emit PodCreated(podId, podAddress, endDate);
     }
     
     /**
