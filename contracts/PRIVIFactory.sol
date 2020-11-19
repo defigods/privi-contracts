@@ -66,11 +66,11 @@ contract PRIVIFactory is AccessControl {
      *
      * - the caller must MODERATOR_ROLE to perform this action.
      */
-    function setPodCycleInterest(string calldata podId, uint256 cycle, uint256 interestAmount) public {
+    function setPodCycleInterest(string calldata podId, uint256 cycle, uint256 interestAmount, uint256 podCycleLengthInDays) public {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to set cycle interest.");
-        require(cycle > 0, "PRIVIFactory: Cycle should not be zero.");
+        // require(cycle > 0, "PRIVIFactory: Cycle should not be zero.");
         require(interestAmount > 0, "PRIVIFactory: interestAmount should not be zero.");
-        PRIVIPodToken(podTokenAddresses[podId]).setCycleInterest(cycle, interestAmount);
+        PRIVIPodToken(podTokenAddresses[podId]).setCycleInterest(cycle, interestAmount, podCycleLengthInDays);
     }
     
 }

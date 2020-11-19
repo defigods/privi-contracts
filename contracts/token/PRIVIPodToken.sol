@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.6.12;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/GSN/Context.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -67,7 +68,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         isPodActive = true;
         lastCycleDate = now;
         
-        _mint(msg.sender, 1000);
+        // _mint(msg.sender, 1000); // for fast test only
     }
     
     modifier onlyFactory() {
@@ -187,6 +188,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         lastCycleDate = now;
         interestPerCycle[cycle] = rewardAmountPerCyclePerDay;
         totalDaysPerCycle[cycle] = totalCycleDays;
+        emit CycleInterestSet(cycle, rewardAmountPerCyclePerDay);
     }
 
     /**
@@ -200,6 +202,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
      */
     function invest(address account, uint256 amount) public onlyFactory  {
         _mint(account, amount);
+        emit Invested(account, amount);
     }
 
     function claimInterest() public updateStakingInterest(_msgSender()) {

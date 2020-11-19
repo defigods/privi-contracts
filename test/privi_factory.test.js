@@ -59,9 +59,9 @@ contract("PRIVIFactory", (accounts) => {
 
     it("Set 1000 as first cycle's interest reward", async () => {
         const priviPodTokenContract = await PRIVIPodToken.at(podAdress1);
-        await priviFactoryContract.setPodCycleInterest(podId1, 1, 1000);
-        const cycle1InterestReward = await priviPodTokenContract.interestPerCycle(1);
-        assert.deepEqual(cycle1InterestReward.toString(), '1000', "Error: cycle 1 interest reward is not 1000.");
+        await priviFactoryContract.setPodCycleInterest(podId1, 0, 1000, 10);
+        const cycle0InterestReward = await priviPodTokenContract.interestPerCycle(0);
+        assert.deepEqual(cycle0InterestReward.toString(), '1000', "Error: cycle 0 interest reward is not 1000.");
     });
 
 });
