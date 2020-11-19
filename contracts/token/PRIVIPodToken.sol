@@ -91,10 +91,6 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         // we can have a condition for in case invetor want to invest mid-cycle
         _;
     }
-    
-    function cycleDays(uint256 cycle) public view returns(uint256 cycle_Days) {
-        cycle_Days = totalDaysPerCycle[cycle];
-    }
 
     function getUnPaidStakingInterest(address account) public view returns(uint256 rewards, uint256 startCycle, uint256 endCycles, uint256 totalMidCycleToken) {
         
@@ -156,10 +152,6 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         }
         
         emit Staked(_msgSender(), amount);
-    }
-
-    function getStakedBalance() public view returns(uint256 staked) { 
-        staked = trackedStakes[_msgSender()].fullCycleBalance;
     }
 
     function unStake(uint256 amount) public updateStakingInterest(_msgSender()) {
