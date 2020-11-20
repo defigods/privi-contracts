@@ -43,7 +43,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     uint256 public liquidationDate;
     uint256 public currentCycleNumber;
     uint256 public lastCycleDate;
-    mapping(address => bool) public isAddressActivlyStaking:
+    mapping(address => bool) public isAddressActivlyStaking;
     address[] activeStakersArray;
     mapping(address => stakeTracker) public trackedStakes;
     mapping(uint256 => uint256) public interestPerCycle; // cycle -> interest amount
@@ -70,7 +70,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         isPodActive = true;
         lastCycleDate = now;
         
-        // _mint(msg.sender, 1000); // for fast test only
+        _mint(msg.sender, 1000); // for fast test only
     }
     
     modifier onlyFactory() {
@@ -93,6 +93,28 @@ contract PRIVIPodToken is Context, ERC20Burnable {
 
         // we can have a condition for in case invetor want to invest mid-cycle
         _;
+    }
+    
+    function removeFromActiveStakersArray(address account) internal {
+        bool shouldPop = false;
+        for(uint i = 0; i < activeStakersArray.length; i++) {
+            if(activeStakersArray[i] == account){
+                activeStakersArray[i] = activeStakersArray[activeStakersArray.length.sub(1)];
+                shouldPop = true;
+            }
+        }
+        if(shouldPop == true){
+            activeStakersArray.pop();
+        }
+        
+    }
+    
+    function getActiveStakersLength() public view returns(uint256 length){
+        length = activeStakersArray.length;
+    }
+    
+    function getActiveStakers() public view returns(address[] memory activeStakers) {
+        activeStakers = activeStakersArray;
     }
 
     function getUnPaidStakingInterest(address account) public view returns(uint256 rewards, uint256 startCycle, uint256 endCycles, uint256 totalMidCycleToken) {
@@ -133,8 +155,10 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     }
 
     function stake(uint256 amount) public updateStakingInterest(_msgSender()) { // **<-|
-        if (isAddressActivlyStaking[account] == false) {
-            isAddressActivlyStaking[account] = true;
+        if (isAddressActivlyStaking[_msgSender()] == false) {
+            isAddressActivlyStaking[_msgSender()] = true;
+            activeStakersArray.push(_msgSender());
+            
         }
         totalTokenStaked = totalTokenStaked.add(amount);
         trackedStakes[_msgSender()].lastCyclePaid = currentCycleNumber;
@@ -163,8 +187,10 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     function unStake(uint256 amount) public updateStakingInterest(_msgSender()) {
         totalTokenStaked = totalTokenStaked.sub(amount);
         trackedStakes[_msgSender()].fullCycleBalance = trackedStakes[_msgSender()].fullCycleBalance.sub(amount);
-        if (trackedStakes[_msgSender()].fullCycleBalance == 0) { // there might be a cenario when account still have inputs
-            isAddressActivlyStaking[account] = false;
+        
+        if (trackedStakes[_msgSender()].fullCycleBalance == 0 && trackedStakes[_msgSender()].midCyclesInputsMap[currentCycleNumber].length == 0) { // there might be a cenario when account still have inputs, probably solved
+            isAddressActivlyStaking[_msgSender()] = false;
+            removeFromActiveStakersArray(_msgSender());
         }
         _transfer(address(this), _msgSender(), amount);
         emit UnStaked(_msgSender(), amount);
