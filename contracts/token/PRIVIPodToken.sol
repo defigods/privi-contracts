@@ -55,7 +55,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     event UnStaked(address indexed account, uint256 amount);
     event InterestClaimed(address indexed account, uint256 interest);
     
-    uint256 public oneDay = 10;
+    uint256 public oneDay = 1 days;
 
     /**
      * @dev Set parentfactory and investToken addresses.
@@ -93,6 +93,10 @@ contract PRIVIPodToken is Context, ERC20Burnable {
 
         // we can have a condition for in case invetor want to invest mid-cycle
         _;
+    }
+
+    function setOneDayLength(uint256 dayLengthInSecond) public onlyFactory {
+        oneDay = dayLengthInSecond;
     }
     
     function removeFromActiveStakersArray(address account) internal {

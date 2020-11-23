@@ -72,5 +72,10 @@ contract PRIVIFactory is AccessControl {
         require(interestAmount > 0, "PRIVIFactory: interestAmount should not be zero.");
         PRIVIPodToken(podTokenAddresses[podId]).setCycleInterest(cycle, interestAmount, podCycleLengthInDays);
     }
+
+    function setPodDayLength(string calldata podId, uint256 dayLengthInSeconds) public {
+        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to set day length.");
+        PRIVIPodToken(podTokenAddresses[podId]).setOneDayLength(dayLengthInSeconds);
+    }
     
 }
