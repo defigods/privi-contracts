@@ -41,6 +41,8 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     bool public isPodActive;
     uint256 public totalTokenStaked;
     uint256 public liquidationDate;
+    uint256 public preMatureLiquidationDate;
+    uint256 public payOffPerToken;
     uint256 public currentCycleNumber;
     uint256 public lastCycleDate;
     mapping(address => bool) public isAddressActivlyStaking;
@@ -81,7 +83,6 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     modifier updateStakingInterest(address account) {
         // if it is first time i.e there is no staked; this modifier passes
         // if there is staked; this modifier calculate the remaining rewards if there is any
-        
         (uint256 rewards, , , uint256 totalMidCycleToken) = getUnPaidStakingInterest(account);
         if (rewards > 0 ) {
             trackedStakes[account].rewards = trackedStakes[account].rewards.add(rewards);
@@ -159,6 +160,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     }
 
     function stake(uint256 amount) public updateStakingInterest(_msgSender()) { // **<-|
+        require(isPodActive, "PRIVIPodToken: Pod is not active anymore.");
         if (isAddressActivlyStaking[_msgSender()] == false) {
             isAddressActivlyStaking[_msgSender()] = true;
             activeStakersArray.push(_msgSender());
@@ -220,6 +222,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     
 
     function setCycleInterest(uint256 cycle, uint256 rewardAmountPerCyclePerDay, uint256 totalCycleDays) public  onlyFactory {
+        require(isPodActive, "PRIVIPodToken: Pod is not active anymore.");
         require(interestPerCycle[cycle] == 0, "PRIVIPodToken: Cycle number is already set.");
         // there is point of no return , if number of cycle days sent was lower that it supposed to be
         currentCycleNumber = cycle.add(1);
@@ -248,6 +251,30 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         trackedStakes[_msgSender()].rewards = 0;
         _mint(_msgSender(), reward);
         emit InterestClaimed(_msgSender(), reward);
+    }
+    
+    function claculateRemainingRewards() public view returns(uint256 totalAccumulatedRewards) {
+        for (uint256 i = 0; i < activeStakersArray.length; i++) {
+            ( , uint256 reward, , , uint256 unPaidRewards, , , ) = getAccountStakeTracker(activeStakersArray[i]);
+            totalAccumulatedRewards = totalAccumulatedRewards.add(reward);
+            totalAccumulatedRewards = totalAccumulatedRewards.add(unPaidRewards);
+        }
+    }
+
+    function liquidatePod(address fromValut, uint256 totalAmount, bool isPreMatureLiquidation) public {
+        ERC20(investToken).transferFrom(fromValut, address(this), totalAmount);
+        isPodActive = false;
+        if(isPreMatureLiquidation){
+            preMatureLiquidationDate = now;
+        }
+        uint256 remainingReward = claculateRemainingRewards();
+        uint256 totalPodToken = remainingReward.add(totalSupply());
+        payOffPerToken = totalAmount.div(totalPodToken);
+    }
+
+    function getPayOff(uint256 amount) public {
+        burnFrom(_msgSender(), amount);
+        ERC20(investToken).transfer(_msgSender(), amount.mul(payOffPerToken));
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual override(ERC20) {
