@@ -72,7 +72,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         isPodActive = true;
         lastCycleDate = now;
         
-        _mint(msg.sender, 1000); // for fast test only
+        //_mint(msg.sender, 1000 * (10 ** 18)); // for fast test only
     }
     
     modifier onlyFactory() {
@@ -264,27 +264,40 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         emit InterestClaimed(_msgSender(), reward);
     }
     
-    function claculateRemainingRewards() public view returns(uint256 totalAccumulatedRewards) {
+    function claculateRemainingRewardsAndTokenSupply() public view returns(uint256 totalAccumulatedRewardsAndToken) {
         for (uint256 i = 0; i < activeStakersArray.length; i++) {
             ( , uint256 reward, , , uint256 unPaidRewards, , , ) = getAccountStakeTracker(activeStakersArray[i]);
+            uint256 totalAccumulatedRewards = 0;
             totalAccumulatedRewards = totalAccumulatedRewards.add(reward);
             totalAccumulatedRewards = totalAccumulatedRewards.add(unPaidRewards);
+            totalAccumulatedRewardsAndToken = totalAccumulatedRewards.add(totalSupply());
         }
     }
 
-    function liquidatePod(address fromValut, uint256 totalAmount, bool isPreMatureLiquidation) public {
+    function liquidatePod(address fromValut, uint256 totalAmount, uint256 liquidationAmountPerToken, bool isPreMatureLiquidation) public onlyFactory {
         ERC20(investToken).transferFrom(fromValut, address(this), totalAmount);
         isPodActive = false;
         if(isPreMatureLiquidation){
             preMatureLiquidationDate = now;
         }
+        /*
         uint256 remainingReward = claculateRemainingRewards();
         uint256 totalPodToken = remainingReward.add(totalSupply());
-        payOffPerToken = totalAmount.div(totalPodToken);
+        // require((totalAmount.div(10 ** 18)).mul(10 ** 18) == totalAmount, "PRIVIPodToken: totalAmount too small");
+        require((totalPodToken.div(10 ** 18)).mul(10 ** 18) == totalPodToken, "PRIVIPodToken: totalPodToken is too small");
+        totalPodToken = totalPodToken.div(10 ** 18);
+        */
+        payOffPerToken = liquidationAmountPerToken;
     }
 
     function getPayOff(uint256 amount) public {
-        burnFrom(_msgSender(), amount);
+        transferFrom(_msgSender(), address(this), amount);
+        burn(amount);
+        /*
+        require((amount.div(10 ** 18)).mul(10 ** 18) == amount, "PRIVIPodToken: amount is too small");
+        amount = amount.div(10 ** 18);
+        */
+        // not complete
         ERC20(investToken).transfer(_msgSender(), amount.mul(payOffPerToken));
     }
 
