@@ -194,10 +194,13 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         totalTokenStaked = totalTokenStaked.sub(amount);
         trackedStakes[_msgSender()].fullCycleBalance = trackedStakes[_msgSender()].fullCycleBalance.sub(amount);
         
-        if (trackedStakes[_msgSender()].fullCycleBalance == 0 && trackedStakes[_msgSender()].midCyclesInputsMap[currentCycleNumber].length == 0) { // there might be a cenario when account still have inputs, probably solved
+        if (trackedStakes[_msgSender()].fullCycleBalance == 0 
+        && trackedStakes[_msgSender()].midCyclesInputsMap[currentCycleNumber].length == 0 
+        && trackedStakes[_msgSender()].rewards == 0) { // there might be a cenario when account still have inputs or rewards
             isAddressActivlyStaking[_msgSender()] = false;
             removeFromActiveStakersArray(_msgSender());
         }
+
         _transfer(address(this), _msgSender(), amount);
         emit UnStaked(_msgSender(), amount);
     }
@@ -249,6 +252,14 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     function claimInterest() public updateStakingInterest(_msgSender()) {
         uint256 reward = trackedStakes[_msgSender()].rewards;
         trackedStakes[_msgSender()].rewards = 0;
+        
+        if (trackedStakes[_msgSender()].fullCycleBalance == 0 
+        && trackedStakes[_msgSender()].midCyclesInputsMap[currentCycleNumber].length == 0 
+        && trackedStakes[_msgSender()].rewards == 0) { // there might be a cenario when account still have inputs or rewards
+            isAddressActivlyStaking[_msgSender()] = false;
+            removeFromActiveStakersArray(_msgSender());
+        }
+        
         _mint(_msgSender(), reward);
         emit InterestClaimed(_msgSender(), reward);
     }
