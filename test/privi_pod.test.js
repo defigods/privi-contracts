@@ -276,15 +276,6 @@ contract("PRIVIPodToken", (accounts) => {
         assert.deepEqual(stakeTrackerInCycle1.fullCycleBalance.toNumber(), sum, "Error: fullCycleBalance is not the correct amount of 223.");
     });
 
-    // it("Assert investor 1 has his/her previouse cycle's inputs of total 223 calculated into full cycle", async () => {
-    //     await priviFactoryContract.setPodDayLength(podId1, 5); // set day length to 5 seconds
-    //     const priviPodTokenContract = await PRIVIPodToken.at(podAdress1);
-    //     const oneDayInContract = await priviPodTokenContract.oneDay();
-    //     // console.log('oneDayInContract', oneDayInContract.toNumber());
-    //     assert.deepEqual(oneDayInContract.toNumber(), 5, "Error: contract day length is not 5 seconds.");
-    //     await priviFactoryContract.callPodInvest(podId1, investor1, 1000);
-    //     const investor1Balance = await priviPodTokenContract.balanceOf(investor1, {from: investor1});
-    //     assert.deepEqual(investor1Balance.toString(), '1000', "Error: investor 1 balance is not correct.");
-    // });
+    // lots of test remaining , not apt for production
 
 });
