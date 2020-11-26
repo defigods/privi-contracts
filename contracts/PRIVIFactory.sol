@@ -36,7 +36,7 @@ contract PRIVIFactory is AccessControl {
      * - pod should not exist before.
      */
     function createPod(string calldata podId, address investToken, uint256 endDate) public returns (address podAddress){
-        // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to invest for investor");
+        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to create pod.");
         require(podTokenAddresses[podId] == address(0), "PRIVIFactory: Pod already exists.");
         PRIVIPodToken podToken = new PRIVIPodToken(address(this), investToken , endDate);
         podAddress = address(podToken);
@@ -66,16 +66,16 @@ contract PRIVIFactory is AccessControl {
      *
      * - the caller must MODERATOR_ROLE to perform this action.
      */
-    function setPodCycleInterest(string calldata podId, uint256 cycle, uint256 interestAmount, uint256 podCycleLengthInDays) public {
+    function setPodCycleInterest(string calldata podId, uint256 cycle, uint256 rewardAmountPerCyclePerDayPerToken, uint256 podCycleLengthInDays) public {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to set cycle interest.");
         // require(cycle > 0, "PRIVIFactory: Cycle should not be zero.");
-        require(interestAmount > 0, "PRIVIFactory: interestAmount should not be zero.");
-        PRIVIPodToken(podTokenAddresses[podId]).setCycleInterest(cycle, interestAmount, podCycleLengthInDays);
+        require(rewardAmountPerCyclePerDayPerToken > 0, "PRIVIFactory: rewardAmountPerCyclePerDayPerToken should not be zero.");
+        PRIVIPodToken(podTokenAddresses[podId]).setCycleInterest(cycle, rewardAmountPerCyclePerDayPerToken, podCycleLengthInDays);
     }
 
-    function setPodDayLength(string calldata podId, uint256 dayLengthInSeconds) public {
-        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to set day length.");
-        PRIVIPodToken(podTokenAddresses[podId]).setOneDayLength(dayLengthInSeconds);
+    function liquidatePod(string calldata podId, address fromValut, uint256 totalAmount, uint256 liquidationAmountPerToken, bool isPreMatureLiquidation) public {
+        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to set pod liquidation.");
+        PRIVIPodToken(podTokenAddresses[podId]).liquidatePod(fromValut, totalAmount, liquidationAmountPerToken, isPreMatureLiquidation);
     }
     
 }

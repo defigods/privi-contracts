@@ -4,11 +4,11 @@ pragma solidity ^0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/GSN/Context.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+// import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 
 /**
- * @dev MeatToken token, including:
+ * @dev token, including:
  *
  *  - ability for holders to burn (destroy) their tokens
  *  - a minter role that allows for token minting (creation)
@@ -17,6 +17,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
  * roles, as well as the default admin role, which will let it grant both minter
  * and moderator roles to other accounts.
  */
+
 contract PRIVIPodToken is Context, ERC20Burnable {
     
     string constant TOKEN_NAME = 'PRIVIPodToken';
@@ -29,7 +30,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     }
     
     struct stakeTracker {
-        uint256 lastCyclePaid;
+        uint256 lastCycleChecked;
         uint256 rewards;
         uint256 fullCycleBalance;
         // midCycleInput[] midCycleInputs;
@@ -48,7 +49,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     mapping(address => bool) public isAddressActivlyStaking;
     address[] activeStakersArray;
     mapping(address => stakeTracker) public trackedStakes;
-    mapping(uint256 => uint256) public interestPerCycle; // cycle -> interest amount
+    mapping(uint256 => uint256) public interestPerCyclePerDayPerTokenMap; // cycle -> interest amount
     mapping(uint256 => uint256) public totalDaysPerCycle;
     
     event CycleInterestSet(uint256 indexed cycle, uint256 amount);
@@ -90,14 +91,10 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         if (totalMidCycleToken > 0) {
             trackedStakes[account].fullCycleBalance = trackedStakes[account].fullCycleBalance.add(totalMidCycleToken);
         }
-        trackedStakes[account].lastCyclePaid = currentCycleNumber;
+        trackedStakes[account].lastCycleChecked = currentCycleNumber;
 
         // we can have a condition for in case invetor want to invest mid-cycle
         _;
-    }
-
-    function setOneDayLength(uint256 dayLengthInSecond) public onlyFactory {
-        oneDay = dayLengthInSecond;
     }
     
     function removeFromActiveStakersArray(address account) internal {
@@ -128,14 +125,14 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         uint256 midCycleTokenTotal = 0;
         // uint256 previousCycleMidInputTotalToken = 0;
         
-        if (currentCycleNumber > trackedStakes[account].lastCyclePaid) {
-            startCycle = trackedStakes[account].lastCyclePaid;
-            endCycles = startCycle.add(currentCycleNumber.sub(trackedStakes[account].lastCyclePaid));
+        if (currentCycleNumber > trackedStakes[account].lastCycleChecked) {
+            startCycle = trackedStakes[account].lastCycleChecked;
+            endCycles = startCycle.add(currentCycleNumber.sub(trackedStakes[account].lastCycleChecked));
             for (uint256 i = startCycle; i <= endCycles; i++) {
                 
                 if (trackedStakes[account].fullCycleBalance > 0) { // first calculate full cycle
                 totalReward = totalReward.add( 
-                        (interestPerCycle[i].mul(trackedStakes[account].fullCycleBalance.add(midCycleTokenTotal)))
+                        (interestPerCyclePerDayPerTokenMap[i].mul(trackedStakes[account].fullCycleBalance.add(midCycleTokenTotal)))
                         .mul(totalDaysPerCycle[i]) 
                     );
                 }
@@ -144,10 +141,18 @@ contract PRIVIPodToken is Context, ERC20Burnable {
                     for(uint256 j = 0; j < trackedStakes[account].midCyclesInputsMap[i].length; j++) {
                         midCycleInput memory currentInput = trackedStakes[account].midCyclesInputsMap[i][j];
                         uint256 inputDayMultiplier = totalDaysPerCycle[i].sub(currentInput.day);
+                        
+                        
                         totalReward = totalReward.add(
-                            (interestPerCycle[i].mul(currentInput.acumulatedAmount))
-                            .mul(inputDayMultiplier) 
-                        );
+                                                        (
+                                                            interestPerCyclePerDayPerTokenMap[i]
+                                                            .mul(currentInput.acumulatedAmount) 
+                                                        ) 
+                                                        .mul(
+                                                            inputDayMultiplier
+                                                            )
+                                                    ) 
+                                                    ;
                         midCycleTokenTotal = midCycleTokenTotal.add(currentInput.acumulatedAmount);
                     }
                 }
@@ -167,7 +172,7 @@ contract PRIVIPodToken is Context, ERC20Burnable {
             
         }
         totalTokenStaked = totalTokenStaked.add(amount);
-        trackedStakes[_msgSender()].lastCyclePaid = currentCycleNumber;
+        trackedStakes[_msgSender()].lastCycleChecked = currentCycleNumber;
         //trackedStakes[_msgSender()].fullCycleBalance = trackedStakes[_msgSender()].fullCycleBalance.add(amount);
         _transfer(_msgSender(), address(this), amount);
         
@@ -206,33 +211,33 @@ contract PRIVIPodToken is Context, ERC20Burnable {
     }
     
     function getAccountStakeTracker(address account) public view returns(
-            uint256 lastCyclePaid, 
+            uint256 lastCycleChecked, 
             uint256 reward, 
             uint256 fullCycleBalance, 
-            midCycleInput[] memory lasyCycleInputs,
+            midCycleInput[] memory currentCycleInputs,
             uint256 unPaidRewards, 
             uint256 startCycle, 
             uint256 endCycles, 
             uint256 totalMidCycleToken
         ) {
         stakeTracker storage accountTracker = trackedStakes[account];
-        lastCyclePaid = accountTracker.lastCyclePaid;
+        lastCycleChecked = accountTracker.lastCycleChecked;
         reward = accountTracker.rewards;
         fullCycleBalance = accountTracker.fullCycleBalance;
-        lasyCycleInputs = accountTracker.midCyclesInputsMap[currentCycleNumber];
+        currentCycleInputs = accountTracker.midCyclesInputsMap[currentCycleNumber];
         (unPaidRewards, startCycle, endCycles, totalMidCycleToken) = getUnPaidStakingInterest(account);
     }
     
 
-    function setCycleInterest(uint256 cycle, uint256 rewardAmountPerCyclePerDay, uint256 totalCycleDays) public  onlyFactory {
+    function setCycleInterest(uint256 cycle, uint256 rewardAmountPerCyclePerDayPerToken, uint256 totalCycleDays) public  onlyFactory {
         require(isPodActive, "PRIVIPodToken: Pod is not active anymore.");
-        require(interestPerCycle[cycle] == 0, "PRIVIPodToken: Cycle number is already set.");
+        require(interestPerCyclePerDayPerTokenMap[cycle] == 0, "PRIVIPodToken: Cycle number is already set.");
         // there is point of no return , if number of cycle days sent was lower that it supposed to be
         currentCycleNumber = cycle.add(1);
         lastCycleDate = now;
-        interestPerCycle[cycle] = rewardAmountPerCyclePerDay;
+        interestPerCyclePerDayPerTokenMap[cycle] = rewardAmountPerCyclePerDayPerToken;
         totalDaysPerCycle[cycle] = totalCycleDays;
-        emit CycleInterestSet(cycle, rewardAmountPerCyclePerDay);
+        emit CycleInterestSet(cycle, rewardAmountPerCyclePerDayPerToken);
     }
 
     /**
@@ -264,13 +269,14 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         emit InterestClaimed(_msgSender(), reward);
     }
     
-    function claculateRemainingRewardsAndTokenSupply() public view returns(uint256 totalAccumulatedRewardsAndToken) {
+    function claculateRemainingRewardsAndTokenSupply() public view returns(uint256 totalAccumulatedRewardsPlusTokenSupply) {
+        totalAccumulatedRewardsPlusTokenSupply = totalSupply();
         for (uint256 i = 0; i < activeStakersArray.length; i++) {
             ( , uint256 reward, , , uint256 unPaidRewards, , , ) = getAccountStakeTracker(activeStakersArray[i]);
-            uint256 totalAccumulatedRewards = 0;
-            totalAccumulatedRewards = totalAccumulatedRewards.add(reward);
-            totalAccumulatedRewards = totalAccumulatedRewards.add(unPaidRewards);
-            totalAccumulatedRewardsAndToken = totalAccumulatedRewards.add(totalSupply());
+            uint256 AccumulatedRewards = 0;
+            AccumulatedRewards = AccumulatedRewards.add(reward);
+            AccumulatedRewards = AccumulatedRewards.add(unPaidRewards);
+            totalAccumulatedRewardsPlusTokenSupply = totalAccumulatedRewardsPlusTokenSupply.add(AccumulatedRewards);
         }
     }
 
@@ -280,25 +286,14 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         if(isPreMatureLiquidation){
             preMatureLiquidationDate = now;
         }
-        /*
-        uint256 remainingReward = claculateRemainingRewards();
-        uint256 totalPodToken = remainingReward.add(totalSupply());
-        // require((totalAmount.div(10 ** 18)).mul(10 ** 18) == totalAmount, "PRIVIPodToken: totalAmount too small");
-        require((totalPodToken.div(10 ** 18)).mul(10 ** 18) == totalPodToken, "PRIVIPodToken: totalPodToken is too small");
-        totalPodToken = totalPodToken.div(10 ** 18);
-        */
         payOffPerToken = liquidationAmountPerToken;
     }
 
     function getPayOff(uint256 amount) public {
-        transferFrom(_msgSender(), address(this), amount);
-        burn(amount);
-        /*
-        require((amount.div(10 ** 18)).mul(10 ** 18) == amount, "PRIVIPodToken: amount is too small");
-        amount = amount.div(10 ** 18);
-        */
-        // not complete
-        ERC20(investToken).transfer(_msgSender(), amount.mul(payOffPerToken));
+        uint256 payOffToBeSent = amount.mul(payOffPerToken);
+        require(payOffToBeSent <= ERC20(investToken).balanceOf(address(0)), "PRIVIPodToken: there is no enough balance of token for payOff");
+        burnFrom(_msgSender(), amount);
+        ERC20(investToken).transfer(_msgSender(), payOffToBeSent);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual override(ERC20) {

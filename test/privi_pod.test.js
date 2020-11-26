@@ -39,6 +39,8 @@ contract("PRIVIPodToken", (accounts) => {
     const investor3 = accounts[5];
     const hacker = accounts[9];
 
+    const oneDay = 86400;
+
     let investorBalance1;
     let investorBalance2;
 
@@ -94,14 +96,14 @@ contract("PRIVIPodToken", (accounts) => {
         const priviPodTokenContract = await PRIVIPodToken.at(podAdress1);
         let lastCycleDate = await priviPodTokenContract.lastCycleDate();
         // console.log('lastCycleDate:', lastCycleDate);
-        await advanceTime(10);
+        await advanceTime((10 * oneDay));
         await priviFactoryContract.setPodCycleInterest(podId1, 0, 1000, 10);
         const cycle0InterestReward = await priviPodTokenContract.interestPerCycle(0);
         assert.deepEqual(cycle0InterestReward.toString(), '1000', "Error: cycle 0 interest reward is not 1000.");
         let lastCycleDateAfter = await priviPodTokenContract.lastCycleDate();
         // console.log('lastCycleDateAfter:', lastCycleDateAfter);
         // console.log('lastCycleDate time vs lastCycleDateAfter time', lastCycleDate.toNumber(), lastCycleDateAfter.toNumber());
-        assert.isTrue((lastCycleDate.add(new BN(10))).eq(lastCycleDateAfter), "Error: more or less than 10 second has passed already.");
+        assert.isTrue((lastCycleDate.add(new BN(10 * oneDay))).eq(lastCycleDateAfter), "Error: more or less than 10 second has passed already.");
     });
 
     it("Assert investor 1 stake 111 token in his/her first input in his/her lasyCycleInputs", async () => {
@@ -144,7 +146,7 @@ contract("PRIVIPodToken", (accounts) => {
         await priviPodTokenContract.stake(111, {from: investor1});
         // let stakeTracker = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTracker: lasyCycleInputs:', stakeTracker.lasyCycleInputs[0].acumulatedAmount);
-        await advanceTime(6);
+        await advanceTime(oneDay + 1);
         await priviPodTokenContract.stake(112, {from: investor1});
         let stakeTrackerAfter = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTrackerAfter: lasyCycleInputs:', stakeTrackerAfter.lasyCycleInputs);
@@ -166,7 +168,7 @@ contract("PRIVIPodToken", (accounts) => {
         await priviPodTokenContract.stake(111, {from: investor1});
         // let stakeTracker = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTracker: lasyCycleInputs:', stakeTracker.lasyCycleInputs[0].acumulatedAmount);
-        await advanceTime(6);
+        await advanceTime(oneDay + 1);
         await priviPodTokenContract.stake(112, {from: investor1});
         let stakeTrackerAfter = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTrackerAfter 1 : lasyCycleInputs:', stakeTrackerAfter);
@@ -200,7 +202,7 @@ contract("PRIVIPodToken", (accounts) => {
         await priviPodTokenContract.stake(111, {from: investor1});
         // let stakeTracker = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTracker: lasyCycleInputs:', stakeTracker.lasyCycleInputs[0].acumulatedAmount);
-        await advanceTime(6);
+        await advanceTime(oneDay + 1);
         await priviPodTokenContract.stake(112, {from: investor1});
         let stakeTrackerAfter = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTrackerAfter 1 : lasyCycleInputs:', stakeTrackerAfter);
@@ -221,7 +223,7 @@ contract("PRIVIPodToken", (accounts) => {
         // console.log('calculated reward vs. local calcucated:', stakeTrackerAfter.unPaidRewards.toNumber(), totalUnPaidRewards);
         assert.deepEqual(stakeTrackerAfter.unPaidRewards.toNumber(), totalUnPaidRewards, "Error: calculated reward inside contract is not similar to test claculation.");
         // advance 26 second, to get 5 days as 1 day length in test is 5 seconds
-        await advanceTime(26);
+        await advanceTime((5 * oneDay) + 1);
         await priviPodTokenContract.stake(50, {from: investor1});
         const stakeTrackerInCycle1 = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTrackerInCycle1 : lasyCycleInputs:', stakeTrackerInCycle1);
@@ -241,7 +243,7 @@ contract("PRIVIPodToken", (accounts) => {
         await priviPodTokenContract.stake(111, {from: investor1});
         // let stakeTracker = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTracker: lasyCycleInputs:', stakeTracker.lasyCycleInputs[0].acumulatedAmount);
-        await advanceTime(6);
+        await advanceTime((5 * oneDay) + 1);
         await priviPodTokenContract.stake(112, {from: investor1});
         const stakeTrackerAfter = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTrackerAfter 1 : lasyCycleInputs:', stakeTrackerAfter);
@@ -262,7 +264,7 @@ contract("PRIVIPodToken", (accounts) => {
         // console.log('calculated reward vs. local calcucated:', stakeTrackerAfter.unPaidRewards.toNumber(), totalUnPaidRewards);
         assert.deepEqual(stakeTrackerAfter2.unPaidRewards.toNumber(), totalUnPaidRewards, "Error: calculated reward inside contract is not similar to test claculation.");
         // advance 26 second, to get 5 days as 1 day length in test is 5 seconds
-        await advanceTime(26);
+        await advanceTime((5 * oneDay) + 1);
         await priviPodTokenContract.stake(50, {from: investor1});
         const stakeTrackerInCycle1 = await priviPodTokenContract.getAccountStakeTracker(investor1, {from: investor1});
         // console.log('stakeTrackerInCycle1 : lasyCycleInputs:', stakeTrackerInCycle1);
