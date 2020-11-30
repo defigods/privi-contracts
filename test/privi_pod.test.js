@@ -1,8 +1,8 @@
 const { assert } = require("chai");
 const BN = require('bn.js');
 
-const PRIVIFactory = artifacts.require("PRIVIFactory");
-const PRIVIPodToken = artifacts.require("PRIVIPodToken");
+const PRIVIFactory = artifacts.require("PRIVIPodERC20Factory_V1");
+const PRIVIPodToken = artifacts.require("PRIVIPodERC20Token");
 
 const advanceTime = async (time) => {
     // console.log('web3:', web3.eth);

@@ -1,7 +1,7 @@
 const { assert } = require("chai");
 
-const PRIVIFactory = artifacts.require("PRIVIFactory");
-const PRIVIPodToken = artifacts.require("PRIVIPodToken");
+const PRIVIFactory = artifacts.require("PRIVIPodERC20Factory_V1");
+const PRIVIPodToken = artifacts.require("PRIVIPodERC20Token");
 
 contract("PRIVIFactory", (accounts) => {
     let priviFactoryContract;
