@@ -4,9 +4,9 @@ pragma solidity ^0.6.12;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "./token/PRIVIPodToken.sol";
+import "./token/PRIVIPodERC20Token.sol";
 
-contract PRIVIFactory is AccessControl {
+contract PRIVIPodERC20Factory_V1 is AccessControl {
     using SafeMath for uint256;
     
     bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
@@ -38,7 +38,7 @@ contract PRIVIFactory is AccessControl {
     function createPod(string calldata podId, address investToken, uint256 endDate) public returns (address podAddress){
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to create pod.");
         require(podTokenAddresses[podId] == address(0), "PRIVIFactory: Pod already exists.");
-        PRIVIPodToken podToken = new PRIVIPodToken(address(this), investToken , endDate);
+        PRIVIPodERC20Token podToken = new PRIVIPodERC20Token(address(this), investToken , endDate);
         podAddress = address(podToken);
         totalPodCreated.add(1);
         podTokenAddresses[podId] = podAddress;
@@ -56,7 +56,7 @@ contract PRIVIFactory is AccessControl {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to invest for investor.");
         require(account != address(0), "PRIVIFactory: Account address should not be zero.");
         require(investAmount > 0, "PRIVIFactory: investAmount should not be zero.");
-        PRIVIPodToken(podTokenAddresses[podId]).invest(account, investAmount);
+        PRIVIPodERC20Token(podTokenAddresses[podId]).invest(account, investAmount);
     }
     
     /**
@@ -70,12 +70,12 @@ contract PRIVIFactory is AccessControl {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to set cycle interest.");
         // require(cycle > 0, "PRIVIFactory: Cycle should not be zero.");
         require(rewardAmountPerCyclePerDayPerToken > 0, "PRIVIFactory: rewardAmountPerCyclePerDayPerToken should not be zero.");
-        PRIVIPodToken(podTokenAddresses[podId]).setCycleInterest(cycle, rewardAmountPerCyclePerDayPerToken, podCycleLengthInDays);
+        PRIVIPodERC20Token(podTokenAddresses[podId]).setCycleInterest(cycle, rewardAmountPerCyclePerDayPerToken, podCycleLengthInDays);
     }
 
     function liquidatePod(string calldata podId, address fromValut, uint256 totalAmount, uint256 liquidationAmountPerToken, bool isPreMatureLiquidation) public {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to set pod liquidation.");
-        PRIVIPodToken(podTokenAddresses[podId]).liquidatePod(fromValut, totalAmount, liquidationAmountPerToken, isPreMatureLiquidation);
+        PRIVIPodERC20Token(podTokenAddresses[podId]).liquidatePod(fromValut, totalAmount, liquidationAmountPerToken, isPreMatureLiquidation);
     }
     
 }

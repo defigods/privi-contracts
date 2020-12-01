@@ -1,7 +1,7 @@
 const { assert } = require("chai");
 
-const PRIVIFactory = artifacts.require("PRIVIFactory");
-const PRIVIPodToken = artifacts.require("PRIVIPodToken");
+const PRIVIFactory = artifacts.require("PRIVIPodERC20Factory_V1");
+const PRIVIPodToken = artifacts.require("PRIVIPodERC20Token");
 
 contract("PRIVIFactory", (accounts) => {
     let priviFactoryContract;
@@ -60,7 +60,7 @@ contract("PRIVIFactory", (accounts) => {
     it("Set 1000 as first cycle's interest reward", async () => {
         const priviPodTokenContract = await PRIVIPodToken.at(podAdress1);
         await priviFactoryContract.setPodCycleInterest(podId1, 0, 1000, 10);
-        const cycle0InterestReward = await priviPodTokenContract.interestPerCycle(0);
+        const cycle0InterestReward = await priviPodTokenContract.interestPerCyclePerDayPerTokenMap(0);
         assert.deepEqual(cycle0InterestReward.toString(), '1000', "Error: cycle 0 interest reward is not 1000.");
     });
 

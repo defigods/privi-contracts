@@ -18,7 +18,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
  * and moderator roles to other accounts.
  */
 
-contract PRIVIPodToken is Context, ERC20Burnable {
+contract PRIVIPodERC20Token is Context, ERC20Burnable {
     
     string constant TOKEN_NAME = 'PRIVIPodToken';
     string constant TOKEN_SYMBOL = 'PPT';
@@ -269,16 +269,16 @@ contract PRIVIPodToken is Context, ERC20Burnable {
         emit InterestClaimed(_msgSender(), reward);
     }
     
-    function claculateRemainingRewardsAndTokenSupply() public view returns(uint256 totalAccumulatedRewardsPlusTokenSupply) {
-        totalAccumulatedRewardsPlusTokenSupply = totalSupply();
-        for (uint256 i = 0; i < activeStakersArray.length; i++) {
-            ( , uint256 reward, , , uint256 unPaidRewards, , , ) = getAccountStakeTracker(activeStakersArray[i]);
-            uint256 AccumulatedRewards = 0;
-            AccumulatedRewards = AccumulatedRewards.add(reward);
-            AccumulatedRewards = AccumulatedRewards.add(unPaidRewards);
-            totalAccumulatedRewardsPlusTokenSupply = totalAccumulatedRewardsPlusTokenSupply.add(AccumulatedRewards);
-        }
-    }
+    // function claculateRemainingRewardsAndTokenSupply() public view returns(uint256 totalAccumulatedRewardsPlusTokenSupply) {
+    //     totalAccumulatedRewardsPlusTokenSupply = totalSupply();
+    //     for (uint256 i = 0; i < activeStakersArray.length; i++) {
+    //         ( , uint256 reward, , , uint256 unPaidRewards, , , ) = getAccountStakeTracker(activeStakersArray[i]);
+    //         uint256 AccumulatedRewards = 0;
+    //         AccumulatedRewards = AccumulatedRewards.add(reward);
+    //         AccumulatedRewards = AccumulatedRewards.add(unPaidRewards);
+    //         totalAccumulatedRewardsPlusTokenSupply = totalAccumulatedRewardsPlusTokenSupply.add(AccumulatedRewards);
+    //     }
+    // }
 
     function liquidatePod(address fromValut, uint256 totalAmount, uint256 liquidationAmountPerToken, bool isPreMatureLiquidation) public onlyFactory {
         ERC20(investToken).transferFrom(fromValut, address(this), totalAmount);
