@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity ^0.6.12;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -10,6 +10,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 /// @author The PRIVI Blockchain team
 /// @title Manages swap and withdraw of Ethers, ERC20 tokens and ERC721 tokens between Users and PRIVI platform
+
 contract SwapManager is AccessControl{
     bytes32 public constant REGISTER_ROLE = keccak256("REGISTER_ROLE");
     bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
@@ -127,8 +128,8 @@ contract SwapManager is AccessControl{
      * @param   amount Amount of tokens to be transferred
      */
     function depositERC20Token(string memory tokenName, uint256 amount) public {
-        require(hasRole(TRANSFER_ROLE, _msgSender()), 
-            "SwapManager: must have TRANSFER_ROLE to deposit token");
+        //require(hasRole(TRANSFER_ROLE, _msgSender()), 
+        //    "SwapManager: must have TRANSFER_ROLE to deposit token");
         require(contractAddressERC20[tokenName] != ZERO_ADDRESS, 
             "SwapManager: token is not registered into the platform");
         require(IERC20(contractAddressERC20[tokenName]).allowance(_msgSender(), address(this)) >= amount, 
@@ -166,8 +167,8 @@ contract SwapManager is AccessControl{
      * @param   tokenId Token identifier to be transferred
      */
     function depositERC721Token(string memory tokenName, address to, uint256 tokenId) public {
-        require(hasRole(TRANSFER_ROLE, _msgSender()), 
-            "SwapManager: must have TRANSFER_ROLE to deposit token");
+        //require(hasRole(TRANSFER_ROLE, _msgSender()), 
+        //    "SwapManager: must have TRANSFER_ROLE to deposit token");
         require(contractAddressERC721[tokenName] != ZERO_ADDRESS, 
             "SwapManager: token is not registered into the platform");
         /* TO BE TESTED */
@@ -200,7 +201,6 @@ contract SwapManager is AccessControl{
      * @dev     - Amount to be deposited must be greater than 0 ethers 
      */
     function depositEther() external payable {
-        //TODO: save mapping with address & amount, to track how much every sender put
         require(msg.value > 0, "SwapManager: amount must be greater than 0 ethers");
         emit DepositEther(_msgSender(), msg.value);  
     }
@@ -226,10 +226,6 @@ contract SwapManager is AccessControl{
      * @return  Contract balance in weis
      */
     function getBalance() public view returns (uint256) {
-        return payable(address(this)).balance;
-    }
-
-        function getBalance2() public view returns (uint256) {
         return payable(address(this)).balance;
     }
 }
