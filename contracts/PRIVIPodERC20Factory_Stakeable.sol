@@ -4,9 +4,9 @@ pragma solidity ^0.6.12;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "./token/PRIVIPodERC20Token.sol";
+import "./token/PRIVIPodERC20TokenStakable.sol";
 
-contract PRIVIPodERC20Factory_V1 is AccessControl {
+contract PRIVIPodERC20Factory_Stakeable is AccessControl {
     using SafeMath for uint256;
     
     bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");

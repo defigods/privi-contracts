@@ -4,7 +4,6 @@ pragma solidity ^0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/GSN/Context.sol";
-// import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 
 /**
@@ -18,7 +17,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
  * and moderator roles to other accounts.
  */
 
-contract PRIVIPodERC20Token is Context, ERC20Burnable {
+contract PRIVIPodERC20TokenStakable is Context, ERC20Burnable {
     
     string constant TOKEN_NAME = 'PRIVIPodToken';
     string constant TOKEN_SYMBOL = 'PPT';
