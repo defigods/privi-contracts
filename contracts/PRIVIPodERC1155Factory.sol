@@ -40,7 +40,7 @@ contract PRIVIPodERC1155Factory is AccessControl {
         podAddress = address(podToken);
         totalPodCreated.add(1);
         podTokenAddresses[podId] = podAddress;
-        emit PodCreated(podId, podTokenName, podTokenSymbol);
+        emit PodCreated(podId, uri);
     }
     
     /**
