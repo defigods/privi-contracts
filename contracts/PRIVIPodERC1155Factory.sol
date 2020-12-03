@@ -50,14 +50,14 @@ contract PRIVIPodERC1155Factory is AccessControl {
      *
      * - the caller must MODERATOR_ROLE to perform this action.
      */
-    function callMint(string calldata podId, address account, uint256 tokenId,  uint256 amount, bytes calldata data) public {
+    function podMint(string calldata podId, address account, uint256 tokenId,  uint256 amount, bytes calldata data) public {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor.");
         require(account != address(0), "PRIVIPodERC1155Factory: Account address should not be zero.");
         require(amount > 0, "PRIVIPodERC1155Factory: amount should not be zero.");
         PRIVIPodERC1155Token(podTokenAddresses[podId]).mint(account, tokenId, amount, data);
     }
 
-    function callMintBatch(string calldata podId, address account, uint256[] memory  tokenIds,  uint256[] memory  amounts, bytes calldata data) public {
+    function podMintBatch(string calldata podId, address account, uint256[] memory  tokenIds,  uint256[] memory  amounts, bytes calldata data) public {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor.");
         require(account != address(0), "PRIVIPodERC1155Factory: Account address should not be zero.");
         PRIVIPodERC1155Token(podTokenAddresses[podId]).mintBatch(account, tokenIds, amounts, data);

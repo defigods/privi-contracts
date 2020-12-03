@@ -34,8 +34,8 @@ contract PRIVIPodERC20Factory is AccessControl {
      * - pod should not exist before.
      */
     function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol) public returns (address podAddress){
-        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to create pod.");
-        require(podTokenAddresses[podId] == address(0), "PRIVIFactory: Pod already exists.");
+        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to create pod.");
+        require(podTokenAddresses[podId] == address(0), "PRIVIPodERC20Factory: Pod already exists.");
         PRIVIPodERC20Token podToken = new PRIVIPodERC20Token(podTokenName, podTokenSymbol , address(this));
         podAddress = address(podToken);
         totalPodCreated.add(1);
@@ -50,10 +50,10 @@ contract PRIVIPodERC20Factory is AccessControl {
      *
      * - the caller must MODERATOR_ROLE to perform this action.
      */
-    function callPodInvest(string calldata podId, address account,  uint256 investAmount) public {
-        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIFactory: must have MODERATOR_ROLE to invest for investor.");
-        require(account != address(0), "PRIVIFactory: Account address should not be zero.");
-        require(investAmount > 0, "PRIVIFactory: investAmount should not be zero.");
+    function podMint(string calldata podId, address account,  uint256 investAmount) public {
+        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to invest for investor.");
+        require(account != address(0), "PRIVIPodERC20Factory: Account address should not be zero.");
+        require(investAmount > 0, "PRIVIPodERC20Factory: investAmount should not be zero.");
         PRIVIPodERC20Token(podTokenAddresses[podId]).mint(account, investAmount);
     }
     
