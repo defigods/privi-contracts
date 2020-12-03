@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
  * @dev {ERC20} token, including:
  *
  *  - ability for holders to burn (destroy) their tokens
- *  - a factoryOnly modifier, that grants mint capabilities only to factory who deployed theis pod token contract
+ *  - a factoryOnly modifier, that grants mint capabilities only to factory who deployed this pod token contract
  *
  */
 contract PRIVIPodERC20Token is Context, ERC20Burnable {
@@ -18,7 +18,7 @@ contract PRIVIPodERC20Token is Context, ERC20Burnable {
     address public parentFactory;
 
     /**
-     * @dev sets factory address
+     * @dev Sets factory address
      *
      * See {ERC20-constructor}.
      */

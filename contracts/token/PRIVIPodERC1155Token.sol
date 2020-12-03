@@ -18,7 +18,7 @@ contract PRIVIPodERC1155Token is Context, ERC1155Burnable {
     address public parentFactory;
 
     /**
-     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` to the account that
+     * @dev Sets factory address
      * deploys the contract.
      */
     constructor(string memory uri, address factory) public ERC1155(uri) {

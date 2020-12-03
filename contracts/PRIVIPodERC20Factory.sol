@@ -27,7 +27,7 @@ contract PRIVIPodERC20Factory is AccessControl {
     }
     
     /**
-     *@dev not clear who can create a pod
+     *@dev only MODERATOR_ROLE role can create pods
      *
      * Requirements:
      *
@@ -44,7 +44,7 @@ contract PRIVIPodERC20Factory is AccessControl {
     }
     
     /**
-     * @dev Moderator will invest the amount of pod token for the investor
+     * @dev Moderator will mint the amount of pod token for the investor's account
      *
      * Requirements:
      *

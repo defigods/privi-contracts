@@ -27,10 +27,11 @@ contract PRIVIPodERC1155Factory is AccessControl {
     }
     
     /**
-     *@dev not clear who can create a pod
+     *@dev caller create a new pod.
      *
      * Requirements:
      *
+     * - the caller must MODERATOR_ROLE to perform this action.
      * - pod should not exist before.
      */
     function createPod(string calldata podId, string calldata uri) public returns (address podAddress){
@@ -44,7 +45,7 @@ contract PRIVIPodERC1155Factory is AccessControl {
     }
     
     /**
-     * @dev Moderator will invest the amount of pod token for the investor
+     * @dev Moderator will mint the amount of pod token for the investor's account
      *
      * Requirements:
      *
