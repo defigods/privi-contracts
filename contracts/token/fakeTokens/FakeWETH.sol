@@ -3,14 +3,14 @@ pragma solidity ^0.6.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract FakeMKR is ERC20, AccessControl {
+contract FakeWETH is ERC20, AccessControl {
     bytes32 public constant NO_LIMIT_ROLE = keccak256("NO_LIMIT_ROLE");
 
     address payable public owner;
     
     mapping(address => uint256) lastIssuedTime;
     
-    constructor(address swapManagerAddress) ERC20("FakeMKR", "fMKR") public {
+    constructor(address swapManagerAddress) ERC20("FakeWETH", "fWETH") public {
         owner = msg.sender;
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(NO_LIMIT_ROLE, _msgSender());

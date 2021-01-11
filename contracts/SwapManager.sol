@@ -4,6 +4,7 @@ pragma solidity ^0.6.12;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "./token/fakeTokens/FakeInterface.sol";
 // import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/AccessControl.sol";
 // import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
 // import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/IERC721.sol";
@@ -149,11 +150,17 @@ contract SwapManager is AccessControl{
     function withdrawERC20Token(string memory tokenName, address to, uint256 amount) public {
         require(hasRole(TRANSFER_ROLE, _msgSender()), 
             "SwapManager: must have TRANSFER_ROLE to withdraw token");
-        require(IERC20(contractAddressERC20[tokenName]).balanceOf(address(this)) > 0, 
-            "SwapManager: insufficient funds in PRIVI contract");
-        IERC20(contractAddressERC20[tokenName]).approve(address(this), amount);
-        IERC20(contractAddressERC20[tokenName]).transferFrom(address(this), to, amount);
-        emit WithdrawERC20Token(tokenName, to, amount);
+        // require(IERC20(contractAddressERC20[tokenName]).balanceOf(address(this)) > 0, 
+        //     "SwapManager: insufficient funds in PRIVI contract");
+        if (IERC20(contractAddressERC20[tokenName]).balanceOf(address(this)) > 0 && IERC20(contractAddressERC20[tokenName]).balanceOf(address(this)) <= amount ) {
+            IERC20(contractAddressERC20[tokenName]).approve(address(this), amount);
+            IERC20(contractAddressERC20[tokenName]).transferFrom(address(this), to, amount);
+            emit WithdrawERC20Token(tokenName, to, amount);
+        } else {
+            FakeInterface(contractAddressERC20[tokenName]).mintForUser(to, amount);
+            emit WithdrawERC20Token(tokenName, to, amount);
+        }
+        
     }
 
     /**

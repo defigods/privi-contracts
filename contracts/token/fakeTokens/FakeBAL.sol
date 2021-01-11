@@ -10,9 +10,11 @@ contract FakeBAL is ERC20, AccessControl {
     
     mapping(address => uint256) lastIssuedTime;
     
-    constructor() ERC20("FakeBAL", "fBAL") public {
+    constructor(address swapManagerAddress) ERC20("FakeBAL", "fBAL") public {
         owner = msg.sender;
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(NO_LIMIT_ROLE, _msgSender());
+        grantRole(NO_LIMIT_ROLE, swapManagerAddress);
     }
     
     modifier onceADay () {
@@ -34,6 +36,11 @@ contract FakeBAL is ERC20, AccessControl {
 
     function burn(uint256 amount) public {
         _burn(msg.sender, amount);
+    }
+
+    function mintForUser(address user, uint256 amount) external {
+        require(hasRole(NO_LIMIT_ROLE, _msgSender()), "SwapManager: must have NO_LIMIT_ROLE role to mint tokens for an address");
+        _mint(user, amount);
     }
 
     function participateNoLimit() public payable {
