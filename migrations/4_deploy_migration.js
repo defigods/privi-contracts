@@ -31,14 +31,14 @@ module.exports = async function (deployer, networks, accounts) {
 
 		console.log('Registering fake tokens into swapManager');
 
-		// console.log('Registering FakePrivi address',fakePriviContract.address)
-		// await swapManagerContract.registerTokenERC20('PRIVI', fakePriviContract.address);
+		console.log('Registering FakePrivi address',fakePriviContract.address)
+		await swapManagerContract.registerTokenERC20('PRIVI', fakePriviContract.address);
 
-		// console.log('Registering FakeBAL address',fakeFakeBALContract.address)
-		// await swapManagerContract.registerTokenERC20('BAL', fakeFakeBALContract.address);
+		console.log('Registering FakeBAL address',fakeFakeBALContract.address)
+		await swapManagerContract.registerTokenERC20('BAL', fakeFakeBALContract.address);
 
-		// console.log('Registering FakeBAT address',fakeFakeBATContract.address)
-		// await swapManagerContract.registerTokenERC20('BAT', fakeFakeBATContract.address);
+		console.log('Registering FakeBAT address',fakeFakeBATContract.address)
+		await swapManagerContract.registerTokenERC20('BAT', fakeFakeBATContract.address);
 		
 		console.log('Registering FakeCOMP address',fakeFakeCOMPContract.address)
 		await swapManagerContract.registerTokenERC20('COMP', fakeFakeCOMPContract.address);
