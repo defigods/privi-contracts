@@ -34,7 +34,7 @@ contract PRIVIPodERC20Factory is AccessControl {
      * - pod should not exist before.
      */
     function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol) public returns (address podAddress){
-        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to create pod.");
+        // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to create pod.");
         require(podTokenAddresses[podId] == address(0), "PRIVIPodERC20Factory: Pod already exists.");
         PRIVIPodERC20Token podToken = new PRIVIPodERC20Token(podTokenName, podTokenSymbol , address(this));
         podAddress = address(podToken);
