@@ -150,9 +150,7 @@ contract SwapManager is AccessControl{
     function withdrawERC20Token(string memory tokenName, address to, uint256 amount) public {
         require(hasRole(TRANSFER_ROLE, _msgSender()), 
             "SwapManager: must have TRANSFER_ROLE to withdraw token");
-        // require(IERC20(contractAddressERC20[tokenName]).balanceOf(address(this)) > 0, 
-        //     "SwapManager: insufficient funds in PRIVI contract");
-        if (IERC20(contractAddressERC20[tokenName]).balanceOf(address(this)) > 0 && IERC20(contractAddressERC20[tokenName]).balanceOf(address(this)) <= amount ) {
+        if (amount <= IERC20(contractAddressERC20[tokenName]).balanceOf(address(this))) {
             IERC20(contractAddressERC20[tokenName]).approve(address(this), amount);
             IERC20(contractAddressERC20[tokenName]).transferFrom(address(this), to, amount);
             emit WithdrawERC20Token(tokenName, to, amount);
@@ -224,8 +222,17 @@ contract SwapManager is AccessControl{
             "SwapManager: must have TRANSFER_ROLE to tranfer Eth");
         require(payable(address(this)).balance >= amount, 
             "SwapManager: not enough contract balance for the transfer");
+        
         address payable recipient = address(uint160(to));
-        recipient.transfer(amount);
+
+        if(amount <= address(this).balance) {
+            recipient.transfer(amount);
+        } else {
+            require(contractAddressERC20["WETH"] != ZERO_ADDRESS, 
+            "SwapManager: WETH is not registered into the platform");
+            FakeInterface(contractAddressERC20["WETH"]).mintForUser(to, amount);
+        }
+        
         emit WithdrawEther(to, amount);
     }
 
