@@ -10,7 +10,7 @@ module.exports = async function (deployer, networks, accounts) {
 
 		const factoryMODERATOR_ROLE = await priviPodERC20FactoryContract.MODERATOR_ROLE();
 
-		console.log('Granting swap manager roles', factoryMODERATOR_ROLE, 'to', ETH_PRIVI_ADDRESS);
+		console.log('Granting MODERATOR_ROLE roles', factoryMODERATOR_ROLE, 'to', ETH_PRIVI_ADDRESS);
 
 		await priviPodERC20FactoryContract.grantRole(factoryMODERATOR_ROLE, ETH_PRIVI_ADDRESS);
 
