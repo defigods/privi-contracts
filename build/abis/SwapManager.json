@@ -21960,10 +21960,294 @@
       "links": {},
       "address": "0x0ADecd3D63bE7585A1A9f1819207925e75ced6Ac",
       "transactionHash": "0xcc2c63015a28092c71e1e449435b22c9f02e495ebc05bc3afdf0b36d652788dd"
+    },
+    "4": {
+      "events": {
+        "0x91ed334b741c7cbbae982dad9ca693e9d47b9a50db6fd5f346755f5bca14dfdd": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "tokenName",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "DepositERC20Token",
+          "type": "event"
+        },
+        "0xf0218d2f738513bea289b1b8ca83d8241a1060f13280602f9b7ff8e3598d4c83": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "tokenName",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "DepositERC721Token",
+          "type": "event"
+        },
+        "0xe628a607143b255f52afd0900e0d9630dd009c2f2635cd1e28c7aeeeff940802": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "DepositEther",
+          "type": "event"
+        },
+        "0x8332d9919bf32207cb796a0a21674da0f96c4d6f2257c02073ff112e117bff0c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            }
+          ],
+          "name": "RegisterERC20Token",
+          "type": "event"
+        },
+        "0x8b716abc5c12b2b1b216049f179e5b7ea408a5a96880c14d00b5c83282e43b95": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            }
+          ],
+          "name": "RegisterERC721Token",
+          "type": "event"
+        },
+        "0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "previousAdminRole",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "newAdminRole",
+              "type": "bytes32"
+            }
+          ],
+          "name": "RoleAdminChanged",
+          "type": "event"
+        },
+        "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleGranted",
+          "type": "event"
+        },
+        "0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleRevoked",
+          "type": "event"
+        },
+        "0x165900214ed2efc5014e11d6a345a7cf56338cec6a77f7836963249a5b12a19f": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "UnRegisterERC20Token",
+          "type": "event"
+        },
+        "0x0de03d3bef344b9df188770d8d72ff98e8c4b63ca2fedde287c7d4d12d8e5b0c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "UnRegisterERC721Token",
+          "type": "event"
+        },
+        "0x226bfaa503fda889c5dbfb29ffa193ceac9a4b461e47f68b3b14c438ec7f8b67": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "tokenName",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "WithdrawERC20Token",
+          "type": "event"
+        },
+        "0xd28833d48ffa5c3f0ea93c47adcb7e8015c714a9c0ddf007d4e523851b98367e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "tokenName",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "WithdrawERC721Token",
+          "type": "event"
+        },
+        "0xdb35132c111efe920cede025e819975671cfd1b8fcc1174762c8670c4e94c211": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "WithdrawEther",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x189323778c3042918ee1309EBB4d8c9019B0eC38",
+      "transactionHash": "0x3a1bfedba2a9e617f7481e7dadacd834b450a72adc998c9fb5ce7078ecdf3b5c"
     }
   },
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-02-02T09:24:27.611Z",
+  "updatedAt": "2021-02-02T09:59:51.556Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "The PRIVI Blockchain team",

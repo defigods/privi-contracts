@@ -62,7 +62,7 @@ module.exports = async function (deployer, networks, accounts) {
 		console.log('Registering FakeWBTC address',fakeFakeWBTCContract.address)
 		await bridgeManagerContract.registerTokenERC20('WBTC Fake Token', 'WBTC', fakeFakeWBTCContract.address);
 
-		console.log('Registering FakeWETHaddress',fakeFakeWETHContract.address)
+		console.log('Registering FakeWETH address',fakeFakeWETHContract.address)
 		await bridgeManagerContract.registerTokenERC20('WETH Fake Token', 'WETH', fakeFakeWETHContract.address);
 
 		console.log('Registering FakeYFI address',fakeFakeYFIContract.address)
