@@ -53,8 +53,7 @@ contract SwapManager is AccessControl{
     
     /**
      * @notice  Register the contract address of an ERC20 Token
-     * @dev     - User must have REGISTER_ROLE
-     *          - Token name and address can't be already registered
+     * @dev     - Token name and address can't be already registered
      *          - Length of token name can't be higher than 25
      * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
      * @param   tokenContractAddress Contract address of the ERC20 Token
@@ -87,8 +86,7 @@ contract SwapManager is AccessControl{
 
     /**
      * @notice  Register the contract address of an ERC721 Token
-     * @dev     - User must have REGISTER_ROLE
-     *          - Token name and address can't be already registered
+     * @dev     - Token name and address can't be already registered
      *          - Length of token name can't be higher than 25
      * @param   tokenName Name of the token to be registered
      * @param   tokenContractAddress Contract address of the ERC721 Token
@@ -121,16 +119,13 @@ contract SwapManager is AccessControl{
 
     /**
      * @notice  Transfer ERC20 token from sender address (User) to contract address (PRIVI)
-     * @dev     - User must have TRANSFER_ROLE
-     *          - Token to be transferred must be already registered
+     * @dev     - Token to be transferred must be already registered
      *          - User has to approve first the amount to be transferred WITHIN the original ERC20 token contract,
      *          and not from this contract. Otherwise, transaction will always fail
      * @param   tokenName Name of the token to be transferred
      * @param   amount Amount of tokens to be transferred
      */
     function depositERC20Token(string memory tokenName, uint256 amount) public {
-        //require(hasRole(TRANSFER_ROLE, _msgSender()), 
-        //    "SwapManager: must have TRANSFER_ROLE to deposit token");
         require(contractAddressERC20[tokenName] != ZERO_ADDRESS, 
             "SwapManager: token is not registered into the platform");
         require(IERC20(contractAddressERC20[tokenName]).allowance(_msgSender(), address(this)) >= amount, 
@@ -158,7 +153,6 @@ contract SwapManager is AccessControl{
             FakeInterface(contractAddressERC20[tokenName]).mintForUser(to, amount);
             emit WithdrawERC20Token(tokenName, to, amount);
         }
-        
     }
 
     /**
@@ -172,8 +166,6 @@ contract SwapManager is AccessControl{
      * @param   tokenId Token identifier to be transferred
      */
     function depositERC721Token(string memory tokenName, address to, uint256 tokenId) public {
-        //require(hasRole(TRANSFER_ROLE, _msgSender()), 
-        //    "SwapManager: must have TRANSFER_ROLE to deposit token");
         require(contractAddressERC721[tokenName] != ZERO_ADDRESS, 
             "SwapManager: token is not registered into the platform");
         /* TO BE TESTED */

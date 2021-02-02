@@ -80,15 +80,12 @@ contract BridgeManager is AccessControl{
     
     /**
      * @notice  Register the contract address of an ERC20 Token
-     * @dev     - User must have REGISTER_ROLE
-     *          - Token name and address can't be already registered
+     * @dev     - Token name and address can't be already registered
      *          - Length of token name can't be higher than 25
      * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
      * @param   tokenContractAddress Contract address of the ERC20 Token
      */
     function registerTokenERC20(string memory tokenName, string memory tokenSymbol, address tokenContractAddress) public tokenNameIsNotEmpty(tokenName) tokenNameIsNotEmpty(tokenSymbol)  {
-        // require(hasRole(REGISTER_ROLE, _msgSender()), 
-        //     "BridgeManager: must have REGISTER_ROLE to register a token");
         require(contractAddressERC20[tokenSymbol] == ZERO_ADDRESS, 
             "BridgeManager: token address is already registered");
         require(bytes(tokenSymbol).length < 25, 
@@ -104,8 +101,7 @@ contract BridgeManager is AccessControl{
 
     /**
      * @notice  Register the contract address of an ERC721 Token
-     * @dev     - User must have REGISTER_ROLE
-     *          - Token name and address can't be already registered
+     * @dev     - Token name and address can't be already registered
      *          - Length of token name can't be higher than 25
      * @param   tokenName Name of the token to be registered
      * @param   tokenContractAddress Contract address of the ERC721 Token
