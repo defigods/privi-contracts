@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.12;
+pragma solidity ^0.7.6;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -23,20 +23,26 @@ contract BridgeManager is AccessControl{
     }
     
     registeredToken[] private erc20RegisteredArray;
-    mapping(string => address) public contractAddressERC20;
+    mapping(string => address) private contractAddressERC20;
+    mapping(string => bool) private isErc20ContractDeployedViaFactory;
     registeredToken[] private erc721RegisteredArray;
-    mapping(string => address) public contractAddressERC721;
+    mapping(string => address) private contractAddressERC721;
+    mapping(string => bool) private isErc721ContractDeployedViaFactory;
+    registeredToken[] private erc1155RegisteredArray;
+    mapping(string => address) private contractAddressERC1155;
 
     event RegisterERC20Token(string indexed name, address tokenAddress);
     event UnRegisterERC20Token(string indexed name);
     event RegisterERC721Token(string indexed name, address tokenAddress);
     event UnRegisterERC721Token(string indexed name);
+    event RegisterERC1155Token(string indexed name, address tokenAddress);
+    event UnRegisterERC1155Token(string indexed name);
 
     /**
      * @notice  Modifier to require 'tokenName' is not empty
      * @param   tokenNameToCheck Token name to be checked
      */
-    modifier tokenNameIsNotEmpty(string memory tokenNameToCheck) {
+    modifier nameIsNotEmpty(string memory tokenNameToCheck) {
         bytes memory bytesTokenName = bytes(tokenNameToCheck);
         require(bytesTokenName.length != 0, "BridgeManager: tokenName can't be empty");
         _;
@@ -49,33 +55,82 @@ contract BridgeManager is AccessControl{
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(REGISTER_ROLE, _msgSender());
     }
+
+    /**
+     * @notice get an address of a registered erc20 tokens
+     */
+    function getErc20AddressRegistered(string calldata tokenSymbol) external view returns(address returnAddress) {
+        returnAddress = contractAddressERC20[tokenSymbol];
+    }
     
     /**
-     * @notice get an array of all registeder erc20 tokens
+     * @notice get an array of all registered erc20 tokens
      */
-    function getAllErc20Registered() public view returns(registeredToken[] memory) {
+    function getAllErc20Registered() external view returns(registeredToken[] memory) {
         return erc20RegisteredArray;
     }
     
     /**
-     * @notice get count of all registeder erc20 tokens
+     * @notice get count of all registered erc20 tokens
      */
-    function getAllErc20Count() public view returns(uint256) {
+    function getAllErc20Count() external view returns(uint256) {
         return erc20RegisteredArray.length;
+    }
+
+    /**
+     * @notice check if ERC20 token is deployed via factory
+     */
+    function isErc20ContractDeployedViaFactory(string calldata tokenSymbol) external view returns(bool) {
+        return isErc20ContractDeployedViaFactory[tokenSymbol];
+    }
+
+    /**
+     * @notice get an address of a registered erc721 tokens
+     */
+    function getErc721AddressRegistered(string calldata tokenSymbol) external view returns(address returnAddress) {
+        returnAddress = contractAddressERC721[tokenSymbol];
     }
     
     /**
-     * @notice get an array of all registeder erc721 tokens
+     * @notice get an array of all registered erc721 tokens
      */
-    function getAllErc721Registered() public view returns(registeredToken[] memory) {
+    function getAllErc721Registered() external view returns(registeredToken[] memory) {
         return erc721RegisteredArray;
     }
     
     /**
-     * @notice get count of all registeder erc721 tokens
+     * @notice get count of all registered erc721 tokens
      */
-    function getAllErc721Count() public view returns(uint256) {
+    function getAllErc721Count() external view returns(uint256) {
         return erc721RegisteredArray.length;
+    }
+
+    /**
+     * @notice check if ERC721 token is deployed via factory
+     */
+    function isErc721ContractDeployedViaFactory(string calldata tokenSymbol) external view returns(bool) {
+        return isErc721ContractDeployedViaFactory[tokenSymbol];
+    }
+
+    /**
+     * @notice get an address of a registered erc1155 tokens
+     */
+    function getErc1155AddressRegistered(string tokenURI) external view returns(address returnAddress) {
+        returnAddress = contractAddressERC1155[tokenURI];
+    }
+    
+    /**
+     * @notice get an array of all registered erc1155 tokens
+     */
+    function getAllErc1155Registered() external view returns(registeredToken[] memory) {
+        return erc1155RegisteredArray;
+    }
+    
+    /**
+     * @notice get count of all registered erc1155 tokens
+     */
+    function getAllErc1155Count() external view returns(uint256) {
+        return erc1155RegisteredArray.length;
     }
     
     /**
@@ -85,7 +140,7 @@ contract BridgeManager is AccessControl{
      * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
      * @param   tokenContractAddress Contract address of the ERC20 Token
      */
-    function registerTokenERC20(string memory tokenName, string memory tokenSymbol, address tokenContractAddress) public tokenNameIsNotEmpty(tokenName) tokenNameIsNotEmpty(tokenSymbol)  {
+    function registerTokenERC20(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress, bool isViaFactory) external nameIsNotEmpty(tokenName) nameIsNotEmpty(tokenSymbol)  {
         require(contractAddressERC20[tokenSymbol] == ZERO_ADDRESS, 
             "BridgeManager: token address is already registered");
         require(bytes(tokenSymbol).length < 25, 
@@ -96,6 +151,9 @@ contract BridgeManager is AccessControl{
         regToken.symbol = tokenSymbol;
         regToken.deployedAddress = tokenContractAddress;
         erc20RegisteredArray.push(regToken);
+        if (isViaFactory) {
+            isErc20ContractDeployedViaFactory[tokenSymbol] = true;
+        }
         emit RegisterERC20Token(tokenSymbol, tokenContractAddress);
     }
 
@@ -106,7 +164,7 @@ contract BridgeManager is AccessControl{
      * @param   tokenName Name of the token to be registered
      * @param   tokenContractAddress Contract address of the ERC721 Token
      */
-    function registerTokenERC721(string memory tokenName, string memory tokenSymbol, address tokenContractAddress) public tokenNameIsNotEmpty(tokenName) tokenNameIsNotEmpty(tokenSymbol) {
+    function registerTokenERC721(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress, bool isViaFactory) external nameIsNotEmpty(tokenName) nameIsNotEmpty(tokenSymbol) {
         // require(hasRole(REGISTER_ROLE, _msgSender()), 
         //     "BridgeManager: must have REGISTER_ROLE to register a token");
         require(contractAddressERC721[tokenSymbol] == ZERO_ADDRESS, 
@@ -119,7 +177,31 @@ contract BridgeManager is AccessControl{
         regToken.symbol = tokenSymbol;
         regToken.deployedAddress = tokenContractAddress;
         erc721RegisteredArray.push(regToken);
+        if (isViaFactory) {
+            isErc721ContractDeployedViaFactory[tokenSymbol] = true;
+        }
         emit RegisterERC721Token(tokenSymbol, tokenContractAddress);
+    }
+
+    /**
+     * @notice  Register the contract address of an ERC1155 Token
+     * @dev     - Token name and address can't be already registered
+     *          - Length of token name can't be higher than 25
+     * @param   tokenURI URI of the token to be registered
+     * @param   tokenContractAddress Contract address of the ERC1155 Token
+     */
+    function registerTokenERC1155(string calldata tokenName, string calldata tokenURI, address tokenContractAddress) external nameIsNotEmpty(tokenURI) {
+        require(contractAddressERC1155[tokenURI] == ZERO_ADDRESS, 
+            "BridgeManager: token address is already registered");
+        require(bytes(tokenURI).length < 25, 
+            "BridgeManager: token Symbol too long");
+        contractAddressERC1155[tokenURI] = tokenContractAddress;
+        registeredToken memory regToken;
+        regToken.name = tokenName;
+        regToken.symbol = tokenURI;
+        regToken.deployedAddress = tokenContractAddress;
+        erc1155RegisteredArray.push(regToken);
+        emit RegisterERC1155Token(tokenURI, tokenContractAddress);
     }
 
 }
