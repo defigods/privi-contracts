@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./token/interfaces/FakeInterface.sol";
 import "./interfaces/IBridgeManager.sol";
 import "./interfaces/IPRIVIPodERC20Factory.sol";
+import "./interfaces/IPRIVIPodERC721Factory.sol";
 
 /// @author The PRIVI Blockchain team
 /// @title Manages swap and withdraw of Ethers, ERC20 tokens and ERC721 tokens between Users and PRIVI platform
@@ -17,6 +18,7 @@ contract SwapManager is AccessControl{
     address private ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
     address public bridgeManagerAddress;
     address public erc20FactoryAddress;
+    address public erc721FactoryAddress;
 
     event DepositERC20Token(string indexed tokenSymbol, address to, uint256 amount);
     event WithdrawERC20Token(string indexed tokenSymbol, address to, uint256 amount);
@@ -40,12 +42,13 @@ contract SwapManager is AccessControl{
     /**
      * @notice Constructor to assign all roles to contract creator
      */
-    constructor(address bridgeDeployedAddress, address erc20FactoryDeployedAddress) {
+    constructor(address bridgeDeployedAddress, address erc20FactoryDeployedAddress, address erc721FactoryDeployedAddress) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         // _setupRole(REGISTER_ROLE, _msgSender());
         _setupRole(TRANSFER_ROLE, _msgSender());
         bridgeManagerAddress = bridgeDeployedAddress;
         erc20FactoryAddress = erc20FactoryDeployedAddress;
+        erc721FactoryAddress = erc721FactoryDeployedAddress;
     }
 
     /**
@@ -84,8 +87,9 @@ contract SwapManager is AccessControl{
             IERC20(tokenAddress).approve(address(this), amount);
             IERC20(tokenAddress).transferFrom(address(this), to, amount);
             emit WithdrawERC20Token(tokenSymbol, to, amount);
-        } else if (bManager.isErc20ContractDeployedViaFactory(tokenSymbol)) {
-
+        } else if (IPRIVIPodERC20Factory(erc20FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
+            IPRIVIPodERC20Factory(erc20FactoryAddress).mintPodTokenBySymbol(tokenSymbol, to, amount);
+            emit WithdrawERC20Token(tokenSymbol, to, amount);
         } else { // only for testnet fake tokens
             FakeInterface(tokenAddress).mintForUser(to, amount);
             emit WithdrawERC20Token(tokenSymbol, to, amount);
@@ -102,7 +106,7 @@ contract SwapManager is AccessControl{
      * @param   to Destination address to receive the tokens
      * @param   tokenId Token identifier to be transferred
      */
-    function depositERC721Token(string memory tokenSymbol, address to, uint256 tokenId) public {
+    function depositERC721Token(string memory tokenSymbol, uint256 tokenId) public {
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
         require(tokenAddress != ZERO_ADDRESS, 
@@ -110,7 +114,7 @@ contract SwapManager is AccessControl{
         /* TO BE TESTED */
         require(IERC721(tokenAddress).getApproved(tokenId) == address(this), 
             "SwapManager: token to be transferred to PRIVI is not yet approved by User"); 
-        IERC721(tokenAddress).transferFrom(msg.sender, to, tokenId);
+        IERC721(tokenAddress).transferFrom(msg.sender, address(this), tokenId);
         emit DepositERC721Token(tokenSymbol, to, tokenId);
     }
 
@@ -127,11 +131,17 @@ contract SwapManager is AccessControl{
         address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
         require(hasRole(TRANSFER_ROLE, _msgSender()), 
             "SwapManager: must have TRANSFER_ROLE to withdraw token");
-        require(IERC721(tokenAddress).balanceOf(address(this)) > 0, 
-            "SwapManager: insufficient funds in PRIVI contract");
-        IERC721(tokenAddress).approve(address(this), tokenId);
-        IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
-        emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+        if (IERC721(tokenAddress).ownerOf(tokenId) == address(this)) {
+            IERC721(tokenAddress).approve(address(this), tokenId);
+            IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
+            emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+        } else if (IPRIVIPodERC721Factory(erc721FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
+            IPRIVIPodERC721Factory(erc721FactoryAddress).mintPodTokenBySymbol(tokenSymbol, to);
+            emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+        } else {
+            revert();
+        }
+        
     }
 
     /**

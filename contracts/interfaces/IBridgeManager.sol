@@ -26,11 +26,6 @@ interface IBridgeManager {
     function getAllErc20Count() external view returns(uint256);
 
     /**
-     * @notice check if ERC20 token is deployed via factory
-     */
-    function isErc20ContractDeployedViaFactory(string calldata tokenSymbol) external view returns(bool);
-
-    /**
      * @notice get an address of a registered erc721 tokens
      */
     function getErc721AddressRegistered(string calldata tokenSymbol) external view returns(address returnAddress);
@@ -44,11 +39,6 @@ interface IBridgeManager {
      * @notice get count of all registered erc721 tokens
      */
     function getAllErc721Count() external view returns(uint256);
-
-    /**
-     * @notice check if ERC721 token is deployed via factory
-     */
-    function isErc721ContractDeployedViaFactory(string calldata tokenSymbol) external view returns(bool);
 
     /**
      * @notice get an address of a registered erc1155 tokens
@@ -72,7 +62,7 @@ interface IBridgeManager {
      * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
      * @param   tokenContractAddress Contract address of the ERC20 Token
      */
-    function registerTokenERC20(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress, bool isViaFactory) external;
+    function registerTokenERC20(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress) external;
 
     /**
      * @notice  Register the contract address of an ERC721 Token
@@ -81,7 +71,7 @@ interface IBridgeManager {
      * @param   tokenName Name of the token to be registered
      * @param   tokenContractAddress Contract address of the ERC721 Token
      */
-    function registerTokenERC721(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress, bool isViaFactory) external;
+    function registerTokenERC721(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress) external;
 
     /**
      * @notice  Register the contract address of an ERC1155 Token

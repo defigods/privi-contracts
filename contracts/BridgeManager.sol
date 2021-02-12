@@ -24,10 +24,8 @@ contract BridgeManager is AccessControl{
     
     registeredToken[] private erc20RegisteredArray;
     mapping(string => address) private contractAddressERC20;
-    mapping(string => bool) private isErc20ContractDeployedViaFactory;
     registeredToken[] private erc721RegisteredArray;
     mapping(string => address) private contractAddressERC721;
-    mapping(string => bool) private isErc721ContractDeployedViaFactory;
     registeredToken[] private erc1155RegisteredArray;
     mapping(string => address) private contractAddressERC1155;
 
@@ -78,13 +76,6 @@ contract BridgeManager is AccessControl{
     }
 
     /**
-     * @notice check if ERC20 token is deployed via factory
-     */
-    function isErc20ContractDeployedViaFactory(string calldata tokenSymbol) external view returns(bool) {
-        return isErc20ContractDeployedViaFactory[tokenSymbol];
-    }
-
-    /**
      * @notice get an address of a registered erc721 tokens
      */
     function getErc721AddressRegistered(string calldata tokenSymbol) external view returns(address returnAddress) {
@@ -103,13 +94,6 @@ contract BridgeManager is AccessControl{
      */
     function getAllErc721Count() external view returns(uint256) {
         return erc721RegisteredArray.length;
-    }
-
-    /**
-     * @notice check if ERC721 token is deployed via factory
-     */
-    function isErc721ContractDeployedViaFactory(string calldata tokenSymbol) external view returns(bool) {
-        return isErc721ContractDeployedViaFactory[tokenSymbol];
     }
 
     /**
@@ -140,7 +124,7 @@ contract BridgeManager is AccessControl{
      * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
      * @param   tokenContractAddress Contract address of the ERC20 Token
      */
-    function registerTokenERC20(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress, bool isViaFactory) external nameIsNotEmpty(tokenName) nameIsNotEmpty(tokenSymbol)  {
+    function registerTokenERC20(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress) external nameIsNotEmpty(tokenName) nameIsNotEmpty(tokenSymbol)  {
         require(contractAddressERC20[tokenSymbol] == ZERO_ADDRESS, 
             "BridgeManager: token address is already registered");
         require(bytes(tokenSymbol).length < 25, 
@@ -151,9 +135,6 @@ contract BridgeManager is AccessControl{
         regToken.symbol = tokenSymbol;
         regToken.deployedAddress = tokenContractAddress;
         erc20RegisteredArray.push(regToken);
-        if (isViaFactory) {
-            isErc20ContractDeployedViaFactory[tokenSymbol] = true;
-        }
         emit RegisterERC20Token(tokenSymbol, tokenContractAddress);
     }
 
@@ -164,7 +145,7 @@ contract BridgeManager is AccessControl{
      * @param   tokenName Name of the token to be registered
      * @param   tokenContractAddress Contract address of the ERC721 Token
      */
-    function registerTokenERC721(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress, bool isViaFactory) external nameIsNotEmpty(tokenName) nameIsNotEmpty(tokenSymbol) {
+    function registerTokenERC721(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress) external nameIsNotEmpty(tokenName) nameIsNotEmpty(tokenSymbol) {
         // require(hasRole(REGISTER_ROLE, _msgSender()), 
         //     "BridgeManager: must have REGISTER_ROLE to register a token");
         require(contractAddressERC721[tokenSymbol] == ZERO_ADDRESS, 
@@ -177,9 +158,6 @@ contract BridgeManager is AccessControl{
         regToken.symbol = tokenSymbol;
         regToken.deployedAddress = tokenContractAddress;
         erc721RegisteredArray.push(regToken);
-        if (isViaFactory) {
-            isErc721ContractDeployedViaFactory[tokenSymbol] = true;
-        }
         emit RegisterERC721Token(tokenSymbol, tokenContractAddress);
     }
 

@@ -1,17 +1,19 @@
-const PRIVIPodERC20Factory = artifacts.require("PRIVIPodERC20Factory");
+const SwapManager = artifacts.require("SwapManager");
 
-module.exports = async function (deployer, networks, accounts) {
+const FakeMKR = artifacts.require("FakeMKR");
+const FakeUNI = artifacts.require("FakeUNI");
+const FakeUSDT = artifacts.require("FakeUSDT");
+const FakeWBTC = artifacts.require("FakeWBTC");
+const FakeWETH = artifacts.require("FakeWETH");
+const FakeYFI = artifacts.require("FakeYFI");
 
-		const priviPodERC20FactoryContract = await PRIVIPodERC20Factory.deployed();
-		
-		console.log('Granting Roles to PRIVI BACKEND on priviPodERC20FactoryContract');
-
-		const ETH_PRIVI_ADDRESS = '0x9353395A21C4eFe442d1C5B41f3808766AA62cC9';
-
-		const factoryMODERATOR_ROLE = await priviPodERC20FactoryContract.MODERATOR_ROLE();
-
-		console.log('Granting MODERATOR_ROLE roles', factoryMODERATOR_ROLE, 'to', ETH_PRIVI_ADDRESS);
-
-		await priviPodERC20FactoryContract.grantRole(factoryMODERATOR_ROLE, ETH_PRIVI_ADDRESS);
-
+module.exports = function (deployer, networks, accounts) {
+	const swapManagerContract = await SwapManager.deployed();
+	const swapManagerAddress = swapManagerContract.address;
+	await deployer.deploy(FakeMKR, swapManagerAddress);
+	await deployer.deploy(FakeUNI, swapManagerAddress);
+	await deployer.deploy(FakeUSDT, swapManagerAddress);
+	await deployer.deploy(FakeWBTC, swapManagerAddress);
+	await deployer.deploy(FakeWETH, swapManagerAddress);
+	await deployer.deploy(FakeYFI, swapManagerAddress);	
 };

@@ -1,4 +1,5 @@
 const BridgeManager = artifacts.require('BridgeManager');
+const SwapManager = artifacts.require("SwapManager");
 const FakePrivi = artifacts.require("FakePrivi");
 
 const FakeBAL = artifacts.require("FakeBAL");
@@ -15,8 +16,7 @@ const FakeYFI = artifacts.require("FakeYFI");
 
 module.exports = async function (deployer, networks, accounts) {
 
-	deployer.deploy(BridgeManager).then(async function(bridgeManagerContract) {
-
+		const bridgeManagerContract = await BridgeManager.deployed();
 		const fakePriviContract = await FakePrivi.deployed();
 		const fakeFakeBALContract = await FakeBAL.deployed();
 		const fakeFakeBATContract = await FakeBAT.deployed();
@@ -30,42 +30,42 @@ module.exports = async function (deployer, networks, accounts) {
 		const fakeFakeWETHContract = await FakeWETH.deployed();
 		const fakeFakeYFIContract = await FakeYFI.deployed();
 
-		console.log('Registering fake tokens into bridgeManagerContract');
+		console.log('Registering fake tokens into swapManager');
 
 		console.log('Registering FakePrivi address',fakePriviContract.address)
-		await bridgeManagerContract.registerTokenERC20('PRIVI Fake Token', 'PRIVI', fakePriviContract.address);
+		await bridgeManagerContract.registerTokenERC20('PRIVI', fakePriviContract.address);
 
 		console.log('Registering FakeBAL address',fakeFakeBALContract.address)
-		await bridgeManagerContract.registerTokenERC20('BAL Fake Token', 'BAL', fakeFakeBALContract.address);
+		await bridgeManagerContract.registerTokenERC20('BAL', fakeFakeBALContract.address);
 
 		console.log('Registering FakeBAT address',fakeFakeBATContract.address)
-		await bridgeManagerContract.registerTokenERC20('BAT Fake Token', 'BAT', fakeFakeBATContract.address);
+		await bridgeManagerContract.registerTokenERC20('BAT', fakeFakeBATContract.address);
 		
 		console.log('Registering FakeCOMP address',fakeFakeCOMPContract.address)
-		await bridgeManagerContract.registerTokenERC20('COMP Fake Token', 'COMP', fakeFakeCOMPContract.address);
+		await bridgeManagerContract.registerTokenERC20('COMP', fakeFakeCOMPContract.address);
 
 		console.log('Registering FakeDAI address',fakeFakeDAIContract.address)
-		await bridgeManagerContract.registerTokenERC20('DAI Fake Token', 'DAI', fakeFakeDAIContract.address);
+		await bridgeManagerContract.registerTokenERC20('DAI', fakeFakeDAIContract.address);
 
 		console.log('Registering FakeLINK address',fakeFakeLINKContract.address)
-		await bridgeManagerContract.registerTokenERC20('LINK Fake Token', 'LINK', fakeFakeLINKContract.address);
+		await bridgeManagerContract.registerTokenERC20('LINK', fakeFakeLINKContract.address);
 
 		console.log('Registering FakeMKR address',fakeFakeMKRContract.address)
-		await bridgeManagerContract.registerTokenERC20('MKR Fake Token', 'MKR', fakeFakeMKRContract.address);
+		await bridgeManagerContract.registerTokenERC20('MKR', fakeFakeMKRContract.address);
 
 		console.log('Registering FakeUNI address',fakeFakeUNIContract.address)
-		await bridgeManagerContract.registerTokenERC20('UNI Fake Token', 'UNI', fakeFakeUNIContract.address);
+		await bridgeManagerContract.registerTokenERC20('UNI', fakeFakeUNIContract.address);
 
 		console.log('Registering FakeUSDT address',fakeFakeUSDTContract.address)
-		await bridgeManagerContract.registerTokenERC20('USDT Fake Token', 'USDT', fakeFakeUSDTContract.address);
+		await bridgeManagerContract.registerTokenERC20('USDT', fakeFakeUSDTContract.address);
 
 		console.log('Registering FakeWBTC address',fakeFakeWBTCContract.address)
-		await bridgeManagerContract.registerTokenERC20('WBTC Fake Token', 'WBTC', fakeFakeWBTCContract.address);
+		await bridgeManagerContract.registerTokenERC20('WBTC', fakeFakeWBTCContract.address);
 
-		console.log('Registering FakeWETH address',fakeFakeWETHContract.address)
-		await bridgeManagerContract.registerTokenERC20('WETH Fake Token', 'WETH', fakeFakeWETHContract.address);
+		console.log('Registering FakeWETHaddress',fakeFakeWETHContract.address)
+		await bridgeManagerContract.registerTokenERC20('WETH', fakeFakeWETHContract.address);
 
 		console.log('Registering FakeYFI address',fakeFakeYFIContract.address)
-		await bridgeManagerContract.registerTokenERC20('YFI Fake Token', 'YFI', fakeFakeYFIContract.address);
-	});
+		await bridgeManagerContract.registerTokenERC20('YFI', fakeFakeYFIContract.address);
+	
 };

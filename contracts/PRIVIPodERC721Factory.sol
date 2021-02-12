@@ -4,10 +4,10 @@ pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "./token/PRIVIPodERC20Token.sol";
+import "./token/PRIVIPodERC721Token.sol";
 import "./interfaces/IBridgeManager.sol";
 
-contract PRIVIPodERC20Factory is AccessControl {
+contract PRIVIPodERC721Factory is AccessControl {
     using SafeMath for uint256;
     
     bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
@@ -49,15 +49,15 @@ contract PRIVIPodERC20Factory is AccessControl {
      * - pod should not exist before.
      */
     function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol) external returns (address podAddress){
-        // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to create pod.");
-        require(podTokenAddressesById[podId] == address(0), "PRIVIPodERC20Factory: Pod id already exists.");
-        require(podTokenAddressesBySymbol[podTokenSymbol] == address(0), "PRIVIPodERC20Factory: Pod symbol already exists.");
-        PRIVIPodERC20Token podToken = new PRIVIPodERC20Token(podTokenName, podTokenSymbol , address(this));
+        // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
+        require(podTokenAddressesById[podId] == address(0), "PRIVIPodERC721TokenFactory: Pod id already exists.");
+        require(podTokenAddressesBySymbol[podTokenSymbol] == address(0), "PRIVIPodERC721TokenFactory: Pod symbol already exists.");
+        PRIVIPodERC721Token podToken = new PRIVIPodERC721Token(podTokenName, podTokenSymbol , address(this));
         podAddress = address(podToken);
         totalPodCreated.add(1);
         podTokenAddressesById[podId] = podAddress;
         podTokenAddressesBySymbol[tokenSymbol] = podAddress;
-        IBridgeManager(bridgeManagerAddress).registerTokenERC20(podTokenName, podTokenSymbol, podAddress);
+        IBridgeManager(bridgeManagerAddress).registerTokenERC721(podTokenName, podTokenSymbol, podAddress);
         emit PodCreated(podId, podTokenName, podTokenSymbol);
     }
     
@@ -68,18 +68,16 @@ contract PRIVIPodERC20Factory is AccessControl {
      *
      * - the caller must MODERATOR_ROLE to perform this action.
      */
-    function mintPodTokenById(string calldata podId, address account,  uint256 investAmount) external {
-        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to invest for investor.");
-        require(account != address(0), "PRIVIPodERC20Factory: Account address should not be zero.");
-        require(investAmount > 0, "PRIVIPodERC20Factory: investAmount should not be zero.");
-        PRIVIPodERC20Token(podTokenAddressesById[podId]).mint(account, investAmount);
+    function mintPodTokenById(string calldata podId, address account) external {
+        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor.");
+        require(account != address(0), "PRIVIPodERC721Token: Account address should not be zero.");
+        PRIVIPodERC721Token(podTokenAddressesById[podId]).mint(account);
     }
 
-    function mintPodTokenBySymbol(string calldata tokenSymbol, address account,  uint256 investAmount) external {
-        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to invest for investor.");
-        require(account != address(0), "PRIVIPodERC20Factory: Account address should not be zero.");
-        require(investAmount > 0, "PRIVIPodERC20Factory: investAmount should not be zero.");
-        PRIVIPodERC20Token(podTokenAddressesBySymbol[tokenSymbol]).mint(account, investAmount);
+    function mintPodTokenBySymbol(string calldata tokenSymbol, address account) external {
+        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor.");
+        require(account != address(0), "PRIVIPodERC721Token: Account address should not be zero.");
+        PRIVIPodERC721Token(podTokenAddressesBySymbol[tokenSymbol]).mint(account);
     }
     
 }
