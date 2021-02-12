@@ -49,7 +49,7 @@ contract BridgeManager is AccessControl{
     /**
      * @notice Constructor to assign all roles to contract creator
      */
-    constructor() public {
+    constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(REGISTER_ROLE, _msgSender());
     }
