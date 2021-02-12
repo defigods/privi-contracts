@@ -246,7 +246,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -259,7 +260,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -272,7 +274,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -285,7 +288,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -298,7 +302,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -317,7 +322,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -341,7 +347,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -360,7 +367,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -402,7 +410,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -527,7 +536,8 @@
       "name": "depositEther",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [
@@ -558,7 +568,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.7.6+commit.7338295f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"bridgeDeployedAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"erc20FactoryDeployedAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"erc721FactoryDeployedAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"DepositERC20Token\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"DepositERC721Token\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"DepositEther\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"WithdrawERC20Token\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"WithdrawERC721Token\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"WithdrawEther\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bridgeManagerAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"depositERC20Token\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"depositERC721Token\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"depositEther\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"erc20FactoryAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"erc721FactoryAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawERC20Token\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"withdrawERC721Token\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawEther\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"The PRIVI Blockchain team\",\"kind\":\"dev\",\"methods\":{\"depositERC20Token(string,uint256)\":{\"details\":\"- Token to be transferred must be already registered          - User has to approve first the amount to be transferred WITHIN the original ERC20 token contract,          and not from this contract. Otherwise, transaction will always fail\",\"params\":{\"amount\":\"Amount of tokens to be transferred\",\"tokenSymbol\":\"Name of the token to be transferred\"}},\"depositERC721Token(string,uint256)\":{\"details\":\"- User must have TRANSFER_ROLE          - Token to be transferred must be already registered          - User has to approve first the amount to be transferred WITHIN the original ERC721 token contract,          and not from this contract. Otherwise, transaction will always fail\",\"params\":{\"tokenId\":\"Token identifier to be transferred\",\"tokenSymbol\":\"Name of the token to be transferred\"}},\"depositEther()\":{\"details\":\"- Amount to be deposited must be greater than 0 ethers \"},\"getBalance()\":{\"returns\":{\"_0\":\"Contract balance in weis\"}},\"getRoleAdmin(bytes32)\":{\"details\":\"Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}.\"},\"getRoleMember(bytes32,uint256)\":{\"details\":\"Returns one of the accounts that have `role`. `index` must be a value between 0 and {getRoleMemberCount}, non-inclusive. Role bearers are not sorted in any particular way, and their ordering may change at any point. WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure you perform all queries on the same block. See the following https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post] for more information.\"},\"getRoleMemberCount(bytes32)\":{\"details\":\"Returns the number of accounts that have `role`. Can be used together with {getRoleMember} to enumerate all bearers of a role.\"},\"grantRole(bytes32,address)\":{\"details\":\"Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role.\"},\"hasRole(bytes32,address)\":{\"details\":\"Returns `true` if `account` has been granted `role`.\"},\"renounceRole(bytes32,address)\":{\"details\":\"Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`.\"},\"revokeRole(bytes32,address)\":{\"details\":\"Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role.\"},\"withdrawERC20Token(string,address,uint256)\":{\"details\":\"- User must have TRANSFER_ROLE          - PRIVI must have enough tokens to transfer them back to User\",\"params\":{\"amount\":\"Amount of tokens to be transferred\",\"to\":\"Destination address to receive the tokens\",\"tokenSymbol\":\"Name of the token to be transferred\"}},\"withdrawERC721Token(string,address,uint256)\":{\"details\":\"- User must have TRANSFER_ROLE          - PRIVI must have enough tokens to transfer them back to User\",\"params\":{\"to\":\"Destination address to receive the tokens\",\"tokenId\":\"Token identifier to be transferred\",\"tokenSymbol\":\"Name of the token to be transferred\"}},\"withdrawEther(address,uint256)\":{\"details\":\"- Sender must have TRANSFER_ROLE          - Contract must have enough balance to do the transfer\",\"params\":{\"amount\":\"Amount of ether to be transferred\",\"to\":\"Destination address to receive the ether\"}}},\"title\":\"Manages swap and withdraw of Ethers, ERC20 tokens and ERC721 tokens between Users and PRIVI platform\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"constructor\":{\"notice\":\"Constructor to assign all roles to contract creator\"},\"depositERC20Token(string,uint256)\":{\"notice\":\"Transfer ERC20 token from sender address (User) to contract address (PRIVI)\"},\"depositERC721Token(string,uint256)\":{\"notice\":\"Transfer ERC721 token from sender address (User) to contract address (PRIVI)\"},\"depositEther()\":{\"notice\":\"Transfer ether from sender address to contract address\"},\"withdrawERC20Token(string,address,uint256)\":{\"notice\":\"Transfer ERC20 token from contract address (PRIVI) to sender address (User)\"},\"withdrawERC721Token(string,address,uint256)\":{\"notice\":\"Transfer ERC721 token from contract address (PRIVI) to sender address (User)\"},\"withdrawEther(address,uint256)\":{\"notice\":\"Transfer ether from contract address to sender address\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/SwapManager.sol\":\"SwapManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":500},\"remappings\":[]},\"sources\":{\"/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/SwapManager.sol\":{\"keccak256\":\"0xb81933b0fcb1e697cc080e8852035940dc2d88160df875d900a869c409c5e3da\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e536681cf5709ae1260a3399411ed258f37b5335b4625afc5beae13ff7d0222a\",\"dweb:/ipfs/Qmcd7J1BpWuM5CtYWkFSvxebfMr7pivMdFu77PiZVd2Vv7\"]},\"/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/interfaces/IBridgeManager.sol\":{\"keccak256\":\"0xa3f7955dccf071f5cf1c12c53661be8659087d5443c1df4cc721566572b01879\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://81bd8c9615e9e45ca8f0971ddacebedddc29c8991dcff7f521f71c5fae4e5392\",\"dweb:/ipfs/QmX9A6hZ6qeC5CuEbewz3KdjYC1oNfNG2dCfJ4qRqkehXW\"]},\"/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/interfaces/IPRIVIPodERC20Factory.sol\":{\"keccak256\":\"0x4be2104b5203efc2f3fe260d2e2bbb19172a7bf44425f9d7e1bafb4179d07435\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9c685396a14677ce61e652547e0a12c4db1ac00c3a0263938b05aa6f8c276f72\",\"dweb:/ipfs/QmXs5K65McNfvzZ1gmsfjZK6s8oN62zjwRUrKnMS6Ytdaj\"]},\"/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/interfaces/IPRIVIPodERC721Factory.sol\":{\"keccak256\":\"0x8a63d9cc60ba33c3944343fb88a23153a01b02ad6e6a9d48de8527c0e955bfa8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0eefd4e8a3bdaf40f22f42237f34ea2eaed11e996a456b00aed8ea11a7de78da\",\"dweb:/ipfs/QmbR4TyDDE3XrxHNRPwAygLVNJXg9UgrT1ALAdntVv1yvB\"]},\"/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/token/interfaces/FakeInterface.sol\":{\"keccak256\":\"0xeb782dd3ad5c9c1e38032ce450bb2861ebe76303af0285b2a1083ebc10102b89\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://84fb670db1ffc9b51acf79bab8fd3cb2dedbb6a60b0b914ca67bf85fb74825c2\",\"dweb:/ipfs/QmQttLdjL6mgccefXr8YsBG3BW3rjKerawWFV6buXKXMA7\"]},\"@openzeppelin/contracts/access/AccessControl.sol\":{\"keccak256\":\"0x4fc155a2f7837603d69a13cfa481eb5e7f5e02cb77e2ec9edbac30986db37988\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0855147e38b5e36288a8df73b8da49132f14ec7abb19041b0c98872263643aaa\",\"dweb:/ipfs/QmSrSysyFUYQq7hbJaJXG7EyZW6ezDBzEJx3SABp6eiJSS\"]},\"@openzeppelin/contracts/introspection/IERC165.sol\":{\"keccak256\":\"0xf70bc25d981e4ec9673a995ad2995d5d493ea188d3d8f388bba9c227ce09fb82\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bd970f51e3a77790c2f02b5b1759827c3b897c3d98c407b3631e8af32e3dc93c\",\"dweb:/ipfs/QmPF85Amgbqjk3SNZKsPCsqCw8JfwYEPMnnhvMJUyX58je\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x5f02220344881ce43204ae4a6281145a67bc52c2bb1290a791857df3d19d78f5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://24427744bd3e6cb73c17010119af12a318289c0253a4d9acb8576c9fb3797b08\",\"dweb:/ipfs/QmTLDqpKRBuxGxRAmjgXt9AkXyACW3MtKzi7PYjm5iMfGC\"]},\"@openzeppelin/contracts/token/ERC721/IERC721.sol\":{\"keccak256\":\"0x2d99a0deb6648c34fbc66d6ac4a2d64798d7a5321b45624f6736fadc63da1962\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2dcdce5ede1e5e650d174ec0b35be7d47b6a50f30bc895ef0d9e59fb75052e45\",\"dweb:/ipfs/QmQ2XFsDLTYqfEdw7pYzHiGtFRY11yQm4b6ynYgKqDxeB8\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x28911e614500ae7c607a432a709d35da25f3bc5ddc8bd12b278b66358070c0ea\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://256c8c8af5eb072bc473226ab2b2187149b8fc04f5f4a4820db22527f5ce8e3c\",\"dweb:/ipfs/QmRvi5BhnL7Rxf85KrJhwM6RRhukm4tzoctRdgQEheNyiN\"]},\"@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x8d3cb350f04ff49cfb10aef08d87f19dcbaecc8027b0bed12f3275cd12f38cf0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ded47ec7c96750f9bd04bbbc84f659992d4ba901cb7b532a52cd468272cf378f\",\"dweb:/ipfs/QmfBrGtQP7rZEqEg6Wz6jh2N2Kukpj1z5v3CGWmAqrzm96\"]},\"@openzeppelin/contracts/utils/EnumerableSet.sol\":{\"keccak256\":\"0x1562cd9922fbf739edfb979f506809e2743789cbde3177515542161c3d04b164\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4580d57781513d98870d9738c7d39094336e0a70cdb90d68dad549c6ced466ec\",\"dweb:/ipfs/Qmf9YZzzRFuvMnav9dgmeRUpdYMMECiZX8w25sHWVbA18V\"]}},\"version\":1}",
@@ -17916,9 +17927,231 @@
     "name": "solc",
     "version": "0.7.6+commit.7338295f.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "4": {
+      "events": {
+        "0x91ed334b741c7cbbae982dad9ca693e9d47b9a50db6fd5f346755f5bca14dfdd": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "tokenSymbol",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "DepositERC20Token",
+          "type": "event"
+        },
+        "0xf0218d2f738513bea289b1b8ca83d8241a1060f13280602f9b7ff8e3598d4c83": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "tokenSymbol",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "DepositERC721Token",
+          "type": "event"
+        },
+        "0xe628a607143b255f52afd0900e0d9630dd009c2f2635cd1e28c7aeeeff940802": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "DepositEther",
+          "type": "event"
+        },
+        "0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "previousAdminRole",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "newAdminRole",
+              "type": "bytes32"
+            }
+          ],
+          "name": "RoleAdminChanged",
+          "type": "event"
+        },
+        "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleGranted",
+          "type": "event"
+        },
+        "0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleRevoked",
+          "type": "event"
+        },
+        "0x226bfaa503fda889c5dbfb29ffa193ceac9a4b461e47f68b3b14c438ec7f8b67": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "tokenSymbol",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "WithdrawERC20Token",
+          "type": "event"
+        },
+        "0xd28833d48ffa5c3f0ea93c47adcb7e8015c714a9c0ddf007d4e523851b98367e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "tokenSymbol",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "WithdrawERC721Token",
+          "type": "event"
+        },
+        "0xdb35132c111efe920cede025e819975671cfd1b8fcc1174762c8670c4e94c211": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "WithdrawEther",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xa4492E8f82bCbc7889F2487919C6d528e0DD770A",
+      "transactionHash": "0xf3955345141171a75cf39d04d41843f351321a799d82e2feadf5409d1b5ee0c4"
+    }
+  },
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-02-12T12:12:56.922Z",
+  "updatedAt": "2021-02-12T14:30:07.117Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "The PRIVI Blockchain team",
     "kind": "dev",
