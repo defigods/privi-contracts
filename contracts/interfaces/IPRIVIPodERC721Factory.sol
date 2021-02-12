@@ -2,13 +2,13 @@
 
 pragma solidity ^0.7.6;
 
-contract IPRIVIPodERC721Factory {
+interface IPRIVIPodERC721Factory {
 
-    function getTotalTokenCreated() external returns(uint256 totalPods);
+    function getTotalTokenCreated() external view returns(uint256 totalPods);
 
-    function getPodAddressById(string calldata podId) external returns(address podAddress);
+    function getPodAddressById(string calldata podId) external view returns(address podAddress);
 
-    function getPodAddressBySymbol(string calldata tokenSymbol) external returns(address podAddress);
+    function getPodAddressBySymbol(string calldata tokenSymbol) external view returns(address podAddress);
     
     /**
      *@dev only MODERATOR_ROLE role can create pods
@@ -17,7 +17,7 @@ contract IPRIVIPodERC721Factory {
      *
      * - pod should not exist before.
      */
-    function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol) external returns (address podAddress);
+    function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol, string calldata baseURI) external returns (address podAddress);
     
     /**
      * @dev Moderator will mint the amount of pod token for the investor's account

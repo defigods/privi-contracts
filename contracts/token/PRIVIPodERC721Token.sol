@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/GSN/Context.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -24,7 +24,7 @@ contract PRIVIPodERC721Token is Context, ERC721Burnable {
      *
      * See {ERC20-constructor}.
      */
-    constructor(string memory name, string memory symbol, string memory baseURI, address factory) public ERC721(name, symbol) {
+    constructor(string memory name, string memory symbol, string memory baseURI, address factory) ERC721(name, symbol) {
         parentFactory = factory;
         _setBaseURI(baseURI);
     }

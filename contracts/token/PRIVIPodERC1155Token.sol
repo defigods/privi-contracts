@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/GSN/Context.sol";
@@ -21,7 +21,7 @@ contract PRIVIPodERC1155Token is Context, ERC1155Burnable {
      * @dev Sets factory address
      * deploys the contract.
      */
-    constructor(string memory uri, address factory) public ERC1155(uri) {
+    constructor(string memory uri, address factory) ERC1155(uri) {
         parentFactory = factory;
     }
 

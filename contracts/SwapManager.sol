@@ -20,9 +20,9 @@ contract SwapManager is AccessControl{
     address public erc20FactoryAddress;
     address public erc721FactoryAddress;
 
-    event DepositERC20Token(string indexed tokenSymbol, address to, uint256 amount);
+    event DepositERC20Token(string indexed tokenSymbol, address from, uint256 amount);
     event WithdrawERC20Token(string indexed tokenSymbol, address to, uint256 amount);
-    event DepositERC721Token(string indexed tokenSymbol, address to, uint256 amount);
+    event DepositERC721Token(string indexed tokenSymbol, address from, uint256 amount);
     event WithdrawERC721Token(string indexed tokenSymbol, address to, uint256 tokenId);
     // event DepositERC1155Token(string indexed tokenSymbol, address to, uint256 amount);
     // event WithdrawERC1155Token(string indexed tokenSymbol, address to, uint256 tokenId);
@@ -33,8 +33,8 @@ contract SwapManager is AccessControl{
      * @notice  Modifier to require 'tokenSymbol' is not empty
      * @param   tokenSymbolToCheck Token name to be checked
      */
-    modifier tokenNameIsNotEmpty(string memory tokenNameToCheck) {
-        bytes memory bytesTokenName = bytes(tokenNameToCheck);
+    modifier tokenNameIsNotEmpty(string memory tokenSymbolToCheck) {
+        bytes memory bytesTokenName = bytes(tokenSymbolToCheck);
         require(bytesTokenName.length != 0, "SwapManager: tokenName can't be empty");
         _;
     }
@@ -103,7 +103,6 @@ contract SwapManager is AccessControl{
      *          - User has to approve first the amount to be transferred WITHIN the original ERC721 token contract,
      *          and not from this contract. Otherwise, transaction will always fail
      * @param   tokenSymbol Name of the token to be transferred
-     * @param   to Destination address to receive the tokens
      * @param   tokenId Token identifier to be transferred
      */
     function depositERC721Token(string memory tokenSymbol, uint256 tokenId) public {
@@ -114,8 +113,8 @@ contract SwapManager is AccessControl{
         /* TO BE TESTED */
         require(IERC721(tokenAddress).getApproved(tokenId) == address(this), 
             "SwapManager: token to be transferred to PRIVI is not yet approved by User"); 
-        IERC721(tokenAddress).transferFrom(msg.sender, address(this), tokenId);
-        emit DepositERC721Token(tokenSymbol, to, tokenId);
+        IERC721(tokenAddress).transferFrom(_msgSender(), address(this), tokenId);
+        emit DepositERC721Token(tokenSymbol, _msgSender(), tokenId);
     }
 
     /**
@@ -213,9 +212,11 @@ contract SwapManager is AccessControl{
         if(amount <= address(this).balance) {
             recipient.transfer(amount);
         } else {
-            require(contractAddressERC20["WETH"] != ZERO_ADDRESS, 
+            IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+            address tokenAddress = bManager.getErc20AddressRegistered("WETH");
+            require(tokenAddress != ZERO_ADDRESS, 
             "SwapManager: WETH is not registered into the platform");
-            FakeInterface(contractAddressERC20["WETH"]).mintForUser(to, amount);
+            FakeInterface(tokenAddress).mintForUser(to, amount);
         }
         
         emit WithdrawEther(to, amount);

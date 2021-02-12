@@ -23,21 +23,21 @@ contract PRIVIPodERC20Factory is AccessControl {
      * account that deploys the contract.
      *
      */
-    constructor(address bridgeAddress) public {
+    constructor(address bridgeAddress) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(MODERATOR_ROLE, _msgSender());
         bridgeManagerAddress = bridgeAddress;
     }
 
-    function getTotalTokenCreated() external returns(uint256 totalPods) {
+    function getTotalTokenCreated() external view returns(uint256 totalPods) {
         totalPods = totalPodCreated;
     }
 
-    function getPodAddressById(string calldata podId) external returns(address podAddress) {
+    function getPodAddressById(string calldata podId) external view returns(address podAddress) {
         podAddress = podTokenAddressesById[podId];
     }
 
-    function getPodAddressBySymbol(string calldata tokenSymbol) external returns(address podAddress) {
+    function getPodAddressBySymbol(string calldata tokenSymbol) external view returns(address podAddress) {
         podAddress = podTokenAddressesBySymbol[tokenSymbol];
     }
     
@@ -56,7 +56,7 @@ contract PRIVIPodERC20Factory is AccessControl {
         podAddress = address(podToken);
         totalPodCreated.add(1);
         podTokenAddressesById[podId] = podAddress;
-        podTokenAddressesBySymbol[tokenSymbol] = podAddress;
+        podTokenAddressesBySymbol[podTokenSymbol] = podAddress;
         IBridgeManager(bridgeManagerAddress).registerTokenERC20(podTokenName, podTokenSymbol, podAddress);
         emit PodCreated(podId, podTokenName, podTokenSymbol);
     }

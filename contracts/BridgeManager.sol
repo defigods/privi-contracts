@@ -99,7 +99,7 @@ contract BridgeManager is AccessControl{
     /**
      * @notice get an address of a registered erc1155 tokens
      */
-    function getErc1155AddressRegistered(string tokenURI) external view returns(address returnAddress) {
+    function getErc1155AddressRegistered(string calldata tokenURI) external view returns(address returnAddress) {
         returnAddress = contractAddressERC1155[tokenURI];
     }
     
