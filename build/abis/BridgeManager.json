@@ -15882,6 +15882,184 @@
     "version": "0.7.6+commit.7338295f.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {
+        "0x823c87a16eb6a527733c83f98949577c23e881d4bd9e2af78535058fa5cd775c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            }
+          ],
+          "name": "RegisterERC1155Token",
+          "type": "event"
+        },
+        "0x8332d9919bf32207cb796a0a21674da0f96c4d6f2257c02073ff112e117bff0c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            }
+          ],
+          "name": "RegisterERC20Token",
+          "type": "event"
+        },
+        "0x8b716abc5c12b2b1b216049f179e5b7ea408a5a96880c14d00b5c83282e43b95": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            }
+          ],
+          "name": "RegisterERC721Token",
+          "type": "event"
+        },
+        "0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "previousAdminRole",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "newAdminRole",
+              "type": "bytes32"
+            }
+          ],
+          "name": "RoleAdminChanged",
+          "type": "event"
+        },
+        "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleGranted",
+          "type": "event"
+        },
+        "0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleRevoked",
+          "type": "event"
+        },
+        "0x5db25a228bb559541edc20b1f2b84cee5e368249a2ea9255e5a38ae7a4a639b4": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "UnRegisterERC1155Token",
+          "type": "event"
+        },
+        "0x165900214ed2efc5014e11d6a345a7cf56338cec6a77f7836963249a5b12a19f": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "UnRegisterERC20Token",
+          "type": "event"
+        },
+        "0x0de03d3bef344b9df188770d8d72ff98e8c4b63ca2fedde287c7d4d12d8e5b0c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "UnRegisterERC721Token",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xC2cf03448a215b6D1530c6a48A28648Ba924766b",
+      "transactionHash": "0x1edcb4a78f4b61ee357d8cc4a2fd6269d85a554c860d798a4d1d90c3a3014356"
+    },
     "4": {
       "events": {
         "0x823c87a16eb6a527733c83f98949577c23e881d4bd9e2af78535058fa5cd775c": {
@@ -16062,7 +16240,7 @@
     }
   },
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-02-12T14:27:21.899Z",
+  "updatedAt": "2021-02-12T14:43:01.515Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "The PRIVI Blockchain team",
