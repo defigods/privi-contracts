@@ -7,7 +7,7 @@ const FakeCOMP = artifacts.require("FakeCOMP");
 const FakeDAI = artifacts.require("FakeDAI");
 const FakeLINK = artifacts.require("FakeLINK");
 
-module.exports = function (deployer, networks, accounts) {
+module.exports = async function (deployer, networks, accounts) {
 	const swapManagerContract = await SwapManager.deployed();
 	const swapManagerAddress = swapManagerContract.address;
 	await deployer.deploy(FakePrivi, swapManagerAddress);

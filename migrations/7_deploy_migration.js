@@ -7,7 +7,7 @@ const FakeWBTC = artifacts.require("FakeWBTC");
 const FakeWETH = artifacts.require("FakeWETH");
 const FakeYFI = artifacts.require("FakeYFI");
 
-module.exports = function (deployer, networks, accounts) {
+module.exports = async function (deployer, networks, accounts) {
 	const swapManagerContract = await SwapManager.deployed();
 	const swapManagerAddress = swapManagerContract.address;
 	await deployer.deploy(FakeMKR, swapManagerAddress);
