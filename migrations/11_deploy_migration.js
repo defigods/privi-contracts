@@ -1,4 +1,5 @@
 const PRIVIPodERC20Factory = artifacts.require("PRIVIPodERC20Factory");
+const SwapManager = artifacts.require("SwapManager");
 
 module.exports = async function (deployer, networks, accounts) {
 
@@ -13,5 +14,12 @@ module.exports = async function (deployer, networks, accounts) {
 		console.log('Granting MODERATOR_ROLE roles', factoryMODERATOR_ROLE, 'to', ETH_PRIVI_ADDRESS);
 
 		await priviPodERC20FactoryContract.grantRole(factoryMODERATOR_ROLE, ETH_PRIVI_ADDRESS);
+
+		const swapManagerContract = await SwapManager.deployed();
+		const swapManagerAddress = swapManagerContract.address;
+
+		console.log('Granting MODERATOR_ROLE roles', factoryMODERATOR_ROLE, 'to', swapManagerAddress);
+
+		await priviPodERC20FactoryContract.grantRole(factoryMODERATOR_ROLE, swapManagerAddress);
 
 };
