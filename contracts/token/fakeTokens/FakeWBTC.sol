@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -10,7 +12,7 @@ contract FakeWBTC is ERC20, AccessControl {
     
     mapping(address => uint256) lastIssuedTime;
     
-    constructor(address swapManagerAddress) ERC20("FakeWBTC", "fWBTC") public {
+    constructor(address swapManagerAddress) ERC20("FakeWBTC", "fWBTC") {
         owner = msg.sender;
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(NO_LIMIT_ROLE, _msgSender());
