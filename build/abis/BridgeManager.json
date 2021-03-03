@@ -5133,28 +5133,28 @@
     "absolutePath": "/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/BridgeManager.sol",
     "exportedSymbols": {
       "AccessControl": [
-        3665
+        3677
       ],
       "Address": [
-        7445
+        7457
       ],
       "BridgeManager": [
         441
       ],
       "Context": [
-        7468
+        7480
       ],
       "EnumerableSet": [
-        8570
+        8582
       ],
       "IERC165": [
-        3734
+        3746
       ],
       "IERC20": [
-        5984
+        5996
       ],
       "IERC721": [
-        7073
+        7085
       ]
     },
     "id": 442,
@@ -5187,7 +5187,7 @@
         "id": 3,
         "nodeType": "ImportDirective",
         "scope": 442,
-        "sourceUnit": 3666,
+        "sourceUnit": 3678,
         "src": "91:58:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -5198,7 +5198,7 @@
         "id": 4,
         "nodeType": "ImportDirective",
         "scope": 442,
-        "sourceUnit": 5985,
+        "sourceUnit": 5997,
         "src": "150:56:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -5209,7 +5209,7 @@
         "id": 5,
         "nodeType": "ImportDirective",
         "scope": 442,
-        "sourceUnit": 7074,
+        "sourceUnit": 7086,
         "src": "207:58:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -5222,10 +5222,10 @@
               "id": 7,
               "name": "AccessControl",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3665,
+              "referencedDeclaration": 3677,
               "src": "792:13:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_AccessControl_$3665",
+                "typeIdentifier": "t_contract$_AccessControl_$3677",
                 "typeString": "contract AccessControl"
               }
             },
@@ -5235,8 +5235,8 @@
           }
         ],
         "contractDependencies": [
-          3665,
-          7468
+          3677,
+          7480
         ],
         "contractKind": "contract",
         "documentation": {
@@ -5249,8 +5249,8 @@
         "id": 441,
         "linearizedBaseContracts": [
           441,
-          3665,
-          7468
+          3677,
+          7480
         ],
         "name": "BridgeManager",
         "nodeType": "ContractDefinition",
@@ -6332,7 +6332,7 @@
                         "name": "DEFAULT_ADMIN_ROLE",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3408,
+                        "referencedDeclaration": 3420,
                         "src": "2299:18:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
@@ -6347,7 +6347,7 @@
                           "name": "_msgSender",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 7456,
+                          "referencedDeclaration": 7468,
                           "src": "2319:10:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$__$returns$_t_address_payable_$",
@@ -6385,7 +6385,7 @@
                       "name": "_setupRole",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3591,
+                      "referencedDeclaration": 3603,
                       "src": "2288:10:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_bytes32_$_t_address_$returns$__$",
@@ -6434,7 +6434,7 @@
                           "name": "_msgSender",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 7456,
+                          "referencedDeclaration": 7468,
                           "src": "2368:10:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$__$returns$_t_address_payable_$",
@@ -6472,7 +6472,7 @@
                       "name": "_setupRole",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3591,
+                      "referencedDeclaration": 3603,
                       "src": "2342:10:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_bytes32_$_t_address_$returns$__$",
@@ -10261,28 +10261,28 @@
       "absolutePath": "/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/BridgeManager.sol",
       "exportedSymbols": {
         "AccessControl": [
-          3665
+          3677
         ],
         "Address": [
-          7445
+          7457
         ],
         "BridgeManager": [
           441
         ],
         "Context": [
-          7468
+          7480
         ],
         "EnumerableSet": [
-          8570
+          8582
         ],
         "IERC165": [
-          3734
+          3746
         ],
         "IERC20": [
-          5984
+          5996
         ],
         "IERC721": [
-          7073
+          7085
         ]
       },
       "license": "MIT"
@@ -10314,7 +10314,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3666,
+          "SourceUnit": 3678,
           "absolutePath": "@openzeppelin/contracts/access/AccessControl.sol",
           "file": "@openzeppelin/contracts/access/AccessControl.sol",
           "scope": 442,
@@ -10329,7 +10329,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 5985,
+          "SourceUnit": 5997,
           "absolutePath": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
           "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
           "scope": 442,
@@ -10344,7 +10344,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 7074,
+          "SourceUnit": 7086,
           "absolutePath": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
           "file": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
           "scope": 442,
@@ -10361,15 +10361,15 @@
         "attributes": {
           "abstract": false,
           "contractDependencies": [
-            3665,
-            7468
+            3677,
+            7480
           ],
           "contractKind": "contract",
           "fullyImplemented": true,
           "linearizedBaseContracts": [
             441,
-            3665,
-            7468
+            3677,
+            7480
           ],
           "name": "BridgeManager",
           "scope": 442
@@ -10389,7 +10389,7 @@
               {
                 "attributes": {
                   "name": "AccessControl",
-                  "referencedDeclaration": 3665,
+                  "referencedDeclaration": 3677,
                   "type": "contract AccessControl"
                 },
                 "id": 7,
@@ -11590,7 +11590,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3591,
+                              "referencedDeclaration": 3603,
                               "type": "function (bytes32,address)",
                               "value": "_setupRole"
                             },
@@ -11603,7 +11603,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3408,
+                              "referencedDeclaration": 3420,
                               "type": "bytes32",
                               "value": "DEFAULT_ADMIN_ROLE"
                             },
@@ -11637,7 +11637,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 7456,
+                                  "referencedDeclaration": 7468,
                                   "type": "function () view returns (address payable)",
                                   "value": "_msgSender"
                                 },
@@ -11692,7 +11692,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3591,
+                              "referencedDeclaration": 3603,
                               "type": "function (bytes32,address)",
                               "value": "_setupRole"
                             },
@@ -11739,7 +11739,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 7456,
+                                  "referencedDeclaration": 7468,
                                   "type": "function () view returns (address payable)",
                                   "value": "_msgSender"
                                 },
@@ -16057,8 +16057,8 @@
         }
       },
       "links": {},
-      "address": "0xC2cf03448a215b6D1530c6a48A28648Ba924766b",
-      "transactionHash": "0x1edcb4a78f4b61ee357d8cc4a2fd6269d85a554c860d798a4d1d90c3a3014356"
+      "address": "0x07863B06a22F5FC9C589b4880b80CDa6e1941BbE",
+      "transactionHash": "0x10d39d289cd2539bc877c7827220d30cbb5778cbb48731cc5f4272187fc5026f"
     },
     "4": {
       "events": {
@@ -16235,12 +16235,190 @@
         }
       },
       "links": {},
-      "address": "0x2DFd2A0838D3B436beFBe69F5f21931A0ff48226",
-      "transactionHash": "0x8a9dca861a4eae99570e9e441f5ac65eb06355656588a5009727c49ab997e509"
+      "address": "0xF3579D2168b0E11614297F9Ad8E5De2a7644E837",
+      "transactionHash": "0x1a4873ce52a8358f91f155b94d97efd94167fb99b9c007e0a365071ad32d37e4"
+    },
+    "97": {
+      "events": {
+        "0x823c87a16eb6a527733c83f98949577c23e881d4bd9e2af78535058fa5cd775c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            }
+          ],
+          "name": "RegisterERC1155Token",
+          "type": "event"
+        },
+        "0x8332d9919bf32207cb796a0a21674da0f96c4d6f2257c02073ff112e117bff0c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            }
+          ],
+          "name": "RegisterERC20Token",
+          "type": "event"
+        },
+        "0x8b716abc5c12b2b1b216049f179e5b7ea408a5a96880c14d00b5c83282e43b95": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            }
+          ],
+          "name": "RegisterERC721Token",
+          "type": "event"
+        },
+        "0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "previousAdminRole",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "newAdminRole",
+              "type": "bytes32"
+            }
+          ],
+          "name": "RoleAdminChanged",
+          "type": "event"
+        },
+        "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleGranted",
+          "type": "event"
+        },
+        "0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "RoleRevoked",
+          "type": "event"
+        },
+        "0x5db25a228bb559541edc20b1f2b84cee5e368249a2ea9255e5a38ae7a4a639b4": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "UnRegisterERC1155Token",
+          "type": "event"
+        },
+        "0x165900214ed2efc5014e11d6a345a7cf56338cec6a77f7836963249a5b12a19f": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "UnRegisterERC20Token",
+          "type": "event"
+        },
+        "0x0de03d3bef344b9df188770d8d72ff98e8c4b63ca2fedde287c7d4d12d8e5b0c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "UnRegisterERC721Token",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x2dBfD3e411b050682b0a64D686eC87Ff126ae386",
+      "transactionHash": "0x932e1e844f2b4fbb0660a57d7ab073f6e9ef2b16321e93b5172e1f24cc414e42"
     }
   },
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-02-12T14:43:01.515Z",
+  "updatedAt": "2021-03-03T15:28:25.435Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "The PRIVI Blockchain team",
