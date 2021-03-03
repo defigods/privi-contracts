@@ -90,7 +90,7 @@ contract SwapManager is AccessControl{
         } else if (IPRIVIPodERC20Factory(erc20FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
             IPRIVIPodERC20Factory(erc20FactoryAddress).mintPodTokenBySymbol(tokenSymbol, to, amount);
             emit WithdrawERC20Token(tokenSymbol, to, amount);
-        } else { // only for testnet fake tokens
+        } else { // only for testnet mint fake tokens
             FakeInterface(tokenAddress).mintForUser(to, amount);
             emit WithdrawERC20Token(tokenSymbol, to, amount);
         }
@@ -124,23 +124,29 @@ contract SwapManager is AccessControl{
      * @param   tokenSymbol Name of the token to be transferred
      * @param   to Destination address to receive the tokens
      * @param   tokenId Token identifier to be transferred
+     * @param   isPodMint is it a withdraw from swap manager or is it minting new nft pod token
      */
-    function withdrawERC721Token(string memory tokenSymbol, address to, uint256 tokenId) public {
+    function withdrawERC721Token(string memory tokenSymbol, address to, uint256 tokenId, bool isPodMint) public {
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
         require(hasRole(TRANSFER_ROLE, _msgSender()), 
             "SwapManager: must have TRANSFER_ROLE to withdraw token");
-        if (IERC721(tokenAddress).ownerOf(tokenId) == address(this)) {
-            IERC721(tokenAddress).approve(address(this), tokenId);
-            IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
-            emit WithdrawERC721Token(tokenSymbol, to, tokenId);
-        } else if (IPRIVIPodERC721Factory(erc721FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
-            IPRIVIPodERC721Factory(erc721FactoryAddress).mintPodTokenBySymbol(tokenSymbol, to);
-            emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+        if (isPodMint == true) {
+            if (IPRIVIPodERC721Factory(erc721FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
+                IPRIVIPodERC721Factory(erc721FactoryAddress).mintPodTokenBySymbol(tokenSymbol, to);
+                emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+            } else {
+                revert();
+            }
         } else {
-            revert();
+            if (IERC721(tokenAddress).ownerOf(tokenId) == address(this)) {
+                IERC721(tokenAddress).approve(address(this), tokenId);
+                IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
+                emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+            } else {
+                revert();
+            }
         }
-        
     }
 
     /**
