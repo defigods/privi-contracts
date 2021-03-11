@@ -11,3 +11,6 @@ truffle-flattener contracts/PRIVIPodERC20Factory.sol > flatted/PRIVIPodERC20Fact
 
 echo "flatening PRIVIPodERC721Factory.sol"
 truffle-flattener contracts/PRIVIPodERC721Factory.sol > flatted/PRIVIPodERC721Factory.sol
+
+echo "flatening PRIVIPodERC721Token.sol"
+truffle-flattener contracts/token/PRIVIPodERC721Token.sol > flatted/PRIVIPodERC721Token.sol

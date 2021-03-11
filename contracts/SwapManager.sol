@@ -13,36 +13,31 @@ import "./interfaces/IPRIVIPodERC721Factory.sol";
 /// @title Manages swap and withdraw of Ethers, ERC20 tokens and ERC721 tokens between Users and PRIVI platform
 
 contract SwapManager is AccessControl{
-    // bytes32 public constant REGISTER_ROLE = keccak256("REGISTER_ROLE");
     bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
     address private ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
     address public bridgeManagerAddress;
     address public erc20FactoryAddress;
     address public erc721FactoryAddress;
+    address public erc1155FactoryAddress;
 
     event DepositERC20Token(string indexed tokenSymbol, address from, uint256 amount);
     event WithdrawERC20Token(string indexed tokenSymbol, address to, uint256 amount);
     event DepositERC721Token(string indexed tokenSymbol, address from, uint256 amount);
     event WithdrawERC721Token(string indexed tokenSymbol, address to, uint256 tokenId);
-    // event DepositERC1155Token(string indexed tokenSymbol, address to, uint256 amount);
-    // event WithdrawERC1155Token(string indexed tokenSymbol, address to, uint256 tokenId);
+    event DepositERC1155Token(string indexed tokenURI, address to, uint256 tokenId, uint256 amount);
+    event WithdrawERC1155Token(string indexed tokenURI, address to, uint256 tokenId, uint256 amount);
     event DepositEther(address indexed from, uint256 amount);
     event WithdrawEther(address indexed to, uint256 amount);
 
     /**
-     * @notice  Modifier to require 'tokenSymbol' is not empty
-     * @param   tokenSymbolToCheck Token name to be checked
-     */
-    modifier tokenNameIsNotEmpty(string memory tokenSymbolToCheck) {
-        bytes memory bytesTokenName = bytes(tokenSymbolToCheck);
-        require(bytesTokenName.length != 0, "SwapManager: tokenName can't be empty");
-        _;
-    }
-
-    /**
      * @notice Constructor to assign all roles to contract creator
      */
-    constructor(address bridgeDeployedAddress, address erc20FactoryDeployedAddress, address erc721FactoryDeployedAddress) {
+    constructor(
+        address bridgeDeployedAddress, 
+        address erc20FactoryDeployedAddress, 
+        address erc721FactoryDeployedAddress, 
+        address erc1155FactoryAddress
+        ) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         // _setupRole(REGISTER_ROLE, _msgSender());
         _setupRole(TRANSFER_ROLE, _msgSender());
@@ -140,7 +135,6 @@ contract SwapManager is AccessControl{
             }
         } else {
             if (IERC721(tokenAddress).ownerOf(tokenId) == address(this)) {
-                IERC721(tokenAddress).approve(address(this), tokenId);
                 IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
                 emit WithdrawERC721Token(tokenSymbol, to, tokenId);
             } else {
@@ -155,41 +149,40 @@ contract SwapManager is AccessControl{
      *          - Token to be transferred must be already registered
      *          - User has to approve first the amount to be transferred WITHIN the original ERC1155 token contract,
      *          and not from this contract. Otherwise, transaction will always fail
-     * @param   tokenSymbol Name of the token to be transferred
+     * @param   tokenURI Name of the token to be transferred
      * @param   to Destination address to receive the tokens
      * @param   tokenId Token identifier to be transferred
      */
-    // function depositERC1155Token(string memory tokenSymbol, address to, uint256 tokenId) public {
-    //     IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
-    //     address tokenAddress = bManager.getErc1155AddressRegistered(tokenSymbol);
-    //     require(tokenAddress != ZERO_ADDRESS, 
-    //         "SwapManager: token is not registered into the platform");
-    //     /* TO BE TESTED */
-    //     require(IERC1155(tokenAddress).getApproved(tokenId) == address(this), 
-    //         "SwapManager: token to be transferred to PRIVI is not yet approved by User"); 
-    //     IERC1155(tokenAddress).transferFrom(msg.sender, to, tokenId);
-    //     emit DepositERC1155Token(tokenSymbol, to, tokenId);
-    // }
+    function depositERC1155Token(string memory tokenURI, address to, uint256 tokenId, uint256 amount, bytes memory data) public {
+        IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+        address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
+        require(tokenAddress != ZERO_ADDRESS, 
+            "SwapManager: token is not registered into the platform");
+        /* TO BE TESTED */
+        require(IERC1155(tokenAddress).isApprovedForAll(msg.sender, address(this)) == true), 
+            "SwapManager: user did not grant aprove yet."); 
+        IERC1155(tokenAddress).safeTransferFrom(msg.sender, to, tokenId, amount, data);
+        emit DepositERC1155Token(tokenURI, to, tokenId, amount);
+    }
 
     /**
      * @notice  Transfer ERC1155 token from contract address (PRIVI) to sender address (User)
      * @dev     - User must have TRANSFER_ROLE
      *          - PRIVI must have enough tokens to transfer them back to User
-     * @param   tokenSymbol Name of the token to be transferred
+     * @param   tokenURI Name of the token to be transferred
      * @param   to Destination address to receive the tokens
      * @param   tokenId Token identifier to be transferred
      */
-    // function withdrawERC1155Token(string memory tokenSymbol, address to, uint256 tokenId) public {
-    //     IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
-    //     address tokenAddress = bManager.getErc1155AddressRegistered(tokenSymbol);
-    //     require(hasRole(TRANSFER_ROLE, _msgSender()), 
-    //         "SwapManager: must have TRANSFER_ROLE to withdraw token");
-    //     require(IERC1155(tokenAddress).balanceOf(address(this)) > 0, 
-    //         "SwapManager: insufficient funds in PRIVI contract");
-    //     IERC1155(tokenAddress).approve(address(this), tokenId);
-    //     IERC1155(tokenAddress).transferFrom(address(this), to, tokenId);
-    //     emit WithdrawERC1155Token(tokenSymbol, to, tokenId);
-    // }
+    function withdrawERC1155Token(string memory tokenURI, address to, uint256 tokenId, uint256 amount, bytes memory data) public {
+        IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+        address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
+        require(hasRole(TRANSFER_ROLE, _msgSender()), 
+            "SwapManager: must have TRANSFER_ROLE to withdraw token");
+        require(IERC1155(tokenAddress).balanceOf(address(this), tokenId) > 0, 
+            "SwapManager: insufficient funds in PRIVI contract");
+        IERC1155(tokenAddress).safeTransferFrom(address(this), to, tokenId, amount, data);
+        emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
+    }
     
     /**
      * @notice  Transfer ether from sender address to contract address
