@@ -27,6 +27,7 @@ contract SwapManager is AccessControl{
     event WithdrawERC721Token(string indexed tokenSymbol, address to, uint256 tokenId);
     event DepositERC1155Token(string indexed tokenURI, address to, uint256 tokenId, uint256 amount);
     event WithdrawERC1155Token(string indexed tokenURI, address to, uint256 tokenId, uint256 amount);
+    event BatchWithdrawERC1155Token(string indexed tokenURI, address to, uint256[] tokenIds, uint256[] amounts);
     event DepositEther(address indexed from, uint256 amount);
     event WithdrawEther(address indexed to, uint256 amount);
 
@@ -159,7 +160,7 @@ contract SwapManager is AccessControl{
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
         require(tokenAddress != ZERO_ADDRESS, 
-            "SwapManager: token is not registered into the platform");
+            "SwapManager: token is not registered on BridgeManager");
         /* TO BE TESTED */
         require(IERC1155(tokenAddress).isApprovedForAll(msg.sender, address(this)) == true, 
             "SwapManager: user did not grant aprove yet."); 
@@ -168,22 +169,59 @@ contract SwapManager is AccessControl{
     }
 
     /**
-     * @notice  Transfer ERC1155 token from contract address (PRIVI) to sender address (User)
-     * @dev     - User must have TRANSFER_ROLE
-     *          - PRIVI must have enough tokens to transfer them back to User
+     * @notice  Transfer ERC1155 token from contract address (PRIVI) to address (User)
+     * @dev     - PRIVI must have enough tokens to transfer them to User
+     *          or is has to be isPodMint.
      * @param   tokenURI Name of the token to be transferred
      * @param   to Destination address to receive the tokens
      * @param   tokenId Token identifier to be transferred
      */
-    function withdrawERC1155Token(string calldata tokenURI, address to, uint256 tokenId, uint256 amount, bytes memory data) external {
+    function withdrawERC1155Token(string calldata tokenURI, address to, uint256 tokenId, uint256 amount, bytes memory data, bool isPodMint) external {
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
         require(hasRole(TRANSFER_ROLE, _msgSender()), 
             "SwapManager: must have TRANSFER_ROLE to withdraw token");
-        require(IERC1155(tokenAddress).balanceOf(address(this), tokenId) > 0, 
-            "SwapManager: insufficient funds in PRIVI contract");
-        IERC1155(tokenAddress).safeTransferFrom(address(this), to, tokenId, amount, data);
-        emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
+        if (isPodMint == true) {
+            if (IPRIVIPodERC1155Factory(erc1155FactoryAddress).podTokenAddresses(tokenURI) != ZERO_ADDRESS) {
+                IPRIVIPodERC1155Factory(erc1155FactoryAddress).podMint(tokenURI, to, tokenId,  amount, data);
+                emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
+            } else {
+                revert();
+            }
+        } else {
+            require(IERC1155(tokenAddress).balanceOf(address(this), tokenId) >= amount, 
+                "SwapManager: insufficient funds in PRIVI SwapManager");
+            IERC1155(tokenAddress).safeTransferFrom(address(this), to, tokenId, amount, data);
+            emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
+        } 
+    }
+
+    /**
+     * @notice  Batch Transfer ERC1155 token from contract address (PRIVI) to address (User)
+     * @dev     - PRIVI must have enough tokens to transfer them to User
+     *          or is has to be isPodMint.
+     * @param   tokenURI Name of the token to be transferred
+     * @param   to Destination address to receive the tokens
+     * @param   tokenId Token identifier to be transferred
+     */
+    function batchWithdrawERC1155Token(string calldata tokenURI, address to, uint256[] tokenIds, uint256[] amounts, bytes memory data, bool isPodMint) external {
+        IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+        address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
+        require(hasRole(TRANSFER_ROLE, _msgSender()), 
+            "SwapManager: must have TRANSFER_ROLE to withdraw token");
+        if (isPodMint == true) {
+            if (IPRIVIPodERC1155Factory(erc1155FactoryAddress).podTokenAddresses(tokenURI) != ZERO_ADDRESS) {
+                IPRIVIPodERC1155Factory(erc1155FactoryAddress).podMintBatch(tokenURI, to, tokenIds,  amounts, data);
+                emit BatchWithdrawERC1155Token(tokenURI, to, tokenId, amount);
+            } else {
+                revert();
+            }
+        } else {
+            require(IERC1155(tokenAddress).balanceOf(address(this), tokenId) >= amount, 
+                "SwapManager: insufficient funds in PRIVI SwapManager");
+            IERC1155(tokenAddress).safeBatchTransferFrom(address(this), to, tokenId, amount, data);
+            emit BatchWithdrawERC1155Token(tokenURI, to, tokenId, amount);
+        } 
     }
     
     /**

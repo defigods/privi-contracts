@@ -14,7 +14,7 @@ contract PRIVIPodERC1155Factory is AccessControl {
     uint256 public totalPodCreated;
     mapping (string => address) public podTokenAddresses;
 
-    event PodCreated(string indexed podId, string uri);
+    event PodCreated(string indexed uri, address podAddress);
     
     /**
      * @dev Grants `DEFAULT_ADMIN_ROLE` and `MODERATOR_ROLE` to the
@@ -34,14 +34,14 @@ contract PRIVIPodERC1155Factory is AccessControl {
      * - the caller must MODERATOR_ROLE to perform this action.
      * - pod should not exist before.
      */
-    function createPod(string calldata podId, string calldata uri) public returns (address podAddress){
+    function createPod(string calldata uri) public returns (address podAddress){
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to create pod.");
-        require(podTokenAddresses[podId] == address(0), "PRIVIPodERC1155Factory: Pod already exists.");
+        require(podTokenAddresses[uri] == address(0), "PRIVIPodERC1155Factory: Pod already exists.");
         PRIVIPodERC1155Token podToken = new PRIVIPodERC1155Token(uri, address(this));
         podAddress = address(podToken);
         totalPodCreated.add(1);
-        podTokenAddresses[podId] = podAddress;
-        emit PodCreated(podId, uri);
+        podTokenAddresses[uri] = podAddress;
+        emit PodCreated(uri, podAddress);
     }
     
     /**
@@ -51,17 +51,17 @@ contract PRIVIPodERC1155Factory is AccessControl {
      *
      * - the caller must MODERATOR_ROLE to perform this action.
      */
-    function podMint(string calldata podId, address account, uint256 tokenId,  uint256 amount, bytes calldata data) public {
+    function podMint(string calldata uri, address account, uint256 tokenId,  uint256 amount, bytes calldata data) public {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor.");
         require(account != address(0), "PRIVIPodERC1155Factory: Account address should not be zero.");
         require(amount > 0, "PRIVIPodERC1155Factory: amount should not be zero.");
-        PRIVIPodERC1155Token(podTokenAddresses[podId]).mint(account, tokenId, amount, data);
+        PRIVIPodERC1155Token(podTokenAddresses[uri]).mint(account, tokenId, amount, data);
     }
 
-    function podMintBatch(string calldata podId, address account, uint256[] memory  tokenIds,  uint256[] memory  amounts, bytes calldata data) public {
+    function podMintBatch(string calldata uri, address account, uint256[] memory  tokenIds,  uint256[] memory  amounts, bytes calldata data) public {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor.");
         require(account != address(0), "PRIVIPodERC1155Factory: Account address should not be zero.");
-        PRIVIPodERC1155Token(podTokenAddresses[podId]).mintBatch(account, tokenIds, amounts, data);
+        PRIVIPodERC1155Token(podTokenAddresses[uri]).mintBatch(account, tokenIds, amounts, data);
     }
     
 }
