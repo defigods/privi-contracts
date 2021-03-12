@@ -4,6 +4,7 @@ pragma solidity ^0.7.6;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "./token/interfaces/FakeInterface.sol";
 import "./interfaces/IBridgeManager.sol";
 import "./interfaces/IPRIVIPodERC20Factory.sol";
@@ -36,7 +37,7 @@ contract SwapManager is AccessControl{
         address bridgeDeployedAddress, 
         address erc20FactoryDeployedAddress, 
         address erc721FactoryDeployedAddress, 
-        address erc1155FactoryAddress
+        address erc1155FactoryDeployedAddress
         ) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         // _setupRole(REGISTER_ROLE, _msgSender());
@@ -44,6 +45,7 @@ contract SwapManager is AccessControl{
         bridgeManagerAddress = bridgeDeployedAddress;
         erc20FactoryAddress = erc20FactoryDeployedAddress;
         erc721FactoryAddress = erc721FactoryDeployedAddress;
+        erc1155FactoryAddress = erc1155FactoryDeployedAddress;
     }
 
     /**
@@ -54,7 +56,7 @@ contract SwapManager is AccessControl{
      * @param   tokenSymbol Name of the token to be transferred
      * @param   amount Amount of tokens to be transferred
      */
-    function depositERC20Token(string memory tokenSymbol, uint256 amount) public {
+    function depositERC20Token(string calldata tokenSymbol, uint256 amount) external {
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc20AddressRegistered(tokenSymbol);
         require(tokenAddress != ZERO_ADDRESS, 
@@ -73,7 +75,7 @@ contract SwapManager is AccessControl{
      * @param   to Destination address to receive the tokens
      * @param   amount Amount of tokens to be transferred
      */
-    function withdrawERC20Token(string memory tokenSymbol, address to, uint256 amount) public {
+    function withdrawERC20Token(string calldata tokenSymbol, address to, uint256 amount) external {
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc20AddressRegistered(tokenSymbol);
         require(hasRole(TRANSFER_ROLE, _msgSender()), 
@@ -100,7 +102,7 @@ contract SwapManager is AccessControl{
      * @param   tokenSymbol Name of the token to be transferred
      * @param   tokenId Token identifier to be transferred
      */
-    function depositERC721Token(string memory tokenSymbol, uint256 tokenId) public {
+    function depositERC721Token(string calldata tokenSymbol, uint256 tokenId) external {
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
         require(tokenAddress != ZERO_ADDRESS, 
@@ -121,7 +123,7 @@ contract SwapManager is AccessControl{
      * @param   tokenId Token identifier to be transferred
      * @param   isPodMint is it a withdraw from swap manager or is it minting new nft pod token
      */
-    function withdrawERC721Token(string memory tokenSymbol, address to, uint256 tokenId, bool isPodMint) public {
+    function withdrawERC721Token(string calldata tokenSymbol, address to, uint256 tokenId, bool isPodMint) external {
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
         require(hasRole(TRANSFER_ROLE, _msgSender()), 
@@ -153,13 +155,13 @@ contract SwapManager is AccessControl{
      * @param   to Destination address to receive the tokens
      * @param   tokenId Token identifier to be transferred
      */
-    function depositERC1155Token(string memory tokenURI, address to, uint256 tokenId, uint256 amount, bytes memory data) public {
+    function depositERC1155Token(string calldata tokenURI, address to, uint256 tokenId, uint256 amount, bytes memory data) external {
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
         require(tokenAddress != ZERO_ADDRESS, 
             "SwapManager: token is not registered into the platform");
         /* TO BE TESTED */
-        require(IERC1155(tokenAddress).isApprovedForAll(msg.sender, address(this)) == true), 
+        require(IERC1155(tokenAddress).isApprovedForAll(msg.sender, address(this)) == true, 
             "SwapManager: user did not grant aprove yet."); 
         IERC1155(tokenAddress).safeTransferFrom(msg.sender, to, tokenId, amount, data);
         emit DepositERC1155Token(tokenURI, to, tokenId, amount);
@@ -173,7 +175,7 @@ contract SwapManager is AccessControl{
      * @param   to Destination address to receive the tokens
      * @param   tokenId Token identifier to be transferred
      */
-    function withdrawERC1155Token(string memory tokenURI, address to, uint256 tokenId, uint256 amount, bytes memory data) public {
+    function withdrawERC1155Token(string calldata tokenURI, address to, uint256 tokenId, uint256 amount, bytes memory data) external {
         IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
         address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
         require(hasRole(TRANSFER_ROLE, _msgSender()), 
@@ -200,7 +202,7 @@ contract SwapManager is AccessControl{
      * @param   to Destination address to receive the ether
      * @param   amount Amount of ether to be transferred
      */
-    function withdrawEther(address to, uint256 amount) public {
+    function withdrawEther(address to, uint256 amount) external {
         require(hasRole(TRANSFER_ROLE, _msgSender()), 
             "SwapManager: must have TRANSFER_ROLE to tranfer Eth");
         require(payable(address(this)).balance >= amount, 
@@ -224,7 +226,7 @@ contract SwapManager is AccessControl{
     /**
      * @return  Contract balance in weis
      */
-    function getBalance() public view returns (uint256) {
+    function getBalance() external view returns (uint256) {
         return payable(address(this)).balance;
     }
 }
