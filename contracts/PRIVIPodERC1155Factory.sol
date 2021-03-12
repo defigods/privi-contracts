@@ -5,12 +5,13 @@ pragma solidity ^0.7.6;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./token/PRIVIPodERC1155Token.sol";
+import "./interfaces/IBridgeManager.sol";
 
 contract PRIVIPodERC1155Factory is AccessControl {
     using SafeMath for uint256;
     
     bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
-    
+    address public bridgeManagerAddress;
     uint256 public totalPodCreated;
     mapping (string => address) public podTokenAddresses;
 
@@ -21,9 +22,10 @@ contract PRIVIPodERC1155Factory is AccessControl {
      * account that deploys the contract.
      *
      */
-    constructor() {
+    constructor(address bridgeAddress) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(MODERATOR_ROLE, _msgSender());
+        bridgeManagerAddress = bridgeAddress;
     }
 
     function getPodAddressByUri(string calldata uri) external view returns(address podAddress) {
@@ -45,6 +47,7 @@ contract PRIVIPodERC1155Factory is AccessControl {
         podAddress = address(podToken);
         totalPodCreated.add(1);
         podTokenAddresses[uri] = podAddress;
+        IBridgeManager(bridgeManagerAddress).registerTokenERC1155(uri, uri, podAddress);
         emit PodCreated(uri, podAddress);
     }
     
