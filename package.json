@@ -9,7 +9,8 @@
   "scripts": {
     "test": "truffle test",
     "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
-    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol"
+    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol",
+    "prettier:js": "./node_modules/.bin/prettier --write ./**/*.js"
   },
   "repository": {
     "type": "git",
