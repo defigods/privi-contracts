@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./token/PRIVIPodERC721TokenRoyalty.sol";
 import "./interfaces/IBridgeManager.sol";
+import "./deployable_managers/MultiCreatorNftManager.sol";
 
 contract PRIVIPodERC721RoyaltyFactory is AccessControl {
     using SafeMath for uint256;
@@ -53,6 +54,27 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
         require(podTokenAddressesById[podId] == address(0), "PRIVIPodERC721TokenFactory: Pod id already exists.");
         require(podTokenAddressesBySymbol[podTokenSymbol] == address(0), "PRIVIPodERC721TokenFactory: Pod symbol already exists.");
         PRIVIPodERC721TokenRoyalty podToken = new PRIVIPodERC721TokenRoyalty(podTokenName, podTokenSymbol , baseURI, address(this), royaltyAmount, creator);
+        podAddress = address(podToken);
+        totalPodCreated.add(1);
+        podTokenAddressesById[podId] = podAddress;
+        podTokenAddressesBySymbol[podTokenSymbol] = podAddress;
+        IBridgeManager(bridgeManagerAddress).registerTokenERC721(podTokenName, podTokenSymbol, podAddress);
+        emit PodCreated(podId, podTokenName, podTokenSymbol);
+    }
+
+    /**
+     *@dev only MODERATOR_ROLE role can create pods
+     *
+     * Requirements:
+     *
+     * - pod should not exist before.
+     */
+    function createMultiCreatorPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol, string calldata baseURI, uint256 royaltyAmount, uint256[] memory royaltyShares, address[] memory creators) external returns (address podAddress){
+        // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
+        require(podTokenAddressesById[podId] == address(0), "PRIVIPodERC721TokenFactory: Pod id already exists.");
+        require(podTokenAddressesBySymbol[podTokenSymbol] == address(0), "PRIVIPodERC721TokenFactory: Pod symbol already exists.");
+        MultiCreatorNftManager multiCreatorManager = new MultiCreatorNftManager(creators, royaltyShares);
+        PRIVIPodERC721TokenRoyalty podToken = new PRIVIPodERC721TokenRoyalty(podTokenName, podTokenSymbol , baseURI, address(this), royaltyAmount, address(multiCreatorManager));
         podAddress = address(podToken);
         totalPodCreated.add(1);
         podTokenAddressesById[podId] = podAddress;
