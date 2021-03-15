@@ -8,6 +8,8 @@ Contains all PRIVI smart contracts to interact with external networks:
 - PRIVIPodERC721
 - PRIVIPodERC1155
 
+[Here]('https://github.com/Get-Cache/PRIVIethereum/blob/master/docs/AtomicSwapDiagram.pdf') you can find an overview of the contracts interaction.
+
 ## Installation:
 
 Run `npm install` to install packages.
