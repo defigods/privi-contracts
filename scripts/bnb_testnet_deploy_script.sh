@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Rnning migrations..."
+echo "Running migrations..."
 truffle migrate -f 2 --to 2 --network bsc_testnet
 truffle migrate -f 3 --to 3 --network bsc_testnet
 truffle migrate -f 4 --to 4 --network bsc_testnet
