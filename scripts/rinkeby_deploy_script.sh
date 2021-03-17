@@ -11,3 +11,4 @@ truffle migrate -f 8 --to 8 --network rinkeby
 truffle migrate -f 9 --to 9 --network rinkeby
 truffle migrate -f 10 --to 10 --network rinkeby
 truffle migrate -f 11 --to 11 --network rinkeby
+truffle migrate -f 12 --to 12 --network rinkeby

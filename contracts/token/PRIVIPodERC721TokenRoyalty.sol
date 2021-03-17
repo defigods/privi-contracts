@@ -4,6 +4,7 @@ pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/GSN/Context.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol";
 import "../abstracts/NFTRoyalty.sol";
@@ -16,6 +17,7 @@ import "../abstracts/NFTRoyalty.sol";
  *
  */
 contract PRIVIPodERC721TokenRoyalty is Context, ERC721Burnable, NFTRoyalty {
+  using SafeMath for uint256;
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIdTracker;
   address public parentFactory;
@@ -87,12 +89,12 @@ contract PRIVIPodERC721TokenRoyalty is Context, ERC721Burnable, NFTRoyalty {
     );
 
     // pay creator
-    uint256 creatorShare = (msg.value * royalty_amount) / 100; // TODO: not safe, must use safeMath
+    uint256 creatorShare = (msg.value.mul(royalty_amount)).div(100); // TODO: needs testing for very low and hi amount
     address payable royaltyOwner = payable(creator);
     royaltyOwner.transfer(creatorShare);
 
     // pay current owner
-    payable(from).transfer(msg.value - creatorShare);
+    payable(from).transfer(msg.value.sub(creatorShare));
 
     // transfer token
     safeTransferFrom(from, to, tokenId, bytes("royalty paid"));

@@ -14,3 +14,9 @@ truffle-flattener contracts/PRIVIPodERC721Factory.sol > flatted/PRIVIPodERC721Fa
 
 echo "flatening PRIVIPodERC721Token.sol"
 truffle-flattener contracts/token/PRIVIPodERC721Token.sol > flatted/PRIVIPodERC721Token.sol
+
+echo "flatening MultiCreatorNftManager.sol"
+truffle-flattener contracts/deployable_managers/MultiCreatorNftManager.sol > flatted/MultiCreatorNftManager.sol
+
+echo "flatening PRIVIPodERC721RoyaltyFactory.sol"
+truffle-flattener contracts/PRIVIPodERC721RoyaltyFactory.sol > flatted/PRIVIPodERC721RoyaltyFactory.sol

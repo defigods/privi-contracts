@@ -27,13 +27,13 @@ abstract contract Context {
 
 // File: @openzeppelin/contracts/GSN/Context.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
 // File: @openzeppelin/contracts/math/SafeMath.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -250,7 +250,7 @@ library SafeMath {
 
 // File: @openzeppelin/contracts/utils/Counters.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -292,7 +292,7 @@ library Counters {
 
 // File: @openzeppelin/contracts/introspection/IERC165.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -319,7 +319,7 @@ interface IERC165 {
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.2 <0.8.0;
 
@@ -450,7 +450,7 @@ interface IERC721 is IERC165 {
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721Metadata.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.2 <0.8.0;
 
@@ -479,7 +479,7 @@ interface IERC721Metadata is IERC721 {
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721Enumerable.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.2 <0.8.0;
 
@@ -510,7 +510,7 @@ interface IERC721Enumerable is IERC721 {
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721Receiver.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -534,7 +534,7 @@ interface IERC721Receiver {
 
 // File: @openzeppelin/contracts/introspection/ERC165.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -590,7 +590,7 @@ abstract contract ERC165 is IERC165 {
 
 // File: @openzeppelin/contracts/utils/Address.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.2 <0.8.0;
 
@@ -782,7 +782,7 @@ library Address {
 
 // File: @openzeppelin/contracts/utils/EnumerableSet.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1082,7 +1082,7 @@ library EnumerableSet {
 
 // File: @openzeppelin/contracts/utils/EnumerableMap.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1351,7 +1351,7 @@ library EnumerableMap {
 
 // File: @openzeppelin/contracts/utils/Strings.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1388,7 +1388,7 @@ library Strings {
 
 // File: @openzeppelin/contracts/token/ERC721/ERC721.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1838,7 +1838,12 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable 
         return (retval == _ERC721_RECEIVED);
     }
 
-    function _approve(address to, uint256 tokenId) private {
+    /**
+     * @dev Approve `to` to operate on `tokenId`
+     *
+     * Emits an {Approval} event.
+     */
+    function _approve(address to, uint256 tokenId) internal virtual {
         _tokenApprovals[tokenId] = to;
         emit Approval(ERC721.ownerOf(tokenId), to, tokenId); // internal owner
     }
@@ -1863,7 +1868,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable 
 
 // File: @openzeppelin/contracts/token/ERC721/ERC721Burnable.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1890,7 +1895,7 @@ abstract contract ERC721Burnable is Context, ERC721 {
 
 // File: contracts/token/PRIVIPodERC721Token.sol
 
-
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.7.6;
 
@@ -1906,42 +1911,54 @@ pragma solidity ^0.7.6;
  *
  */
 contract PRIVIPodERC721Token is Context, ERC721Burnable {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIdTracker;
-    address public parentFactory;
+  using Counters for Counters.Counter;
+  Counters.Counter private _tokenIdTracker;
+  address public parentFactory;
 
-    /**
-     * @dev Sets factory address
-     *
-     * See {ERC20-constructor}.
-     */
-    constructor(string memory name, string memory symbol, string memory baseURI, address factory) ERC721(name, symbol) {
-        parentFactory = factory;
-        _setBaseURI(baseURI);
-    }
+  /**
+   * @dev Sets factory address
+   *
+   * See {ERC20-constructor}.
+   */
+  constructor(
+    string memory name,
+    string memory symbol,
+    string memory baseURI,
+    address factory
+  ) ERC721(name, symbol) {
+    parentFactory = factory;
+    _setBaseURI(baseURI);
+  }
 
-    modifier onlyFactory() {
-        require(_msgSender() == parentFactory, "PRIVIPodERC721Token: Only Factory can call this function.");
-        _;
-    }
+  modifier onlyFactory() {
+    require(
+      _msgSender() == parentFactory,
+      "PRIVIPodERC721Token: Only Factory can call this function."
+    );
+    _;
+  }
 
-    /**
-     * @dev Creates `amount` new tokens for `to`.
-     *
-     * See {ERC20-_mint}.
-     *
-     * Requirements:
-     *
-     * - the caller must be factory only.
-     */
-    function mint(address to) public virtual onlyFactory{
-        // We cannot just use balanceOf to create the new tokenId because tokens
-        // can be burned (destroyed), so we need a separate counter.
-        _mint(to, _tokenIdTracker.current());
-        _tokenIdTracker.increment();
-    }
+  /**
+   * @dev Creates `amount` new tokens for `to`.
+   *
+   * See {ERC20-_mint}.
+   *
+   * Requirements:
+   *
+   * - the caller must be factory only.
+   */
+  function mint(address to) public virtual onlyFactory {
+    // We cannot just use balanceOf to create the new tokenId because tokens
+    // can be burned (destroyed), so we need a separate counter.
+    _mint(to, _tokenIdTracker.current());
+    _tokenIdTracker.increment();
+  }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
-        super._beforeTokenTransfer(from, to, tokenId);
-    }
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 tokenId
+  ) internal virtual override(ERC721) {
+    super._beforeTokenTransfer(from, to, tokenId);
+  }
 }

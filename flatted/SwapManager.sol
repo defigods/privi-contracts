@@ -974,6 +974,111 @@ interface IERC721 is IERC165 {
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;
 }
 
+// File: @openzeppelin/contracts/token/ERC1155/IERC1155.sol
+
+// SPDX-License-Identifier: MIT
+
+pragma solidity >=0.6.2 <0.8.0;
+
+
+/**
+ * @dev Required interface of an ERC1155 compliant contract, as defined in the
+ * https://eips.ethereum.org/EIPS/eip-1155[EIP].
+ *
+ * _Available since v3.1._
+ */
+interface IERC1155 is IERC165 {
+    /**
+     * @dev Emitted when `value` tokens of token type `id` are transferred from `from` to `to` by `operator`.
+     */
+    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
+
+    /**
+     * @dev Equivalent to multiple {TransferSingle} events, where `operator`, `from` and `to` are the same for all
+     * transfers.
+     */
+    event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values);
+
+    /**
+     * @dev Emitted when `account` grants or revokes permission to `operator` to transfer their tokens, according to
+     * `approved`.
+     */
+    event ApprovalForAll(address indexed account, address indexed operator, bool approved);
+
+    /**
+     * @dev Emitted when the URI for token type `id` changes to `value`, if it is a non-programmatic URI.
+     *
+     * If an {URI} event was emitted for `id`, the standard
+     * https://eips.ethereum.org/EIPS/eip-1155#metadata-extensions[guarantees] that `value` will equal the value
+     * returned by {IERC1155MetadataURI-uri}.
+     */
+    event URI(string value, uint256 indexed id);
+
+    /**
+     * @dev Returns the amount of tokens of token type `id` owned by `account`.
+     *
+     * Requirements:
+     *
+     * - `account` cannot be the zero address.
+     */
+    function balanceOf(address account, uint256 id) external view returns (uint256);
+
+    /**
+     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {balanceOf}.
+     *
+     * Requirements:
+     *
+     * - `accounts` and `ids` must have the same length.
+     */
+    function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory);
+
+    /**
+     * @dev Grants or revokes permission to `operator` to transfer the caller's tokens, according to `approved`,
+     *
+     * Emits an {ApprovalForAll} event.
+     *
+     * Requirements:
+     *
+     * - `operator` cannot be the caller.
+     */
+    function setApprovalForAll(address operator, bool approved) external;
+
+    /**
+     * @dev Returns true if `operator` is approved to transfer ``account``'s tokens.
+     *
+     * See {setApprovalForAll}.
+     */
+    function isApprovedForAll(address account, address operator) external view returns (bool);
+
+    /**
+     * @dev Transfers `amount` tokens of token type `id` from `from` to `to`.
+     *
+     * Emits a {TransferSingle} event.
+     *
+     * Requirements:
+     *
+     * - `to` cannot be the zero address.
+     * - If the caller is not `from`, it must be have been approved to spend ``from``'s tokens via {setApprovalForAll}.
+     * - `from` must have a balance of tokens of type `id` of at least `amount`.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
+     * acceptance magic value.
+     */
+    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes calldata data) external;
+
+    /**
+     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {safeTransferFrom}.
+     *
+     * Emits a {TransferBatch} event.
+     *
+     * Requirements:
+     *
+     * - `ids` and `amounts` must have the same length.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155BatchReceived} and return the
+     * acceptance magic value.
+     */
+    function safeBatchTransferFrom(address from, address to, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata data) external;
+}
+
 // File: contracts/token/interfaces/FakeInterface.sol
 
 // SPDX-License-Identifier: MIT
@@ -984,7 +1089,7 @@ pragma solidity ^0.7.6;
  * @dev Interface of the ERC20 standard as defined in the EIP.
  */
 interface FakeInterface {
-    function mintForUser(address user, uint256 amount) external;
+  function mintForUser(address user, uint256 amount) external;
 }
 
 // File: contracts/interfaces/IBridgeManager.sol
@@ -994,85 +1099,113 @@ pragma solidity ^0.7.6;
 pragma experimental ABIEncoderV2;
 
 interface IBridgeManager {
-    
-    struct registeredToken {
-        string name;
-        string symbol;
-        address deployedAddress;
-    }
-    
-    /**
-     * @notice get an address of a registered erc20 tokens
-     */
-    function getErc20AddressRegistered(string calldata tokenSymbol) external view returns(address returnAddress);
-    
-    /**
-     * @notice get an array of all registered erc20 tokens
-     */
-    function getAllErc20Registered() external view returns(registeredToken[] memory);
-    
-    /**
-     * @notice get count of all registered erc20 tokens
-     */
-    function getAllErc20Count() external view returns(uint256);
+  struct registeredToken {
+    string name;
+    string symbol;
+    address deployedAddress;
+  }
 
-    /**
-     * @notice get an address of a registered erc721 tokens
-     */
-    function getErc721AddressRegistered(string calldata tokenSymbol) external view returns(address returnAddress);
-    
-    /**
-     * @notice get an array of all registered erc721 tokens
-     */
-    function getAllErc721Registered() external view returns(registeredToken[] memory);
-    
-    /**
-     * @notice get count of all registered erc721 tokens
-     */
-    function getAllErc721Count() external view returns(uint256);
+  /**
+   * @notice get an address of a registered erc20 tokens
+   */
+  function getErc20AddressRegistered(string calldata tokenSymbol)
+    external
+    view
+    returns (address returnAddress);
 
-    /**
-     * @notice get an address of a registered erc1155 tokens
-     */
-    function getErc1155AddressRegistered(string calldata tokenURI) external view returns(address returnAddress);
-    
-    /**
-     * @notice get an array of all registered erc1155 tokens
-     */
-    function getAllErc1155Registered() external view returns(registeredToken[] memory);
-    
-    /**
-     * @notice get count of all registered erc1155 tokens
-     */
-    function getAllErc1155Count() external view returns(uint256);
-    
-    /**
-     * @notice  Register the contract address of an ERC20 Token
-     * @dev     - Token name and address can't be already registered
-     *          - Length of token name can't be higher than 25
-     * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
-     * @param   tokenContractAddress Contract address of the ERC20 Token
-     */
-    function registerTokenERC20(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress) external;
+  /**
+   * @notice get an array of all registered erc20 tokens
+   */
+  function getAllErc20Registered()
+    external
+    view
+    returns (registeredToken[] memory);
 
-    /**
-     * @notice  Register the contract address of an ERC721 Token
-     * @dev     - Token name and address can't be already registered
-     *          - Length of token name can't be higher than 25
-     * @param   tokenName Name of the token to be registered
-     * @param   tokenContractAddress Contract address of the ERC721 Token
-     */
-    function registerTokenERC721(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress) external;
+  /**
+   * @notice get count of all registered erc20 tokens
+   */
+  function getAllErc20Count() external view returns (uint256);
 
-    /**
-     * @notice  Register the contract address of an ERC1155 Token
-     * @dev     - Token name and address can't be already registered
-     *          - Length of token name can't be higher than 25
-     * @param   tokenURI URI of the token to be registered
-     * @param   tokenContractAddress Contract address of the ERC1155 Token
-     */
-    function registerTokenERC1155(string calldata tokenName, string calldata tokenURI, address tokenContractAddress) external;
+  /**
+   * @notice get an address of a registered erc721 tokens
+   */
+  function getErc721AddressRegistered(string calldata tokenSymbol)
+    external
+    view
+    returns (address returnAddress);
 
+  /**
+   * @notice get an array of all registered erc721 tokens
+   */
+  function getAllErc721Registered()
+    external
+    view
+    returns (registeredToken[] memory);
+
+  /**
+   * @notice get count of all registered erc721 tokens
+   */
+  function getAllErc721Count() external view returns (uint256);
+
+  /**
+   * @notice get an address of a registered erc1155 tokens
+   */
+  function getErc1155AddressRegistered(string calldata tokenURI)
+    external
+    view
+    returns (address returnAddress);
+
+  /**
+   * @notice get an array of all registered erc1155 tokens
+   */
+  function getAllErc1155Registered()
+    external
+    view
+    returns (registeredToken[] memory);
+
+  /**
+   * @notice get count of all registered erc1155 tokens
+   */
+  function getAllErc1155Count() external view returns (uint256);
+
+  /**
+   * @notice  Register the contract address of an ERC20 Token
+   * @dev     - Token name and address can't be already registered
+   *          - Length of token name can't be higher than 25
+   * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
+   * @param   tokenContractAddress Contract address of the ERC20 Token
+   */
+  function registerTokenERC20(
+    string calldata tokenName,
+    string calldata tokenSymbol,
+    address tokenContractAddress
+  ) external;
+
+  /**
+   * @notice  Register the contract address of an ERC721 Token
+   * @dev     - Token name and address can't be already registered
+   *          - Length of token name can't be higher than 25
+   * @param   tokenName Name of the token to be registered
+   * @param   tokenContractAddress Contract address of the ERC721 Token
+   */
+  function registerTokenERC721(
+    string calldata tokenName,
+    string calldata tokenSymbol,
+    address tokenContractAddress
+  ) external;
+
+  /**
+   * @notice  Register the contract address of an ERC1155 Token
+   * @dev     - Token name and address can't be already registered
+   *          - Length of token name can't be higher than 25
+   * @param   tokenURI URI of the token to be registered
+   * @param   tokenContractAddress Contract address of the ERC1155 Token
+   */
+  function registerTokenERC1155(
+    string calldata tokenName,
+    string calldata tokenURI,
+    address tokenContractAddress
+  ) external;
 }
 
 // File: contracts/interfaces/IPRIVIPodERC20Factory.sol
@@ -1082,33 +1215,49 @@ interface IBridgeManager {
 pragma solidity ^0.7.6;
 
 interface IPRIVIPodERC20Factory {
+  function getTotalTokenCreated() external view returns (uint256 totalPods);
 
-    function getTotalTokenCreated() external view returns(uint256 totalPods);
+  function getPodAddressById(string calldata podId)
+    external
+    view
+    returns (address podAddress);
 
-    function getPodAddressById(string calldata podId) external view returns(address podAddress);
+  function getPodAddressBySymbol(string calldata tokenSymbol)
+    external
+    view
+    returns (address podAddress);
 
-    function getPodAddressBySymbol(string calldata tokenSymbol) external view returns(address podAddress);
-    
-    /**
-     *@dev only MODERATOR_ROLE role can create pods
-     *
-     * Requirements:
-     *
-     * - pod should not exist before.
-     */
-    function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol) external returns (address podAddress);
-    
-    /**
-     * @dev Moderator will mint the amount of pod token for the investor's account
-     *
-     * Requirements:
-     *
-     * - the caller must MODERATOR_ROLE to perform this action.
-     */
-    function mintPodTokenById(string calldata podId, address account,  uint256 investAmount) external;
+  /**
+   *@dev only MODERATOR_ROLE role can create pods
+   *
+   * Requirements:
+   *
+   * - pod should not exist before.
+   */
+  function createPod(
+    string calldata podId,
+    string calldata podTokenName,
+    string calldata podTokenSymbol
+  ) external returns (address podAddress);
 
-    function mintPodTokenBySymbol(string calldata tokenSymbol, address account,  uint256 investAmount) external;
-    
+  /**
+   * @dev Moderator will mint the amount of pod token for the investor's account
+   *
+   * Requirements:
+   *
+   * - the caller must MODERATOR_ROLE to perform this action.
+   */
+  function mintPodTokenById(
+    string calldata podId,
+    address account,
+    uint256 investAmount
+  ) external;
+
+  function mintPodTokenBySymbol(
+    string calldata tokenSymbol,
+    address account,
+    uint256 investAmount
+  ) external;
 }
 
 // File: contracts/interfaces/IPRIVIPodERC721Factory.sol
@@ -1118,33 +1267,91 @@ interface IPRIVIPodERC20Factory {
 pragma solidity ^0.7.6;
 
 interface IPRIVIPodERC721Factory {
+  function getTotalTokenCreated() external view returns (uint256 totalPods);
 
-    function getTotalTokenCreated() external view returns(uint256 totalPods);
+  function getPodAddressById(string calldata podId)
+    external
+    view
+    returns (address podAddress);
 
-    function getPodAddressById(string calldata podId) external view returns(address podAddress);
+  function getPodAddressBySymbol(string calldata tokenSymbol)
+    external
+    view
+    returns (address podAddress);
 
-    function getPodAddressBySymbol(string calldata tokenSymbol) external view returns(address podAddress);
-    
-    /**
-     *@dev only MODERATOR_ROLE role can create pods
-     *
-     * Requirements:
-     *
-     * - pod should not exist before.
-     */
-    function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol, string calldata baseURI) external returns (address podAddress);
-    
-    /**
-     * @dev Moderator will mint the amount of pod token for the investor's account
-     *
-     * Requirements:
-     *
-     * - the caller must MODERATOR_ROLE to perform this action.
-     */
-    function mintPodTokenById(string calldata podId, address account) external;
+  /**
+   *@dev only MODERATOR_ROLE role can create pods
+   *
+   * Requirements:
+   *
+   * - pod should not exist before.
+   */
+  function createPod(
+    string calldata podId,
+    string calldata podTokenName,
+    string calldata podTokenSymbol,
+    string calldata baseURI
+  ) external returns (address podAddress);
 
-    function mintPodTokenBySymbol(string calldata tokenSymbol, address account) external;
-    
+  /**
+   * @dev Moderator will mint the amount of pod token for the investor's account
+   *
+   * Requirements:
+   *
+   * - the caller must MODERATOR_ROLE to perform this action.
+   */
+  function mintPodTokenById(string calldata podId, address account) external;
+
+  function mintPodTokenBySymbol(string calldata tokenSymbol, address account)
+    external;
+}
+
+// File: contracts/interfaces/IPRIVIPodERC1155Factory.sol
+
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.7.6;
+
+interface IPRIVIPodERC1155Factory {
+  event PodCreated(string indexed uri, address podAddress);
+
+  function getPodAddressByUri(string calldata uri)
+    external
+    view
+    returns (address podAddress);
+
+  /**
+   *@dev caller create a new pod.
+   *
+   * Requirements:
+   *
+   * - the caller must MODERATOR_ROLE to perform this action.
+   * - pod should not exist before.
+   */
+  function createPod(string calldata uri) external returns (address podAddress);
+
+  /**
+   * @dev Moderator will mint the amount of pod token for the investor's account
+   *
+   * Requirements:
+   *
+   * - the caller must MODERATOR_ROLE to perform this action.
+   */
+  function podMint(
+    string calldata uri,
+    address account,
+    uint256 tokenId,
+    uint256 amount,
+    bytes calldata data
+  ) external;
+
+  function podMintBatch(
+    string calldata uri,
+    address account,
+    uint256[] memory tokenIds,
+    uint256[] memory amounts,
+    bytes calldata data
+  ) external;
 }
 
 // File: contracts/SwapManager.sol
@@ -1159,229 +1366,411 @@ pragma solidity ^0.7.6;
 
 
 
+
+
 /// @author The PRIVI Blockchain team
 /// @title Manages swap and withdraw of Ethers, ERC20 tokens and ERC721 tokens between Users and PRIVI platform
+contract SwapManager is AccessControl {
+  bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
+  address private ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
+  address public bridgeManagerAddress;
+  address public erc20FactoryAddress;
+  address public erc721FactoryAddress;
+  address public erc1155FactoryAddress;
 
-contract SwapManager is AccessControl{
-    // bytes32 public constant REGISTER_ROLE = keccak256("REGISTER_ROLE");
-    bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
-    address private ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
-    address public bridgeManagerAddress;
-    address public erc20FactoryAddress;
-    address public erc721FactoryAddress;
+  event DepositERC20Token(
+    string indexed tokenSymbol,
+    address from,
+    uint256 amount
+  );
+  event WithdrawERC20Token(
+    string indexed tokenSymbol,
+    address to,
+    uint256 amount
+  );
+  event DepositERC721Token(
+    string indexed tokenSymbol,
+    address from,
+    uint256 amount
+  );
+  event WithdrawERC721Token(
+    string indexed tokenSymbol,
+    address to,
+    uint256 tokenId
+  );
+  event DepositERC1155Token(
+    string indexed tokenURI,
+    address to,
+    uint256 tokenId,
+    uint256 amount
+  );
+  event WithdrawERC1155Token(
+    string indexed tokenURI,
+    address to,
+    uint256 tokenId,
+    uint256 amount
+  );
+  event BatchWithdrawERC1155Token(
+    string indexed tokenURI,
+    address to,
+    uint256[] tokenIds,
+    uint256[] amounts
+  );
+  event DepositEther(address indexed from, uint256 amount);
+  event WithdrawEther(address indexed to, uint256 amount);
 
-    event DepositERC20Token(string indexed tokenSymbol, address from, uint256 amount);
-    event WithdrawERC20Token(string indexed tokenSymbol, address to, uint256 amount);
-    event DepositERC721Token(string indexed tokenSymbol, address from, uint256 amount);
-    event WithdrawERC721Token(string indexed tokenSymbol, address to, uint256 tokenId);
-    // event DepositERC1155Token(string indexed tokenSymbol, address to, uint256 amount);
-    // event WithdrawERC1155Token(string indexed tokenSymbol, address to, uint256 tokenId);
-    event DepositEther(address indexed from, uint256 amount);
-    event WithdrawEther(address indexed to, uint256 amount);
+  /**
+   * @notice Constructor to assign all roles to contract creator
+   */
+  constructor(
+    address bridgeDeployedAddress,
+    address erc20FactoryDeployedAddress,
+    address erc721FactoryDeployedAddress,
+    address erc1155FactoryDeployedAddress
+  ) {
+    _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+    // _setupRole(REGISTER_ROLE, _msgSender());
+    _setupRole(TRANSFER_ROLE, _msgSender());
+    bridgeManagerAddress = bridgeDeployedAddress;
+    erc20FactoryAddress = erc20FactoryDeployedAddress;
+    erc721FactoryAddress = erc721FactoryDeployedAddress;
+    erc1155FactoryAddress = erc1155FactoryDeployedAddress;
+  }
 
-    /**
-     * @notice  Modifier to require 'tokenSymbol' is not empty
-     * @param   tokenSymbolToCheck Token name to be checked
-     */
-    modifier tokenNameIsNotEmpty(string memory tokenSymbolToCheck) {
-        bytes memory bytesTokenName = bytes(tokenSymbolToCheck);
-        require(bytesTokenName.length != 0, "SwapManager: tokenName can't be empty");
-        _;
+  /**
+   * @notice  Transfer ERC20 token from sender address (User) to contract address (PRIVI)
+   * @dev     - Token to be transferred must be already registered
+   *          - User has to approve first the amount to be transferred WITHIN the original ERC20 token contract,
+   *          and not from this contract. Otherwise, transaction will always fail
+   * @param   tokenSymbol Name of the token to be transferred
+   * @param   amount Amount of tokens to be transferred
+   */
+  function depositERC20Token(string calldata tokenSymbol, uint256 amount)
+    external
+  {
+    IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+    address tokenAddress = bManager.getErc20AddressRegistered(tokenSymbol);
+    require(
+      tokenAddress != ZERO_ADDRESS,
+      "SwapManager: token is not registered into the platform"
+    );
+    require(
+      IERC20(tokenAddress).allowance(_msgSender(), address(this)) >= amount,
+      "SwapManager: token amount to be transferred to PRIVI is not yet approved by User"
+    );
+    IERC20(tokenAddress).transferFrom(_msgSender(), address(this), amount);
+    emit DepositERC20Token(tokenSymbol, _msgSender(), amount);
+  }
+
+  /**
+   * @notice  Transfer ERC20 token from contract address (PRIVI) to sender address (User)
+   * @dev     - User must have TRANSFER_ROLE
+   *          - PRIVI must have enough tokens to transfer them back to User
+   * @param   tokenSymbol Name of the token to be transferred
+   * @param   to Destination address to receive the tokens
+   * @param   amount Amount of tokens to be transferred
+   */
+  function withdrawERC20Token(
+    string calldata tokenSymbol,
+    address to,
+    uint256 amount
+  ) external {
+    IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+    address tokenAddress = bManager.getErc20AddressRegistered(tokenSymbol);
+    require(
+      hasRole(TRANSFER_ROLE, _msgSender()),
+      "SwapManager: must have TRANSFER_ROLE to withdraw token"
+    );
+    if (amount <= IERC20(tokenAddress).balanceOf(address(this))) {
+      IERC20(tokenAddress).approve(address(this), amount);
+      IERC20(tokenAddress).transferFrom(address(this), to, amount);
+      emit WithdrawERC20Token(tokenSymbol, to, amount);
+    } else if (
+      IPRIVIPodERC20Factory(erc20FactoryAddress).getPodAddressBySymbol(
+        tokenSymbol
+      ) != ZERO_ADDRESS
+    ) {
+      IPRIVIPodERC20Factory(erc20FactoryAddress).mintPodTokenBySymbol(
+        tokenSymbol,
+        to,
+        amount
+      );
+      emit WithdrawERC20Token(tokenSymbol, to, amount);
+    } else {
+      // only for testnet mint fake tokens
+      FakeInterface(tokenAddress).mintForUser(to, amount);
+      emit WithdrawERC20Token(tokenSymbol, to, amount);
+    }
+  }
+
+  /**
+   * @notice  Transfer ERC721 token from sender address (User) to contract address (PRIVI)
+   * @dev     - User must have TRANSFER_ROLE
+   *          - Token to be transferred must be already registered
+   *          - User has to approve first the amount to be transferred WITHIN the original ERC721 token contract,
+   *          and not from this contract. Otherwise, transaction will always fail
+   * @param   tokenSymbol Name of the token to be transferred
+   * @param   tokenId Token identifier to be transferred
+   */
+  function depositERC721Token(string calldata tokenSymbol, uint256 tokenId)
+    external
+  {
+    IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+    address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
+    require(
+      tokenAddress != ZERO_ADDRESS,
+      "SwapManager: token is not registered into the platform"
+    );
+    /* TO BE TESTED */
+    require(
+      IERC721(tokenAddress).getApproved(tokenId) == address(this),
+      "SwapManager: token to be transferred to PRIVI is not yet approved by User"
+    );
+    IERC721(tokenAddress).transferFrom(_msgSender(), address(this), tokenId);
+    emit DepositERC721Token(tokenSymbol, _msgSender(), tokenId);
+  }
+
+  /**
+   * @notice  Transfer ERC721 token from contract address (PRIVI) to sender address (User)
+   * @dev     - User must have TRANSFER_ROLE
+   *          - PRIVI must have enough tokens to transfer them back to User
+   * @param   tokenSymbol Name of the token to be transferred
+   * @param   to Destination address to receive the tokens
+   * @param   tokenId Token identifier to be transferred
+   * @param   isPodMint is it a withdraw from swap manager or is it minting new nft pod token
+   */
+  function withdrawERC721Token(
+    string calldata tokenSymbol,
+    address to,
+    uint256 tokenId,
+    bool isPodMint
+  ) external {
+    IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+    address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
+    require(
+      hasRole(TRANSFER_ROLE, _msgSender()),
+      "SwapManager: must have TRANSFER_ROLE to withdraw token"
+    );
+    if (isPodMint == true) {
+      if (
+        IPRIVIPodERC721Factory(erc721FactoryAddress).getPodAddressBySymbol(
+          tokenSymbol
+        ) != ZERO_ADDRESS
+      ) {
+        IPRIVIPodERC721Factory(erc721FactoryAddress).mintPodTokenBySymbol(
+          tokenSymbol,
+          to
+        );
+        emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+      } else {
+        revert();
+      }
+    } else {
+      if (IERC721(tokenAddress).ownerOf(tokenId) == address(this)) {
+        IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
+        emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+      } else {
+        revert();
+      }
+    }
+  }
+
+  /**
+   * @notice  Transfer ERC1155 token from sender address (User) to contract address (PRIVI)
+   * @dev     - User must have TRANSFER_ROLE
+   *          - Token to be transferred must be already registered
+   *          - User has to approve first the amount to be transferred WITHIN the original ERC1155 token contract,
+   *          and not from this contract. Otherwise, transaction will always fail
+   * @param   tokenURI Name of the token to be transferred
+   * @param   to Destination address to receive the tokens
+   * @param   tokenId Token identifier to be transferred
+   */
+  function depositERC1155Token(
+    string calldata tokenURI,
+    address to,
+    uint256 tokenId,
+    uint256 amount,
+    bytes memory data
+  ) external {
+    IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+    address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
+    require(
+      tokenAddress != ZERO_ADDRESS,
+      "SwapManager: token is not registered on BridgeManager"
+    );
+    /* TO BE TESTED */
+    require(
+      IERC1155(tokenAddress).isApprovedForAll(msg.sender, address(this)) ==
+        true,
+      "SwapManager: user did not grant aprove yet."
+    );
+    IERC1155(tokenAddress).safeTransferFrom(
+      msg.sender,
+      to,
+      tokenId,
+      amount,
+      data
+    );
+    emit DepositERC1155Token(tokenURI, to, tokenId, amount);
+  }
+
+  /**
+   * @notice  Transfer ERC1155 token from contract address (PRIVI) to address (User)
+   * @dev     - PRIVI must have enough tokens to transfer them to User
+   *          or is has to be isPodMint.
+   * @param   tokenURI Name of the token to be transferred
+   * @param   to Destination address to receive the tokens
+   * @param   tokenId Token identifier to be transferred
+   * @param   amount Token amount to be transfered
+   * @param   data bytes
+   */
+  function withdrawERC1155Token(
+    string calldata tokenURI,
+    address to,
+    uint256 tokenId,
+    uint256 amount,
+    bytes memory data,
+    bool isPodMint
+  ) external {
+    IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+    address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
+    require(
+      hasRole(TRANSFER_ROLE, _msgSender()),
+      "SwapManager: must have TRANSFER_ROLE to withdraw token"
+    );
+    if (isPodMint == true) {
+      if (
+        IPRIVIPodERC1155Factory(erc1155FactoryAddress).getPodAddressByUri(
+          tokenURI
+        ) != ZERO_ADDRESS
+      ) {
+        IPRIVIPodERC1155Factory(erc1155FactoryAddress).podMint(
+          tokenURI,
+          to,
+          tokenId,
+          amount,
+          data
+        );
+        emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
+      } else {
+        revert();
+      }
+    } else {
+      require(
+        IERC1155(tokenAddress).balanceOf(address(this), tokenId) >= amount,
+        "SwapManager: insufficient funds in PRIVI SwapManager"
+      );
+      IERC1155(tokenAddress).safeTransferFrom(
+        address(this),
+        to,
+        tokenId,
+        amount,
+        data
+      );
+      emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
+    }
+  }
+
+  /**
+   * @notice  Batch Transfer ERC1155 token from contract address (PRIVI) to address (User)
+   * @dev     - PRIVI must have enough tokens to transfer them to User
+   *          or is has to be isPodMint.
+   * @param   tokenURI Name of the token to be transferred
+   * @param   to Destination address to receive the tokens
+   * @param   tokenIds Token identifiers to be transferred
+   * @param   amounts Token amounts to be transfered
+   * @param   data bytes
+   */
+  function batchWithdrawERC1155Token(
+    string calldata tokenURI,
+    address to,
+    uint256[] memory tokenIds,
+    uint256[] memory amounts,
+    bytes memory data,
+    bool isPodMint
+  ) external {
+    IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+    address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
+    require(
+      hasRole(TRANSFER_ROLE, _msgSender()),
+      "SwapManager: must have TRANSFER_ROLE to withdraw token"
+    );
+    if (isPodMint == true) {
+      if (
+        IPRIVIPodERC1155Factory(erc1155FactoryAddress).getPodAddressByUri(
+          tokenURI
+        ) != ZERO_ADDRESS
+      ) {
+        IPRIVIPodERC1155Factory(erc1155FactoryAddress).podMintBatch(
+          tokenURI,
+          to,
+          tokenIds,
+          amounts,
+          data
+        );
+        emit BatchWithdrawERC1155Token(tokenURI, to, tokenIds, amounts);
+      } else {
+        revert();
+      }
+    } else {
+      IERC1155(tokenAddress).safeBatchTransferFrom(
+        address(this),
+        to,
+        tokenIds,
+        amounts,
+        data
+      );
+      emit BatchWithdrawERC1155Token(tokenURI, to, tokenIds, amounts);
+    }
+  }
+
+  /**
+   * @notice  Transfer ether from sender address to contract address
+   * @dev     - Amount to be deposited must be greater than 0 ethers
+   */
+  function depositEther() external payable {
+    require(msg.value > 0, "SwapManager: amount must be greater than 0 ethers");
+    emit DepositEther(_msgSender(), msg.value);
+  }
+
+  /**
+   * @notice  Transfer ether from contract address to sender address
+   * @dev     - Sender must have TRANSFER_ROLE
+   *          - Contract must have enough balance to do the transfer
+   * @param   to Destination address to receive the ether
+   * @param   amount Amount of ether to be transferred
+   */
+  function withdrawEther(address to, uint256 amount) external {
+    require(
+      hasRole(TRANSFER_ROLE, _msgSender()),
+      "SwapManager: must have TRANSFER_ROLE to tranfer Eth"
+    );
+    require(
+      payable(address(this)).balance >= amount,
+      "SwapManager: not enough contract balance for the transfer"
+    );
+
+    address payable recipient = address(uint160(to));
+
+    if (amount <= address(this).balance) {
+      recipient.transfer(amount);
+    } else {
+      IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
+      address tokenAddress = bManager.getErc20AddressRegistered("WETH");
+      require(
+        tokenAddress != ZERO_ADDRESS,
+        "SwapManager: WETH is not registered into the platform"
+      );
+      FakeInterface(tokenAddress).mintForUser(to, amount);
     }
 
-    /**
-     * @notice Constructor to assign all roles to contract creator
-     */
-    constructor(address bridgeDeployedAddress, address erc20FactoryDeployedAddress, address erc721FactoryDeployedAddress) {
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        // _setupRole(REGISTER_ROLE, _msgSender());
-        _setupRole(TRANSFER_ROLE, _msgSender());
-        bridgeManagerAddress = bridgeDeployedAddress;
-        erc20FactoryAddress = erc20FactoryDeployedAddress;
-        erc721FactoryAddress = erc721FactoryDeployedAddress;
-    }
+    emit WithdrawEther(to, amount);
+  }
 
-    /**
-     * @notice  Transfer ERC20 token from sender address (User) to contract address (PRIVI)
-     * @dev     - Token to be transferred must be already registered
-     *          - User has to approve first the amount to be transferred WITHIN the original ERC20 token contract,
-     *          and not from this contract. Otherwise, transaction will always fail
-     * @param   tokenSymbol Name of the token to be transferred
-     * @param   amount Amount of tokens to be transferred
-     */
-    function depositERC20Token(string memory tokenSymbol, uint256 amount) public {
-        IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
-        address tokenAddress = bManager.getErc20AddressRegistered(tokenSymbol);
-        require(tokenAddress != ZERO_ADDRESS, 
-            "SwapManager: token is not registered into the platform");
-        require(IERC20(tokenAddress).allowance(_msgSender(), address(this)) >= amount, 
-            "SwapManager: token amount to be transferred to PRIVI is not yet approved by User"); 
-        IERC20(tokenAddress).transferFrom(_msgSender(), address(this), amount);
-        emit DepositERC20Token(tokenSymbol, _msgSender(), amount);
-    }
-
-    /**
-     * @notice  Transfer ERC20 token from contract address (PRIVI) to sender address (User)
-     * @dev     - User must have TRANSFER_ROLE
-     *          - PRIVI must have enough tokens to transfer them back to User
-     * @param   tokenSymbol Name of the token to be transferred
-     * @param   to Destination address to receive the tokens
-     * @param   amount Amount of tokens to be transferred
-     */
-    function withdrawERC20Token(string memory tokenSymbol, address to, uint256 amount) public {
-        IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
-        address tokenAddress = bManager.getErc20AddressRegistered(tokenSymbol);
-        require(hasRole(TRANSFER_ROLE, _msgSender()), 
-            "SwapManager: must have TRANSFER_ROLE to withdraw token");
-        if (amount <= IERC20(tokenAddress).balanceOf(address(this))) {
-            IERC20(tokenAddress).approve(address(this), amount);
-            IERC20(tokenAddress).transferFrom(address(this), to, amount);
-            emit WithdrawERC20Token(tokenSymbol, to, amount);
-        } else if (IPRIVIPodERC20Factory(erc20FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
-            IPRIVIPodERC20Factory(erc20FactoryAddress).mintPodTokenBySymbol(tokenSymbol, to, amount);
-            emit WithdrawERC20Token(tokenSymbol, to, amount);
-        } else { // only for testnet mint fake tokens
-            FakeInterface(tokenAddress).mintForUser(to, amount);
-            emit WithdrawERC20Token(tokenSymbol, to, amount);
-        }
-    }
-
-    /**
-     * @notice  Transfer ERC721 token from sender address (User) to contract address (PRIVI)
-     * @dev     - User must have TRANSFER_ROLE
-     *          - Token to be transferred must be already registered
-     *          - User has to approve first the amount to be transferred WITHIN the original ERC721 token contract,
-     *          and not from this contract. Otherwise, transaction will always fail
-     * @param   tokenSymbol Name of the token to be transferred
-     * @param   tokenId Token identifier to be transferred
-     */
-    function depositERC721Token(string memory tokenSymbol, uint256 tokenId) public {
-        IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
-        address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
-        require(tokenAddress != ZERO_ADDRESS, 
-            "SwapManager: token is not registered into the platform");
-        /* TO BE TESTED */
-        require(IERC721(tokenAddress).getApproved(tokenId) == address(this), 
-            "SwapManager: token to be transferred to PRIVI is not yet approved by User"); 
-        IERC721(tokenAddress).transferFrom(_msgSender(), address(this), tokenId);
-        emit DepositERC721Token(tokenSymbol, _msgSender(), tokenId);
-    }
-
-    /**
-     * @notice  Transfer ERC721 token from contract address (PRIVI) to sender address (User)
-     * @dev     - User must have TRANSFER_ROLE
-     *          - PRIVI must have enough tokens to transfer them back to User
-     * @param   tokenSymbol Name of the token to be transferred
-     * @param   to Destination address to receive the tokens
-     * @param   tokenId Token identifier to be transferred
-     * @param   isPodMint is it a withdraw from swap manager or is it minting new nft pod token
-     */
-    function withdrawERC721Token(string memory tokenSymbol, address to, uint256 tokenId, bool isPodMint) public {
-        IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
-        address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
-        require(hasRole(TRANSFER_ROLE, _msgSender()), 
-            "SwapManager: must have TRANSFER_ROLE to withdraw token");
-        if (isPodMint == true) {
-            if (IPRIVIPodERC721Factory(erc721FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
-                IPRIVIPodERC721Factory(erc721FactoryAddress).mintPodTokenBySymbol(tokenSymbol, to);
-                emit WithdrawERC721Token(tokenSymbol, to, tokenId);
-            } else {
-                revert();
-            }
-        } else {
-            if (IERC721(tokenAddress).ownerOf(tokenId) == address(this)) {
-                IERC721(tokenAddress).approve(address(this), tokenId);
-                IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
-                emit WithdrawERC721Token(tokenSymbol, to, tokenId);
-            } else {
-                revert();
-            }
-        }
-    }
-
-    /**
-     * @notice  Transfer ERC1155 token from sender address (User) to contract address (PRIVI)
-     * @dev     - User must have TRANSFER_ROLE
-     *          - Token to be transferred must be already registered
-     *          - User has to approve first the amount to be transferred WITHIN the original ERC1155 token contract,
-     *          and not from this contract. Otherwise, transaction will always fail
-     * @param   tokenSymbol Name of the token to be transferred
-     * @param   to Destination address to receive the tokens
-     * @param   tokenId Token identifier to be transferred
-     */
-    // function depositERC1155Token(string memory tokenSymbol, address to, uint256 tokenId) public {
-    //     IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
-    //     address tokenAddress = bManager.getErc1155AddressRegistered(tokenSymbol);
-    //     require(tokenAddress != ZERO_ADDRESS, 
-    //         "SwapManager: token is not registered into the platform");
-    //     /* TO BE TESTED */
-    //     require(IERC1155(tokenAddress).getApproved(tokenId) == address(this), 
-    //         "SwapManager: token to be transferred to PRIVI is not yet approved by User"); 
-    //     IERC1155(tokenAddress).transferFrom(msg.sender, to, tokenId);
-    //     emit DepositERC1155Token(tokenSymbol, to, tokenId);
-    // }
-
-    /**
-     * @notice  Transfer ERC1155 token from contract address (PRIVI) to sender address (User)
-     * @dev     - User must have TRANSFER_ROLE
-     *          - PRIVI must have enough tokens to transfer them back to User
-     * @param   tokenSymbol Name of the token to be transferred
-     * @param   to Destination address to receive the tokens
-     * @param   tokenId Token identifier to be transferred
-     */
-    // function withdrawERC1155Token(string memory tokenSymbol, address to, uint256 tokenId) public {
-    //     IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
-    //     address tokenAddress = bManager.getErc1155AddressRegistered(tokenSymbol);
-    //     require(hasRole(TRANSFER_ROLE, _msgSender()), 
-    //         "SwapManager: must have TRANSFER_ROLE to withdraw token");
-    //     require(IERC1155(tokenAddress).balanceOf(address(this)) > 0, 
-    //         "SwapManager: insufficient funds in PRIVI contract");
-    //     IERC1155(tokenAddress).approve(address(this), tokenId);
-    //     IERC1155(tokenAddress).transferFrom(address(this), to, tokenId);
-    //     emit WithdrawERC1155Token(tokenSymbol, to, tokenId);
-    // }
-    
-    /**
-     * @notice  Transfer ether from sender address to contract address
-     * @dev     - Amount to be deposited must be greater than 0 ethers 
-     */
-    function depositEther() external payable {
-        require(msg.value > 0, "SwapManager: amount must be greater than 0 ethers");
-        emit DepositEther(_msgSender(), msg.value);  
-    }
-    
-    /**
-     * @notice  Transfer ether from contract address to sender address
-     * @dev     - Sender must have TRANSFER_ROLE
-     *          - Contract must have enough balance to do the transfer
-     * @param   to Destination address to receive the ether
-     * @param   amount Amount of ether to be transferred
-     */
-    function withdrawEther(address to, uint256 amount) public {
-        require(hasRole(TRANSFER_ROLE, _msgSender()), 
-            "SwapManager: must have TRANSFER_ROLE to tranfer Eth");
-        require(payable(address(this)).balance >= amount, 
-            "SwapManager: not enough contract balance for the transfer");
-        
-        address payable recipient = address(uint160(to));
-
-        if(amount <= address(this).balance) {
-            recipient.transfer(amount);
-        } else {
-            IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
-            address tokenAddress = bManager.getErc20AddressRegistered("WETH");
-            require(tokenAddress != ZERO_ADDRESS, 
-            "SwapManager: WETH is not registered into the platform");
-            FakeInterface(tokenAddress).mintForUser(to, amount);
-        }
-        
-        emit WithdrawEther(to, amount);
-    }
-
-    /**
-     * @return  Contract balance in weis
-     */
-    function getBalance() public view returns (uint256) {
-        return payable(address(this)).balance;
-    }
+  /**
+   * @return  Contract balance in weis
+   */
+  function getBalance() external view returns (uint256) {
+    return payable(address(this)).balance;
+  }
 }

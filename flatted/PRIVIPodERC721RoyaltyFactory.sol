@@ -300,7 +300,7 @@ library EnumerableSet {
 
 // File: @openzeppelin/contracts/utils/Address.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.2 <0.8.0;
 
@@ -492,7 +492,7 @@ library Address {
 
 // File: @openzeppelin/contracts/utils/Context.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -519,7 +519,7 @@ abstract contract Context {
 
 // File: @openzeppelin/contracts/access/AccessControl.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -738,7 +738,7 @@ abstract contract AccessControl is Context {
 
 // File: @openzeppelin/contracts/math/SafeMath.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -955,13 +955,13 @@ library SafeMath {
 
 // File: @openzeppelin/contracts/GSN/Context.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
 // File: @openzeppelin/contracts/utils/Counters.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1003,7 +1003,7 @@ library Counters {
 
 // File: @openzeppelin/contracts/introspection/IERC165.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1030,7 +1030,7 @@ interface IERC165 {
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.2 <0.8.0;
 
@@ -1161,7 +1161,7 @@ interface IERC721 is IERC165 {
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721Metadata.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.2 <0.8.0;
 
@@ -1190,7 +1190,7 @@ interface IERC721Metadata is IERC721 {
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721Enumerable.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.2 <0.8.0;
 
@@ -1221,7 +1221,7 @@ interface IERC721Enumerable is IERC721 {
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721Receiver.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1245,7 +1245,7 @@ interface IERC721Receiver {
 
 // File: @openzeppelin/contracts/introspection/ERC165.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1301,7 +1301,7 @@ abstract contract ERC165 is IERC165 {
 
 // File: @openzeppelin/contracts/utils/EnumerableMap.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1570,7 +1570,7 @@ library EnumerableMap {
 
 // File: @openzeppelin/contracts/utils/Strings.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -1607,7 +1607,7 @@ library Strings {
 
 // File: @openzeppelin/contracts/token/ERC721/ERC721.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -2087,7 +2087,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable 
 
 // File: @openzeppelin/contracts/token/ERC721/ERC721Burnable.sol
 
-// SPDX-License-Identifier: MIT
+
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -2112,11 +2112,86 @@ abstract contract ERC721Burnable is Context, ERC721 {
     }
 }
 
-// File: contracts/token/PRIVIPodERC721Token.sol
+// File: contracts/abstracts/NFTRoyalty.sol
 
-// SPDX-License-Identifier: MIT
+pragma solidity 0.7.6;
+
+
+
+abstract contract NFTRoyalty {
+  /*
+   * bytes4(keccak256('supportsInterface(bytes4)')) == 0x01ffc9a7
+   */
+  uint256 internal royalty_amount;
+  address internal creator;
+
+  /**
+    @notice (Mandatory) This event is emitted when royalties are transfered.
+
+    @dev The marketplace would emit this event from their contracts. Or they would call royaltiesRecieved() function.
+
+    @param creator The original creator of the NFT entitled to the royalties
+    @param buyer The person buying the NFT on a secondary sale
+    @param amount The amount being paid to the creator
+    */
+  event RecievedRoyalties(
+    address indexed creator,
+    address indexed buyer,
+    uint256 indexed amount
+  );
+
+  constructor(uint256 _amount, address _creator) {
+    royalty_amount = _amount;
+    creator = _creator;
+  }
+
+  /**
+    @notice (Mandatory) This Function retrieve royalty info.
+    */
+  function royaltyInfo() external view returns (uint256, address) {
+    return (royalty_amount, creator);
+  }
+
+  /**
+    @notice (optional) check if NFT has royalty
+    */
+  function hasRoyalties() public pure returns (bool) {
+    return true;
+  }
+
+  /**
+    @notice (optional) get royalty creator address
+    */
+  function royaltyCreator() external view returns (address) {
+    return creator;
+  }
+
+  /**
+    @notice (optional) get royalty amount
+    */
+  function royaltyAmount() external view returns (uint256) {
+    return royalty_amount;
+  }
+
+  /**
+    @notice (optional) check if NFT has royalty
+    */
+  function royaltiesRecieved(
+    address _creator,
+    address _buyer,
+    uint256 _amount
+  ) public {
+    emit RecievedRoyalties(_creator, _buyer, _amount);
+  }
+}
+
+// File: contracts/token/PRIVIPodERC721TokenRoyalty.sol
+
+
 
 pragma solidity ^0.7.6;
+
+
 
 
 
@@ -2129,7 +2204,8 @@ pragma solidity ^0.7.6;
  *  - a factoryOnly modifier, that grants mint capabilities only to factory who deployed this pod token contract
  *
  */
-contract PRIVIPodERC721Token is Context, ERC721Burnable {
+contract PRIVIPodERC721TokenRoyalty is Context, ERC721Burnable, NFTRoyalty {
+  using SafeMath for uint256;
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIdTracker;
   address public parentFactory;
@@ -2143,8 +2219,10 @@ contract PRIVIPodERC721Token is Context, ERC721Burnable {
     string memory name,
     string memory symbol,
     string memory baseURI,
-    address factory
-  ) ERC721(name, symbol) {
+    address factory,
+    uint256 royaltyAmount,
+    address creator
+  ) ERC721(name, symbol) NFTRoyalty(royaltyAmount, creator) {
     parentFactory = factory;
     _setBaseURI(baseURI);
   }
@@ -2173,6 +2251,46 @@ contract PRIVIPodERC721Token is Context, ERC721Burnable {
     _tokenIdTracker.increment();
   }
 
+  /**
+   * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
+   * are aware of the ERC721 protocol to prevent tokens from being forever locked.
+   * Then pay royalty amount.
+   *
+   * Requirements:
+   *
+   * - approval from current owner of token id
+   *
+   * Emits a {RecievedRoyalties} event.
+   *
+   * Problems: TODO: may have reentrancy
+   */
+  function marketSell(
+    uint256 sellAmount,
+    uint256 tokenId,
+    address from,
+    address to
+  ) public payable {
+    // make sure all the fund is deposited here first
+    require(
+      msg.value == sellAmount,
+      "PRIVIPodERC721TokenRoyalty: royalty amount is not correct"
+    );
+
+    // pay creator
+    uint256 creatorShare = (msg.value.mul(royalty_amount)).div(100); // TODO: needs testing for very low and hi amount
+    address payable royaltyOwner = payable(creator);
+    royaltyOwner.transfer(creatorShare);
+
+    // pay current owner
+    payable(from).transfer(msg.value.sub(creatorShare));
+
+    // transfer token
+    safeTransferFrom(from, to, tokenId, bytes("royalty paid"));
+
+    // event
+    royaltiesRecieved(creator, to, creatorShare);
+  }
+
   function _beforeTokenTransfer(
     address from,
     address to,
@@ -2184,7 +2302,7 @@ contract PRIVIPodERC721Token is Context, ERC721Burnable {
 
 // File: contracts/interfaces/IBridgeManager.sol
 
-// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.7.6;
 pragma experimental ABIEncoderV2;
 
@@ -2298,9 +2416,93 @@ interface IBridgeManager {
   ) external;
 }
 
-// File: contracts/PRIVIPodERC721Factory.sol
+// File: contracts/deployable_managers/MultiCreatorNftManager.sol
 
-// SPDX-License-Identifier: MIT
+pragma solidity >=0.7.6;
+
+
+
+
+
+/**
+ * @notice this contract under heavy development and it is not ready for production.
+ */
+contract MultiCreatorNftManager {
+  using SafeMath for uint256;
+  using Counters for Counters.Counter;
+
+  address[] public creators;
+  uint256[] public shares;
+  Counters.Counter public recieveCounter;
+  mapping(uint256 => uint256) public recievedPayments;
+  mapping(address => uint256) public lastPaid;
+
+  constructor(address[] memory _creators, uint256[] memory _shares) {
+    require(
+      _creators.length == _shares.length,
+      "MultiCreatorNftManager: Creators and Shares are not of same length."
+    );
+    creators = _creators;
+    shares = _shares;
+  }
+
+  /**
+   * @dev incriment counter for each deposite
+   */
+  receive() external payable {
+    recievedPayments[recieveCounter.current()] = msg.value;
+    recieveCounter.increment();
+  }
+
+  /**
+   * @dev calculate current un-withdrawed creator share
+   */
+  function getSharesTotal(uint256 _creatorIndex)
+    public
+    view
+    returns (uint256 shareTotal)
+  {
+    for (
+      uint256 i = lastPaid[creators[_creatorIndex]];
+      i <= recieveCounter.current();
+      i++
+    ) {
+      shareTotal =
+        shareTotal.add(
+          (
+            shares[_creatorIndex]
+            .mul(recievedPayments[i])
+          )
+          .div(100)
+        );
+        
+    }
+  }
+
+  /**
+   * @dev withdrawed creator share
+   */
+  function withdraw(uint256 _creatorIndex) external {
+    require(
+      msg.sender == creators[_creatorIndex],
+      "MultiCreatorNftManager: You are not one of the creators."
+    );
+    uint256 shareTotal = getSharesTotal(_creatorIndex);
+    lastPaid[msg.sender] = recieveCounter.current();
+    payable(msg.sender).transfer(shareTotal);
+  }
+
+  /**
+   * @dev get contract balance
+   */
+  function getContractBalance() external view returns (uint256 balance) {
+    balance = address(this).balance;
+  }
+}
+
+// File: contracts/PRIVIPodERC721RoyaltyFactory.sol
+
+
 
 pragma solidity ^0.7.6;
 
@@ -2308,123 +2510,99 @@ pragma solidity ^0.7.6;
 
 
 
-contract PRIVIPodERC721Factory is AccessControl {
-  using SafeMath for uint256;
 
-  bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
-  address public bridgeManagerAddress;
-  uint256 private totalPodCreated;
-  mapping(string => address) private podTokenAddressesById;
-  mapping(string => address) private podTokenAddressesBySymbol;
+contract PRIVIPodERC721RoyaltyFactory is AccessControl {
+    using SafeMath for uint256;
+    
+    bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
+    address public bridgeManagerAddress;
+    uint256 private totalPodCreated;
+    mapping (string => address) private podTokenAddressesById;
+    mapping (string => address) private podTokenAddressesBySymbol;
 
-  event PodCreated(
-    string indexed podId,
-    string podTokenName,
-    string podTokenSymbol
-  );
+    event PodCreated(string indexed podId, string podTokenName, string podTokenSymbol);
+    
+    /**
+     * @dev Grants `DEFAULT_ADMIN_ROLE` and `MODERATOR_ROLE` to the
+     * account that deploys the contract.
+     *
+     */
+    constructor(address bridgeAddress) {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(MODERATOR_ROLE, _msgSender());
+        bridgeManagerAddress = bridgeAddress;
+    }
 
-  /**
-   * @dev Grants `DEFAULT_ADMIN_ROLE` and `MODERATOR_ROLE` to the
-   * account that deploys the contract.
-   *
-   */
-  constructor(address bridgeAddress) {
-    _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-    _setupRole(MODERATOR_ROLE, _msgSender());
-    bridgeManagerAddress = bridgeAddress;
-  }
+    function getTotalTokenCreated() external view returns(uint256 totalPods) {
+        totalPods = totalPodCreated;
+    }
 
-  function getTotalTokenCreated() external view returns (uint256 totalPods) {
-    totalPods = totalPodCreated;
-  }
+    function getPodAddressById(string calldata podId) external view returns(address podAddress) {
+        podAddress = podTokenAddressesById[podId];
+    }
 
-  function getPodAddressById(string calldata podId)
-    external
-    view
-    returns (address podAddress)
-  {
-    podAddress = podTokenAddressesById[podId];
-  }
+    function getPodAddressBySymbol(string calldata tokenSymbol) external view returns(address podAddress) {
+        podAddress = podTokenAddressesBySymbol[tokenSymbol];
+    }
+    
+    /**
+     *@dev only MODERATOR_ROLE role can create pods
+     *
+     * Requirements:
+     *
+     * - pod should not exist before.
+     */
+    function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol, string calldata baseURI, uint256 royaltyAmount, address creator) external returns (address podAddress){
+        // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
+        require(podTokenAddressesById[podId] == address(0), "PRIVIPodERC721TokenFactory: Pod id already exists.");
+        require(podTokenAddressesBySymbol[podTokenSymbol] == address(0), "PRIVIPodERC721TokenFactory: Pod symbol already exists.");
+        PRIVIPodERC721TokenRoyalty podToken = new PRIVIPodERC721TokenRoyalty(podTokenName, podTokenSymbol , baseURI, address(this), royaltyAmount, creator);
+        podAddress = address(podToken);
+        totalPodCreated.add(1);
+        podTokenAddressesById[podId] = podAddress;
+        podTokenAddressesBySymbol[podTokenSymbol] = podAddress;
+        IBridgeManager(bridgeManagerAddress).registerTokenERC721(podTokenName, podTokenSymbol, podAddress);
+        emit PodCreated(podId, podTokenName, podTokenSymbol);
+    }
 
-  function getPodAddressBySymbol(string calldata tokenSymbol)
-    external
-    view
-    returns (address podAddress)
-  {
-    podAddress = podTokenAddressesBySymbol[tokenSymbol];
-  }
+    /**
+     *@dev only MODERATOR_ROLE role can create pods
+     *
+     * Requirements:
+     *
+     * - pod should not exist before.
+     */
+    function createMultiCreatorPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol, string calldata baseURI, uint256 royaltyAmount, uint256[] memory royaltyShares, address[] memory creators) external returns (address podAddress){
+        // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
+        require(podTokenAddressesById[podId] == address(0), "PRIVIPodERC721TokenFactory: Pod id already exists.");
+        require(podTokenAddressesBySymbol[podTokenSymbol] == address(0), "PRIVIPodERC721TokenFactory: Pod symbol already exists.");
+        MultiCreatorNftManager multiCreatorManager = new MultiCreatorNftManager(creators, royaltyShares);
+        PRIVIPodERC721TokenRoyalty podToken = new PRIVIPodERC721TokenRoyalty(podTokenName, podTokenSymbol , baseURI, address(this), royaltyAmount, address(multiCreatorManager));
+        podAddress = address(podToken);
+        totalPodCreated.add(1);
+        podTokenAddressesById[podId] = podAddress;
+        podTokenAddressesBySymbol[podTokenSymbol] = podAddress;
+        IBridgeManager(bridgeManagerAddress).registerTokenERC721(podTokenName, podTokenSymbol, podAddress);
+        emit PodCreated(podId, podTokenName, podTokenSymbol);
+    }
+    
+    /**
+     * @dev Moderator will mint the amount of pod token for the investor's account
+     *
+     * Requirements:
+     *
+     * - the caller must MODERATOR_ROLE to perform this action.
+     */
+    function mintPodTokenById(string calldata podId, address account) external {
+        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenRoyalty: must have MODERATOR_ROLE to invest for investor.");
+        require(account != address(0), "PRIVIPodERC721TokenRoyalty: Account address should not be zero.");
+        PRIVIPodERC721TokenRoyalty(podTokenAddressesById[podId]).mint(account);
+    }
 
-  /**
-   *@dev only MODERATOR_ROLE role can create pods
-   *
-   * Requirements:
-   *
-   * - pod should not exist before.
-   */
-  function createPod(
-    string calldata podId,
-    string calldata podTokenName,
-    string calldata podTokenSymbol,
-    string calldata baseURI
-  ) external returns (address podAddress) {
-    // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
-    require(
-      podTokenAddressesById[podId] == address(0),
-      "PRIVIPodERC721TokenFactory: Pod id already exists."
-    );
-    require(
-      podTokenAddressesBySymbol[podTokenSymbol] == address(0),
-      "PRIVIPodERC721TokenFactory: Pod symbol already exists."
-    );
-    PRIVIPodERC721Token podToken =
-      new PRIVIPodERC721Token(
-        podTokenName,
-        podTokenSymbol,
-        baseURI,
-        address(this)
-      );
-    podAddress = address(podToken);
-    totalPodCreated.add(1);
-    podTokenAddressesById[podId] = podAddress;
-    podTokenAddressesBySymbol[podTokenSymbol] = podAddress;
-    IBridgeManager(bridgeManagerAddress).registerTokenERC721(
-      podTokenName,
-      podTokenSymbol,
-      podAddress
-    );
-    emit PodCreated(podId, podTokenName, podTokenSymbol);
-  }
-
-  /**
-   * @dev Moderator will mint the amount of pod token for the investor's account
-   *
-   * Requirements:
-   *
-   * - the caller must MODERATOR_ROLE to perform this action.
-   */
-  function mintPodTokenById(string calldata podId, address account) external {
-    require(
-      hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor."
-    );
-    require(
-      account != address(0),
-      "PRIVIPodERC721Token: Account address should not be zero."
-    );
-    PRIVIPodERC721Token(podTokenAddressesById[podId]).mint(account);
-  }
-
-  function mintPodTokenBySymbol(string calldata tokenSymbol, address account)
-    external
-  {
-    require(
-      hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor."
-    );
-    require(
-      account != address(0),
-      "PRIVIPodERC721Token: Account address should not be zero."
-    );
-    PRIVIPodERC721Token(podTokenAddressesBySymbol[tokenSymbol]).mint(account);
-  }
+    function mintPodTokenBySymbol(string calldata tokenSymbol, address account) external {
+        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenRoyalty: must have MODERATOR_ROLE to invest for investor.");
+        require(account != address(0), "PRIVIPodERC721TokenRoyalty: Account address should not be zero.");
+        PRIVIPodERC721TokenRoyalty(podTokenAddressesBySymbol[tokenSymbol]).mint(account);
+    }
+    
 }

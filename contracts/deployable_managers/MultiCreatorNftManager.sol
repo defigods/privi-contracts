@@ -2,13 +2,19 @@ pragma solidity >=0.7.6;
 
 // SPDX-License-Identifier: MIT
 
+import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
 /**
  * @notice this contract under heavy development and it is not ready for production.
  */
 contract MultiCreatorNftManager {
+  using SafeMath for uint256;
+  using Counters for Counters.Counter;
+
   address[] public creators;
   uint256[] public shares;
-  uint256 public recieveCounter = 0;
+  Counters.Counter public recieveCounter;
   mapping(uint256 => uint256) public recievedPayments;
   mapping(address => uint256) public lastPaid;
 
@@ -25,8 +31,8 @@ contract MultiCreatorNftManager {
    * @dev incriment counter for each deposite
    */
   receive() external payable {
-    recievedPayments[recieveCounter] = msg.value;
-    recieveCounter = recieveCounter + 1;
+    recievedPayments[recieveCounter.current()] = msg.value;
+    recieveCounter.increment();
   }
 
   /**
@@ -39,12 +45,18 @@ contract MultiCreatorNftManager {
   {
     for (
       uint256 i = lastPaid[creators[_creatorIndex]];
-      i <= recieveCounter;
+      i <= recieveCounter.current();
       i++
     ) {
       shareTotal =
-        shareTotal +
-        ((shares[_creatorIndex] * recievedPayments[i]) / 100);
+        shareTotal.add(
+          (
+            shares[_creatorIndex]
+            .mul(recievedPayments[i])
+          )
+          .div(100)
+        );
+        
     }
   }
 
@@ -57,7 +69,7 @@ contract MultiCreatorNftManager {
       "MultiCreatorNftManager: You are not one of the creators."
     );
     uint256 shareTotal = getSharesTotal(_creatorIndex);
-    lastPaid[msg.sender] = recieveCounter;
+    lastPaid[msg.sender] = recieveCounter.current();
     payable(msg.sender).transfer(shareTotal);
   }
 

@@ -1408,39 +1408,49 @@ pragma solidity ^0.7.6;
  *
  */
 contract PRIVIPodERC20Token is Context, ERC20Burnable {
+  address public parentFactory;
 
-    address public parentFactory;
+  /**
+   * @dev Sets factory address
+   *
+   * See {ERC20-constructor}.
+   */
+  constructor(
+    string memory name,
+    string memory symbol,
+    address factory
+  ) ERC20(name, symbol) {
+    parentFactory = factory;
+  }
 
-    /**
-     * @dev Sets factory address
-     *
-     * See {ERC20-constructor}.
-     */
-    constructor(string memory name, string memory symbol, address factory) ERC20(name, symbol) {
-        parentFactory = factory;
-    }
+  modifier onlyFactory() {
+    require(
+      _msgSender() == parentFactory,
+      "PRIVIPodERC20Token: Only Factory can call this function."
+    );
+    _;
+  }
 
-    modifier onlyFactory() {
-        require(_msgSender() == parentFactory, "PRIVIPodERC20Token: Only Factory can call this function.");
-        _;
-    }
+  /**
+   * @dev Creates `amount` new tokens for `to`.
+   *
+   * See {ERC20-_mint}.
+   *
+   * Requirements:
+   *
+   * - the caller must be factory only.
+   */
+  function mint(address to, uint256 amount) public virtual onlyFactory {
+    _mint(to, amount);
+  }
 
-    /**
-     * @dev Creates `amount` new tokens for `to`.
-     *
-     * See {ERC20-_mint}.
-     *
-     * Requirements:
-     *
-     * - the caller must be factory only.
-     */
-    function mint(address to, uint256 amount) public virtual onlyFactory{
-        _mint(to, amount);
-    }
-
-    function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual override(ERC20) {
-        super._beforeTokenTransfer(from, to, amount);
-    }
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 amount
+  ) internal virtual override(ERC20) {
+    super._beforeTokenTransfer(from, to, amount);
+  }
 }
 
 // File: contracts/interfaces/IBridgeManager.sol
@@ -1450,85 +1460,113 @@ pragma solidity ^0.7.6;
 pragma experimental ABIEncoderV2;
 
 interface IBridgeManager {
-    
-    struct registeredToken {
-        string name;
-        string symbol;
-        address deployedAddress;
-    }
-    
-    /**
-     * @notice get an address of a registered erc20 tokens
-     */
-    function getErc20AddressRegistered(string calldata tokenSymbol) external view returns(address returnAddress);
-    
-    /**
-     * @notice get an array of all registered erc20 tokens
-     */
-    function getAllErc20Registered() external view returns(registeredToken[] memory);
-    
-    /**
-     * @notice get count of all registered erc20 tokens
-     */
-    function getAllErc20Count() external view returns(uint256);
+  struct registeredToken {
+    string name;
+    string symbol;
+    address deployedAddress;
+  }
 
-    /**
-     * @notice get an address of a registered erc721 tokens
-     */
-    function getErc721AddressRegistered(string calldata tokenSymbol) external view returns(address returnAddress);
-    
-    /**
-     * @notice get an array of all registered erc721 tokens
-     */
-    function getAllErc721Registered() external view returns(registeredToken[] memory);
-    
-    /**
-     * @notice get count of all registered erc721 tokens
-     */
-    function getAllErc721Count() external view returns(uint256);
+  /**
+   * @notice get an address of a registered erc20 tokens
+   */
+  function getErc20AddressRegistered(string calldata tokenSymbol)
+    external
+    view
+    returns (address returnAddress);
 
-    /**
-     * @notice get an address of a registered erc1155 tokens
-     */
-    function getErc1155AddressRegistered(string calldata tokenURI) external view returns(address returnAddress);
-    
-    /**
-     * @notice get an array of all registered erc1155 tokens
-     */
-    function getAllErc1155Registered() external view returns(registeredToken[] memory);
-    
-    /**
-     * @notice get count of all registered erc1155 tokens
-     */
-    function getAllErc1155Count() external view returns(uint256);
-    
-    /**
-     * @notice  Register the contract address of an ERC20 Token
-     * @dev     - Token name and address can't be already registered
-     *          - Length of token name can't be higher than 25
-     * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
-     * @param   tokenContractAddress Contract address of the ERC20 Token
-     */
-    function registerTokenERC20(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress) external;
+  /**
+   * @notice get an array of all registered erc20 tokens
+   */
+  function getAllErc20Registered()
+    external
+    view
+    returns (registeredToken[] memory);
 
-    /**
-     * @notice  Register the contract address of an ERC721 Token
-     * @dev     - Token name and address can't be already registered
-     *          - Length of token name can't be higher than 25
-     * @param   tokenName Name of the token to be registered
-     * @param   tokenContractAddress Contract address of the ERC721 Token
-     */
-    function registerTokenERC721(string calldata tokenName, string calldata tokenSymbol, address tokenContractAddress) external;
+  /**
+   * @notice get count of all registered erc20 tokens
+   */
+  function getAllErc20Count() external view returns (uint256);
 
-    /**
-     * @notice  Register the contract address of an ERC1155 Token
-     * @dev     - Token name and address can't be already registered
-     *          - Length of token name can't be higher than 25
-     * @param   tokenURI URI of the token to be registered
-     * @param   tokenContractAddress Contract address of the ERC1155 Token
-     */
-    function registerTokenERC1155(string calldata tokenName, string calldata tokenURI, address tokenContractAddress) external;
+  /**
+   * @notice get an address of a registered erc721 tokens
+   */
+  function getErc721AddressRegistered(string calldata tokenSymbol)
+    external
+    view
+    returns (address returnAddress);
 
+  /**
+   * @notice get an array of all registered erc721 tokens
+   */
+  function getAllErc721Registered()
+    external
+    view
+    returns (registeredToken[] memory);
+
+  /**
+   * @notice get count of all registered erc721 tokens
+   */
+  function getAllErc721Count() external view returns (uint256);
+
+  /**
+   * @notice get an address of a registered erc1155 tokens
+   */
+  function getErc1155AddressRegistered(string calldata tokenURI)
+    external
+    view
+    returns (address returnAddress);
+
+  /**
+   * @notice get an array of all registered erc1155 tokens
+   */
+  function getAllErc1155Registered()
+    external
+    view
+    returns (registeredToken[] memory);
+
+  /**
+   * @notice get count of all registered erc1155 tokens
+   */
+  function getAllErc1155Count() external view returns (uint256);
+
+  /**
+   * @notice  Register the contract address of an ERC20 Token
+   * @dev     - Token name and address can't be already registered
+   *          - Length of token name can't be higher than 25
+   * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
+   * @param   tokenContractAddress Contract address of the ERC20 Token
+   */
+  function registerTokenERC20(
+    string calldata tokenName,
+    string calldata tokenSymbol,
+    address tokenContractAddress
+  ) external;
+
+  /**
+   * @notice  Register the contract address of an ERC721 Token
+   * @dev     - Token name and address can't be already registered
+   *          - Length of token name can't be higher than 25
+   * @param   tokenName Name of the token to be registered
+   * @param   tokenContractAddress Contract address of the ERC721 Token
+   */
+  function registerTokenERC721(
+    string calldata tokenName,
+    string calldata tokenSymbol,
+    address tokenContractAddress
+  ) external;
+
+  /**
+   * @notice  Register the contract address of an ERC1155 Token
+   * @dev     - Token name and address can't be already registered
+   *          - Length of token name can't be higher than 25
+   * @param   tokenURI URI of the token to be registered
+   * @param   tokenContractAddress Contract address of the ERC1155 Token
+   */
+  function registerTokenERC1155(
+    string calldata tokenName,
+    string calldata tokenURI,
+    address tokenContractAddress
+  ) external;
 }
 
 // File: contracts/PRIVIPodERC20Factory.sol
@@ -1542,78 +1580,136 @@ pragma solidity ^0.7.6;
 
 
 contract PRIVIPodERC20Factory is AccessControl {
-    using SafeMath for uint256;
-    
-    bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
-    address public bridgeManagerAddress;
-    uint256 private totalPodCreated;
-    mapping (string => address) private podTokenAddressesById;
-    mapping (string => address) private podTokenAddressesBySymbol;
+  using SafeMath for uint256;
 
-    event PodCreated(string indexed podId, string podTokenName, string podTokenSymbol);
-    
-    /**
-     * @dev Grants `DEFAULT_ADMIN_ROLE` and `MODERATOR_ROLE` to the
-     * account that deploys the contract.
-     *
-     */
-    constructor(address bridgeAddress) {
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MODERATOR_ROLE, _msgSender());
-        bridgeManagerAddress = bridgeAddress;
-    }
+  bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
+  address public bridgeManagerAddress;
+  uint256 private totalPodCreated;
+  mapping(string => address) private podTokenAddressesById;
+  mapping(string => address) private podTokenAddressesBySymbol;
 
-    function getTotalTokenCreated() external view returns(uint256 totalPods) {
-        totalPods = totalPodCreated;
-    }
+  event PodCreated(
+    string indexed podId,
+    string podTokenName,
+    string podTokenSymbol
+  );
 
-    function getPodAddressById(string calldata podId) external view returns(address podAddress) {
-        podAddress = podTokenAddressesById[podId];
-    }
+  /**
+   * @dev Grants `DEFAULT_ADMIN_ROLE` and `MODERATOR_ROLE` to the
+   * account that deploys the contract.
+   *
+   */
+  constructor(address bridgeAddress) {
+    _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+    _setupRole(MODERATOR_ROLE, _msgSender());
+    bridgeManagerAddress = bridgeAddress;
+  }
 
-    function getPodAddressBySymbol(string calldata tokenSymbol) external view returns(address podAddress) {
-        podAddress = podTokenAddressesBySymbol[tokenSymbol];
-    }
-    
-    /**
-     *@dev only MODERATOR_ROLE role can create pods
-     *
-     * Requirements:
-     *
-     * - pod should not exist before.
-     */
-    function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol) external returns (address podAddress){
-        // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to create pod.");
-        require(podTokenAddressesById[podId] == address(0), "PRIVIPodERC20Factory: Pod id already exists.");
-        require(podTokenAddressesBySymbol[podTokenSymbol] == address(0), "PRIVIPodERC20Factory: Pod symbol already exists.");
-        PRIVIPodERC20Token podToken = new PRIVIPodERC20Token(podTokenName, podTokenSymbol , address(this));
-        podAddress = address(podToken);
-        totalPodCreated.add(1);
-        podTokenAddressesById[podId] = podAddress;
-        podTokenAddressesBySymbol[podTokenSymbol] = podAddress;
-        IBridgeManager(bridgeManagerAddress).registerTokenERC20(podTokenName, podTokenSymbol, podAddress);
-        emit PodCreated(podId, podTokenName, podTokenSymbol);
-    }
-    
-    /**
-     * @dev Moderator will mint the amount of pod token for the investor's account
-     *
-     * Requirements:
-     *
-     * - the caller must MODERATOR_ROLE to perform this action.
-     */
-    function mintPodTokenById(string calldata podId, address account,  uint256 investAmount) external {
-        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to invest for investor.");
-        require(account != address(0), "PRIVIPodERC20Factory: Account address should not be zero.");
-        require(investAmount > 0, "PRIVIPodERC20Factory: investAmount should not be zero.");
-        PRIVIPodERC20Token(podTokenAddressesById[podId]).mint(account, investAmount);
-    }
+  function getTotalTokenCreated() external view returns (uint256 totalPods) {
+    totalPods = totalPodCreated;
+  }
 
-    function mintPodTokenBySymbol(string calldata tokenSymbol, address account,  uint256 investAmount) external {
-        require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to invest for investor.");
-        require(account != address(0), "PRIVIPodERC20Factory: Account address should not be zero.");
-        require(investAmount > 0, "PRIVIPodERC20Factory: investAmount should not be zero.");
-        PRIVIPodERC20Token(podTokenAddressesBySymbol[tokenSymbol]).mint(account, investAmount);
-    }
-    
+  function getPodAddressById(string calldata podId)
+    external
+    view
+    returns (address podAddress)
+  {
+    podAddress = podTokenAddressesById[podId];
+  }
+
+  function getPodAddressBySymbol(string calldata tokenSymbol)
+    external
+    view
+    returns (address podAddress)
+  {
+    podAddress = podTokenAddressesBySymbol[tokenSymbol];
+  }
+
+  /**
+   *@dev only MODERATOR_ROLE role can create pods
+   *
+   * Requirements:
+   *
+   * - pod should not exist before.
+   */
+  function createPod(
+    string calldata podId,
+    string calldata podTokenName,
+    string calldata podTokenSymbol
+  ) external returns (address podAddress) {
+    // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to create pod.");
+    require(
+      podTokenAddressesById[podId] == address(0),
+      "PRIVIPodERC20Factory: Pod id already exists."
+    );
+    require(
+      podTokenAddressesBySymbol[podTokenSymbol] == address(0),
+      "PRIVIPodERC20Factory: Pod symbol already exists."
+    );
+    PRIVIPodERC20Token podToken =
+      new PRIVIPodERC20Token(podTokenName, podTokenSymbol, address(this));
+    podAddress = address(podToken);
+    totalPodCreated.add(1);
+    podTokenAddressesById[podId] = podAddress;
+    podTokenAddressesBySymbol[podTokenSymbol] = podAddress;
+    IBridgeManager(bridgeManagerAddress).registerTokenERC20(
+      podTokenName,
+      podTokenSymbol,
+      podAddress
+    );
+    emit PodCreated(podId, podTokenName, podTokenSymbol);
+  }
+
+  /**
+   * @dev Moderator will mint the amount of pod token for the investor's account
+   *
+   * Requirements:
+   *
+   * - the caller must MODERATOR_ROLE to perform this action.
+   */
+  function mintPodTokenById(
+    string calldata podId,
+    address account,
+    uint256 investAmount
+  ) external {
+    require(
+      hasRole(MODERATOR_ROLE, _msgSender()),
+      "PRIVIPodERC20Factory: must have MODERATOR_ROLE to invest for investor."
+    );
+    require(
+      account != address(0),
+      "PRIVIPodERC20Factory: Account address should not be zero."
+    );
+    require(
+      investAmount > 0,
+      "PRIVIPodERC20Factory: investAmount should not be zero."
+    );
+    PRIVIPodERC20Token(podTokenAddressesById[podId]).mint(
+      account,
+      investAmount
+    );
+  }
+
+  function mintPodTokenBySymbol(
+    string calldata tokenSymbol,
+    address account,
+    uint256 investAmount
+  ) external {
+    require(
+      hasRole(MODERATOR_ROLE, _msgSender()),
+      "PRIVIPodERC20Factory: must have MODERATOR_ROLE to invest for investor."
+    );
+    require(
+      account != address(0),
+      "PRIVIPodERC20Factory: Account address should not be zero."
+    );
+    require(
+      investAmount > 0,
+      "PRIVIPodERC20Factory: investAmount should not be zero."
+    );
+    PRIVIPodERC20Token(podTokenAddressesBySymbol[tokenSymbol]).mint(
+      account,
+      investAmount
+    );
+  }
 }
