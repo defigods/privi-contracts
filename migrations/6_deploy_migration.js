@@ -8,13 +8,16 @@ const FakeDAI = artifacts.require('FakeDAI')
 const FakeLINK = artifacts.require('FakeLINK')
 
 module.exports = async function(deployer, networks, accounts) {
-  const swapManagerContract = await SwapManager.deployed()
+  if (networks !== 'mainnet') {
+    const swapManagerContract = await SwapManager.deployed()
 
-  const swapManagerAddress = swapManagerContract.address
-  await deployer.deploy(FakePrivi, swapManagerAddress)
-  await deployer.deploy(FakeBAL, swapManagerAddress)
-  await deployer.deploy(FakeBAT, swapManagerAddress)
-  await deployer.deploy(FakeCOMP, swapManagerAddress)
-  await deployer.deploy(FakeDAI, swapManagerAddress)
-  await deployer.deploy(FakeLINK, swapManagerAddress)
+    const swapManagerAddress = swapManagerContract.address
+    await deployer.deploy(FakePrivi, swapManagerAddress)
+    await deployer.deploy(FakeBAL, swapManagerAddress)
+    await deployer.deploy(FakeBAT, swapManagerAddress)
+    await deployer.deploy(FakeCOMP, swapManagerAddress)
+    await deployer.deploy(FakeDAI, swapManagerAddress)
+    await deployer.deploy(FakeLINK, swapManagerAddress)
+  }
+  
 }
