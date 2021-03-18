@@ -10,6 +10,8 @@ import "./interfaces/IBridgeManager.sol";
 import "./interfaces/IPRIVIPodERC20Factory.sol";
 import "./interfaces/IPRIVIPodERC721Factory.sol";
 import "./interfaces/IPRIVIPodERC1155Factory.sol";
+import "./interfaces/IPRIVIPodERC721RoyaltyFactory.sol";
+import "./interfaces/IPRIVIPodERC1155RoyaltyFactory.sol";
 
 /// @author The PRIVI Blockchain team
 /// @title Manages swap and withdraw of Ethers, ERC20 tokens and ERC721 tokens between Users and PRIVI platform
@@ -20,6 +22,8 @@ contract SwapManager is AccessControl {
   address public erc20FactoryAddress;
   address public erc721FactoryAddress;
   address public erc1155FactoryAddress;
+  address public erc721RoyaltyFactoryAddress;
+  address public erc1155RoyaltyFactoryAddress;
 
   event DepositERC20Token(
     string indexed tokenSymbol,
@@ -69,7 +73,9 @@ contract SwapManager is AccessControl {
     address bridgeDeployedAddress,
     address erc20FactoryDeployedAddress,
     address erc721FactoryDeployedAddress,
-    address erc1155FactoryDeployedAddress
+    address erc1155FactoryDeployedAddress,
+    address erc721FactoryRoyaltyDeployedAddress,
+    address erc1155FactoryRoyaltyDeployedAddress
   ) {
     _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     // _setupRole(REGISTER_ROLE, _msgSender());
@@ -78,6 +84,8 @@ contract SwapManager is AccessControl {
     erc20FactoryAddress = erc20FactoryDeployedAddress;
     erc721FactoryAddress = erc721FactoryDeployedAddress;
     erc1155FactoryAddress = erc1155FactoryDeployedAddress;
+    erc721RoyaltyFactoryAddress = erc721FactoryRoyaltyDeployedAddress;
+    erc1155RoyaltyFactoryAddress = erc1155FactoryRoyaltyDeployedAddress;
   }
 
   /**
@@ -186,7 +194,8 @@ contract SwapManager is AccessControl {
     string calldata tokenSymbol,
     address to,
     uint256 tokenId,
-    bool isPodMint
+    bool isPodMint,
+    bool isRoyalty
   ) external {
     IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
     address tokenAddress = bManager.getErc721AddressRegistered(tokenSymbol);
@@ -195,19 +204,28 @@ contract SwapManager is AccessControl {
       "SwapManager: must have TRANSFER_ROLE to withdraw token"
     );
     if (isPodMint == true) {
-      if (
-        IPRIVIPodERC721Factory(erc721FactoryAddress).getPodAddressBySymbol(
-          tokenSymbol
-        ) != ZERO_ADDRESS
-      ) {
-        IPRIVIPodERC721Factory(erc721FactoryAddress).mintPodTokenBySymbol(
-          tokenSymbol,
-          to
-        );
-        emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+      if (isRoyalty == true) {
+        if (IPRIVIPodERC721RoyaltyFactory(erc721FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
+          IPRIVIPodERC721RoyaltyFactory(erc721FactoryAddress).mintPodTokenBySymbol(
+            tokenSymbol,
+            to
+          );
+          emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+        } else {
+          revert();
+        }
       } else {
-        revert();
+        if (IPRIVIPodERC721Factory(erc721FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
+          IPRIVIPodERC721Factory(erc721FactoryAddress).mintPodTokenBySymbol(
+            tokenSymbol,
+            to
+          );
+          emit WithdrawERC721Token(tokenSymbol, to, tokenId);
+        } else {
+          revert();
+        }
       }
+      
     } else {
       if (IERC721(tokenAddress).ownerOf(tokenId) == address(this)) {
         IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
@@ -273,7 +291,8 @@ contract SwapManager is AccessControl {
     uint256 tokenId,
     uint256 amount,
     bytes memory data,
-    bool isPodMint
+    bool isPodMint,
+    bool isRoyalty
   ) external {
     IBridgeManager bManager = IBridgeManager(bridgeManagerAddress);
     address tokenAddress = bManager.getErc1155AddressRegistered(tokenURI);
@@ -282,21 +301,40 @@ contract SwapManager is AccessControl {
       "SwapManager: must have TRANSFER_ROLE to withdraw token"
     );
     if (isPodMint == true) {
-      if (
-        IPRIVIPodERC1155Factory(erc1155FactoryAddress).getPodAddressByUri(
-          tokenURI
-        ) != ZERO_ADDRESS
-      ) {
-        IPRIVIPodERC1155Factory(erc1155FactoryAddress).podMint(
-          tokenURI,
-          to,
-          tokenId,
-          amount,
-          data
-        );
-        emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
+      if (isRoyalty) {
+        if (
+          IPRIVIPodERC1155RoyaltyFactory(erc1155FactoryAddress).getPodAddressByUri(
+            tokenURI
+          ) != ZERO_ADDRESS
+        ) {
+          IPRIVIPodERC1155RoyaltyFactory(erc1155FactoryAddress).podMint(
+            tokenURI,
+            to,
+            tokenId,
+            amount,
+            data
+          );
+          emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
+        } else {
+          revert();
+        }
       } else {
-        revert();
+        if (
+          IPRIVIPodERC1155Factory(erc1155FactoryAddress).getPodAddressByUri(
+            tokenURI
+          ) != ZERO_ADDRESS
+        ) {
+          IPRIVIPodERC1155Factory(erc1155FactoryAddress).podMint(
+            tokenURI,
+            to,
+            tokenId,
+            amount,
+            data
+          );
+          emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
+        } else {
+          revert();
+        }
       }
     } else {
       require(
