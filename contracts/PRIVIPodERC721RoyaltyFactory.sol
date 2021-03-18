@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./token/PRIVIPodERC721TokenRoyalty.sol";
 import "./interfaces/IBridgeManager.sol";
 import "./deployable_managers/MultiCreatorNftManager.sol";
@@ -43,11 +43,11 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
     }
     
     /**
-     *@dev only MODERATOR_ROLE role can create pods
+     *@dev Create pods of one single creator
      *
      * Requirements:
      *
-     * - pod should not exist before.
+     * - pod id and pod symbol should not exist before.
      */
     function createPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol, string calldata baseURI, uint256 royaltyAmount, address creator) external returns (address podAddress){
         // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
@@ -63,11 +63,11 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
     }
 
     /**
-     *@dev only MODERATOR_ROLE role can create pods
+     *@dev Create pods
      *
      * Requirements:
      *
-     * - pod should not exist before.
+     * - pod id and symbol should not exist before.
      */
     function createMultiCreatorPod(string calldata podId, string calldata podTokenName, string calldata podTokenSymbol, string calldata baseURI, uint256 royaltyAmount, uint256[] memory royaltyShares, address[] memory creators) external returns (address podAddress){
         // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
@@ -96,6 +96,13 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
         PRIVIPodERC721TokenRoyalty(podTokenAddressesById[podId]).mint(account);
     }
 
+    /**
+     * @dev Moderator will mint the amount of pod token for the investor's account
+     *
+     * Requirements:
+     *
+     * - the caller must MODERATOR_ROLE to perform this action.
+     */
     function mintPodTokenBySymbol(string calldata tokenSymbol, address account) external {
         require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenRoyalty: must have MODERATOR_ROLE to invest for investor.");
         require(account != address(0), "PRIVIPodERC721TokenRoyalty: Account address should not be zero.");

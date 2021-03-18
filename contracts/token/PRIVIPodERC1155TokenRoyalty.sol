@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
+import "../abstracts/NFTRoyalty.sol";
 
 /**
  * @dev {ERC1155} token, including:
@@ -13,14 +14,14 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
  *  - ability for holders to burn (destroy) their tokens
  *  - a factoryOnly modifier, that grants mint capabilities only to factory who deployed theis pod token contract
  */
-contract PRIVIPodERC1155Token is Context, ERC1155Burnable {
+contract PRIVIPodERC1155TokenRoyalty is Context, ERC1155Burnable, NFTRoyalty {
   address public parentFactory;
 
   /**
    * @dev Sets factory address
    * deploys the contract.
    */
-  constructor(string memory uri, address factory) ERC1155(uri) {
+  constructor(string memory uri, address factory, uint256 royaltyAmount, address creator) ERC1155(uri) NFTRoyalty(royaltyAmount, creator) {
     parentFactory = factory;
   }
 
@@ -39,7 +40,7 @@ contract PRIVIPodERC1155Token is Context, ERC1155Burnable {
    *
    * Requirements:
    *
-   * - the caller must be factory only.
+   * - tthe caller must be factory only.
    */
   function mint(
     address to,
@@ -57,7 +58,7 @@ contract PRIVIPodERC1155Token is Context, ERC1155Burnable {
    *
    * Requirements:
    *
-   * - the caller must be factory only.
+   * - tthe caller must be factory only.
    */
   function mintBatch(
     address to,

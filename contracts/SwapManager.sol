@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -393,7 +393,7 @@ contract SwapManager is AccessControl {
       "SwapManager: not enough contract balance for the transfer"
     );
 
-    address payable recipient = address(uint160(to));
+    address payable recipient = payable(to);
 
     if (amount <= address(this).balance) {
       recipient.transfer(amount);

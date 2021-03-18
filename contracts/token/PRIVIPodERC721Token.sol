@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/GSN/Context.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721Burnable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 
 /**
  * @dev {ERC20} token, including:
@@ -19,6 +19,8 @@ contract PRIVIPodERC721Token is Context, ERC721Burnable {
   Counters.Counter private _tokenIdTracker;
   address public parentFactory;
 
+  string private _baseTokenURI;
+
   /**
    * @dev Sets factory address
    *
@@ -31,7 +33,7 @@ contract PRIVIPodERC721Token is Context, ERC721Burnable {
     address factory
   ) ERC721(name, symbol) {
     parentFactory = factory;
-    _setBaseURI(baseURI);
+    _baseTokenURI = baseURI;
   }
 
   modifier onlyFactory() {
@@ -40,6 +42,10 @@ contract PRIVIPodERC721Token is Context, ERC721Burnable {
       "PRIVIPodERC721Token: Only Factory can call this function."
     );
     _;
+  }
+
+  function _baseURI() internal view virtual override returns (string memory) {
+    return _baseTokenURI;
   }
 
   /**

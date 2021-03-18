@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./token/PRIVIPodERC20Token.sol";
 import "./interfaces/IBridgeManager.sol";
 
@@ -54,7 +54,7 @@ contract PRIVIPodERC20Factory is AccessControl {
   }
 
   /**
-   *@dev only MODERATOR_ROLE role can create pods
+   *@dev Create pods
    *
    * Requirements:
    *
@@ -118,6 +118,13 @@ contract PRIVIPodERC20Factory is AccessControl {
     );
   }
 
+  /**
+   * @dev Moderator will mint the amount of pod token for the investor's account
+   *
+   * Requirements:
+   *
+   * - the caller must MODERATOR_ROLE to perform this action.
+   */
   function mintPodTokenBySymbol(
     string calldata tokenSymbol,
     address account,

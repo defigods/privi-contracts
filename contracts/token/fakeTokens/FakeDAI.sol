@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -13,7 +13,7 @@ contract FakeDAI is ERC20, AccessControl {
   mapping(address => uint256) lastIssuedTime;
 
   constructor(address swapManagerAddress) ERC20("FakeDAI", "fDAI") {
-    owner = msg.sender;
+    owner = payable(msg.sender);
     _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     _setupRole(NO_LIMIT_ROLE, _msgSender());
     grantRole(NO_LIMIT_ROLE, swapManagerAddress);
