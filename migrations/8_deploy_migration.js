@@ -118,5 +118,6 @@ module.exports = async function(deployer, networks, accounts) {
     )
   } else {
     // if it is main net then the desired token addresses should be registered
+    console.log('no token for pre-register')
   }
 }
