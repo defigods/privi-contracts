@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "Rnning migrations..."
+truffle migrate -f 1 --to 1 --network rinkeby
 truffle migrate -f 2 --to 2 --network rinkeby
 truffle migrate -f 3 --to 3 --network rinkeby
 truffle migrate -f 4 --to 4 --network rinkeby
