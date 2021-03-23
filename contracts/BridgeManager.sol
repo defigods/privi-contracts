@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-pragma experimental ABIEncoderV2;
+// pragma experimental ABIEncoderV2; // SJS: not needed with pragma v0.8
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
+// import "@openzeppelin/contracts/token/ERC20/IERC20.sol"; // SJS: already in SwapManager.sol
+// import "@openzeppelin/contracts/token/ERC721/IERC721.sol"; // SJS: already in SwapManager.sol
 
 /// @author The PRIVI Blockchain team
 /// @title Manages Bridge with ethereum, ERC20 tokens and ERC721 tokens between Users on Ethereum and PRIVI platform
@@ -14,18 +15,22 @@ contract BridgeManager is AccessControl {
   address private constant ZERO_ADDRESS =
     0x0000000000000000000000000000000000000000;
 
+  // Structure to handle registered token data
   struct registeredToken {
     string name;
     string symbol;
     address deployedAddress;
   }
 
+  // ERC20 token types
   registeredToken[] private erc20RegisteredArray;
   mapping(string => address) private contractAddressERC20;
 
+  // ERC721 token types
   registeredToken[] private erc721RegisteredArray;
   mapping(string => address) private contractAddressERC721;
 
+  // ERC1155 token types
   registeredToken[] private erc1155RegisteredArray;
   mapping(string => address) private contractAddressERC1155;
 
@@ -37,14 +42,15 @@ contract BridgeManager is AccessControl {
   event UnRegisterERC1155Token(string indexed name);
 
   /**
-   * @notice  Modifier to require 'tokenName' is not empty
-   * @param   tokenNameToCheck Token name to be checked
+   * @notice  Modifier to require 'tokenName' and 'tokenSymbol' are not empty
+   * @param   tokenNameToCheck The token or symbol name to be checked
+   * @dev     reverts if tokenNameToCheck is empty
    */
   modifier nameIsNotEmpty(string memory tokenNameToCheck) {
     bytes memory bytesTokenName = bytes(tokenNameToCheck);
     require(
       bytesTokenName.length != 0,
-      "BridgeManager: tokenName can't be empty"
+      "BridgeManager: token name and symbol can't be empty"
     );
     _;
   }
@@ -58,7 +64,7 @@ contract BridgeManager is AccessControl {
   }
 
   /**
-   * @notice get an address of a registered erc20 tokens
+   * @notice Get the contract address of a registered ERC20 token
    */
   function getErc20AddressRegistered(string calldata tokenSymbol)
     external
@@ -69,7 +75,7 @@ contract BridgeManager is AccessControl {
   }
 
   /**
-   * @notice get an array of all registered erc20 tokens
+   * @notice Get an array of all registered ERC20 tokens
    */
   function getAllErc20Registered()
     external
@@ -80,14 +86,14 @@ contract BridgeManager is AccessControl {
   }
 
   /**
-   * @notice get count of all registered erc20 tokens
+   * @notice Get count of all registered ERC20 tokens
    */
   function getAllErc20Count() external view returns (uint256) {
     return erc20RegisteredArray.length;
   }
 
   /**
-   * @notice get an address of a registered erc721 tokens
+   * @notice Get the contract address of a registered ERC721 token
    */
   function getErc721AddressRegistered(string calldata tokenSymbol)
     external
@@ -98,7 +104,7 @@ contract BridgeManager is AccessControl {
   }
 
   /**
-   * @notice get an array of all registered erc721 tokens
+   * @notice Get an array of all registered ERC721 tokens
    */
   function getAllErc721Registered()
     external
@@ -109,14 +115,14 @@ contract BridgeManager is AccessControl {
   }
 
   /**
-   * @notice get count of all registered erc721 tokens
+   * @notice Get count of all registered ERC721 tokens
    */
   function getAllErc721Count() external view returns (uint256) {
     return erc721RegisteredArray.length;
   }
 
   /**
-   * @notice get an address of a registered erc1155 tokens
+   * @notice Get the address of a registered ERC1155 token
    */
   function getErc1155AddressRegistered(string calldata tokenURI)
     external
@@ -127,7 +133,7 @@ contract BridgeManager is AccessControl {
   }
 
   /**
-   * @notice get an array of all registered erc1155 tokens
+   * @notice Get an array of all registered ERC1155 tokens
    */
   function getAllErc1155Registered()
     external
@@ -138,18 +144,19 @@ contract BridgeManager is AccessControl {
   }
 
   /**
-   * @notice get count of all registered erc1155 tokens
+   * @notice Get count of all registered ERC1155 tokens
    */
   function getAllErc1155Count() external view returns (uint256) {
     return erc1155RegisteredArray.length;
   }
 
   /**
-   * @notice  Register the contract address of an ERC20 Token
+   * @notice  Register the contract address of an ERC20 token
    * @dev     - Token name and address can't be already registered
-   *          - Length of token name can't be higher than 25
-   * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)
-   * @param   tokenContractAddress Contract address of the ERC20 Token
+   *          - Length of token name and symbol can't be above 25 characters
+   * @param   tokenName The name of the token to be registered (e.g.: Uniswap)
+   * @param   tokenSymbol The symbol of the token to be registered (e.g.: UNI)
+   * @param   tokenContractAddress The contract address of the ERC20 Token
    */
   function registerTokenERC20(
     string calldata tokenName,
@@ -176,9 +183,10 @@ contract BridgeManager is AccessControl {
   /**
    * @notice  Register the contract address of an ERC721 Token
    * @dev     - Token name and address can't be already registered
-   *          - Length of token name can't be higher than 25
-   * @param   tokenName Name of the token to be registered
-   * @param   tokenContractAddress Contract address of the ERC721 Token
+   *          - Length of token name and symbol can't be above 25 characters
+   * @param   tokenName The name of the token to be registered (e.g.: Uniswap)
+   * @param   tokenSymbol The symbol of the token to be registered (e.g.: UNI)
+   * @param   tokenContractAddress Contract address of the ERC721 token
    */
   function registerTokenERC721(
     string calldata tokenName,
@@ -189,7 +197,7 @@ contract BridgeManager is AccessControl {
     //     "BridgeManager: must have REGISTER_ROLE to register a token");
     require(
       contractAddressERC721[tokenSymbol] == ZERO_ADDRESS,
-      "BridgeManager: token address is already registered"
+      "BridgeManager: token address is already registered" //TODO: token symbol already registered
     );
     require(
       bytes(tokenSymbol).length < 25,
@@ -207,9 +215,10 @@ contract BridgeManager is AccessControl {
   /**
    * @notice  Register the contract address of an ERC1155 Token
    * @dev     - Token name and address can't be already registered
-   *          - Length of token name can't be higher than 25
-   * @param   tokenURI URI of the token to be registered
-   * @param   tokenContractAddress Contract address of the ERC1155 Token
+   *          - Length of token name and symbol can't be above 25 characters
+   * @param   tokenName The name of the token to be registered (e.g.: Kitty)
+   * @param   tokenURI The URI of the token to be registered
+   * @param   tokenContractAddress Contract address of the ERC1155 token
    */
   function registerTokenERC1155(
     string calldata tokenName,
