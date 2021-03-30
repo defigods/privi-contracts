@@ -148,9 +148,10 @@ contract SwapManager is AccessControl {
       );
       emit WithdrawERC20Token(tokenSymbol, to, amount);
     } else {
+      revert('SwapManager: cannot withdraw any amount');
       // only for testnet mint fake tokens
-      FakeInterface(tokenAddress).mintForUser(to, amount);
-      emit WithdrawERC20Token(tokenSymbol, to, amount);
+      // FakeInterface(tokenAddress).mintForUser(to, amount);
+      // emit WithdrawERC20Token(tokenSymbol, to, amount);
     }
   }
 
@@ -212,7 +213,7 @@ contract SwapManager is AccessControl {
           );
           emit WithdrawERC721Token(tokenSymbol, to, tokenId);
         } else {
-          revert();
+          revert('SwapManager: cannot withdraw any amount (royalty)');
         }
       } else {
         if (IPRIVIPodERC721Factory(erc721FactoryAddress).getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS) {
@@ -222,7 +223,7 @@ contract SwapManager is AccessControl {
           );
           emit WithdrawERC721Token(tokenSymbol, to, tokenId);
         } else {
-          revert();
+          revert('SwapManager: cannot withdraw any amount (non royalty)');
         }
       }
       
@@ -231,7 +232,7 @@ contract SwapManager is AccessControl {
         IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
         emit WithdrawERC721Token(tokenSymbol, to, tokenId);
       } else {
-        revert();
+        revert('SwapManager: cannot withdraw any standard token amount');
       }
     }
   }
@@ -263,7 +264,7 @@ contract SwapManager is AccessControl {
     require(
       IERC1155(tokenAddress).isApprovedForAll(msg.sender, address(this)) ==
         true,
-      "SwapManager: user did not grant aprove yet."
+      "SwapManager: user did not grant aprove yet"
     );
     IERC1155(tokenAddress).safeTransferFrom(
       msg.sender,
@@ -316,7 +317,7 @@ contract SwapManager is AccessControl {
           );
           emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
         } else {
-          revert();
+          revert('SwapManager: cannot withdraw any amount (royalty)');
         }
       } else {
         if (
@@ -333,7 +334,7 @@ contract SwapManager is AccessControl {
           );
           emit WithdrawERC1155Token(tokenURI, to, tokenId, amount);
         } else {
-          revert();
+          revert('SwapManager: cannot withdraw any amount (non royalty)');
         }
       }
     } else {
@@ -391,7 +392,7 @@ contract SwapManager is AccessControl {
         );
         emit BatchWithdrawERC1155Token(tokenURI, to, tokenIds, amounts);
       } else {
-        revert();
+        revert('SwapManager: cannot withdraw any amount');
       }
     } else {
       IERC1155(tokenAddress).safeBatchTransferFrom(
