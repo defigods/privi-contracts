@@ -38,7 +38,7 @@ contract SwapManager is AccessControl {
   event DepositERC721Token(
     string indexed tokenSymbol,
     address from,
-    uint256 amount
+    uint256 tokenId
   );
   event WithdrawERC721Token(
     string indexed tokenSymbol,
