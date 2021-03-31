@@ -257,7 +257,7 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"getAllErc1155Count\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc1155Registered\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"deployedAddress\",\"type\":\"address\"}],\"internalType\":\"struct IBridgeManager.registeredToken[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc20Count\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc20Registered\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"deployedAddress\",\"type\":\"address\"}],\"internalType\":\"struct IBridgeManager.registeredToken[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc721Count\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc721Registered\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"deployedAddress\",\"type\":\"address\"}],\"internalType\":\"struct IBridgeManager.registeredToken[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"}],\"name\":\"getErc1155AddressRegistered\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"returnAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"}],\"name\":\"getErc20AddressRegistered\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"returnAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"}],\"name\":\"getErc721AddressRegistered\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"returnAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"tokenContractAddress\",\"type\":\"address\"}],\"name\":\"registerTokenERC1155\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"tokenContractAddress\",\"type\":\"address\"}],\"name\":\"registerTokenERC20\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"tokenContractAddress\",\"type\":\"address\"}],\"name\":\"registerTokenERC721\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"registerTokenERC1155(string,string,address)\":{\"details\":\"- Token name and address can't be already registered          - Length of token name can't be higher than 25\",\"params\":{\"tokenContractAddress\":\"Contract address of the ERC1155 Token\",\"tokenURI\":\"URI of the token to be registered\"}},\"registerTokenERC20(string,string,address)\":{\"details\":\"- Token name and address can't be already registered          - Length of token name can't be higher than 25\",\"params\":{\"tokenContractAddress\":\"Contract address of the ERC20 Token\",\"tokenName\":\"Name of the token to be registered (e.g.: DAI, UNI)\"}},\"registerTokenERC721(string,string,address)\":{\"details\":\"- Token name and address can't be already registered          - Length of token name can't be higher than 25\",\"params\":{\"tokenContractAddress\":\"Contract address of the ERC721 Token\",\"tokenName\":\"Name of the token to be registered\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"getAllErc1155Count()\":{\"notice\":\"get count of all registered erc1155 tokens\"},\"getAllErc1155Registered()\":{\"notice\":\"get an array of all registered erc1155 tokens\"},\"getAllErc20Count()\":{\"notice\":\"get count of all registered erc20 tokens\"},\"getAllErc20Registered()\":{\"notice\":\"get an array of all registered erc20 tokens\"},\"getAllErc721Count()\":{\"notice\":\"get count of all registered erc721 tokens\"},\"getAllErc721Registered()\":{\"notice\":\"get an array of all registered erc721 tokens\"},\"getErc1155AddressRegistered(string)\":{\"notice\":\"get an address of a registered erc1155 tokens\"},\"getErc20AddressRegistered(string)\":{\"notice\":\"get an address of a registered erc20 tokens\"},\"getErc721AddressRegistered(string)\":{\"notice\":\"get an address of a registered erc721 tokens\"},\"registerTokenERC1155(string,string,address)\":{\"notice\":\"Register the contract address of an ERC1155 Token\"},\"registerTokenERC20(string,string,address)\":{\"notice\":\"Register the contract address of an ERC20 Token\"},\"registerTokenERC721(string,string,address)\":{\"notice\":\"Register the contract address of an ERC721 Token\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/interfaces/IBridgeManager.sol\":\"IBridgeManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":500},\"remappings\":[]},\"sources\":{\"/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/interfaces/IBridgeManager.sol\":{\"keccak256\":\"0x05310847ff0e781ca355be47c3355441d539e2e30538133fad7e7d1e4de1ab1a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e30c72f4b54ef59dc310a629dbde65e41156063ce09cdbb1336e632acfe9bd96\",\"dweb:/ipfs/QmXCWX4vhayxBV72DBiFZWjrgVbm73AwZYsYZGCck47oAD\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"getAllErc1155Count\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc1155Registered\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"deployedAddress\",\"type\":\"address\"}],\"internalType\":\"struct IBridgeManager.registeredToken[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc20Count\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc20Registered\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"deployedAddress\",\"type\":\"address\"}],\"internalType\":\"struct IBridgeManager.registeredToken[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc721Count\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllErc721Registered\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"deployedAddress\",\"type\":\"address\"}],\"internalType\":\"struct IBridgeManager.registeredToken[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"}],\"name\":\"getErc1155AddressRegistered\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"returnAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"}],\"name\":\"getErc20AddressRegistered\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"returnAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"}],\"name\":\"getErc721AddressRegistered\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"returnAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"tokenContractAddress\",\"type\":\"address\"}],\"name\":\"registerTokenERC1155\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"tokenContractAddress\",\"type\":\"address\"}],\"name\":\"registerTokenERC20\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"tokenContractAddress\",\"type\":\"address\"}],\"name\":\"registerTokenERC721\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"registerTokenERC1155(string,string,address)\":{\"details\":\"- Token name and address can't be already registered          - Length of token name can't be higher than 25\",\"params\":{\"tokenContractAddress\":\"Contract address of the ERC1155 Token\",\"tokenURI\":\"URI of the token to be registered\"}},\"registerTokenERC20(string,string,address)\":{\"details\":\"- Token name and address can't be already registered          - Length of token name can't be higher than 25\",\"params\":{\"tokenContractAddress\":\"Contract address of the ERC20 Token\",\"tokenName\":\"Name of the token to be registered (e.g.: DAI, UNI)\"}},\"registerTokenERC721(string,string,address)\":{\"details\":\"- Token name and address can't be already registered          - Length of token name can't be higher than 25\",\"params\":{\"tokenContractAddress\":\"Contract address of the ERC721 Token\",\"tokenName\":\"Name of the token to be registered\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"getAllErc1155Count()\":{\"notice\":\"get count of all registered erc1155 tokens\"},\"getAllErc1155Registered()\":{\"notice\":\"get an array of all registered erc1155 tokens\"},\"getAllErc20Count()\":{\"notice\":\"get count of all registered erc20 tokens\"},\"getAllErc20Registered()\":{\"notice\":\"get an array of all registered erc20 tokens\"},\"getAllErc721Count()\":{\"notice\":\"get count of all registered erc721 tokens\"},\"getAllErc721Registered()\":{\"notice\":\"get an array of all registered erc721 tokens\"},\"getErc1155AddressRegistered(string)\":{\"notice\":\"get an address of a registered erc1155 tokens\"},\"getErc20AddressRegistered(string)\":{\"notice\":\"get an address of a registered erc20 tokens\"},\"getErc721AddressRegistered(string)\":{\"notice\":\"get an address of a registered erc721 tokens\"},\"registerTokenERC1155(string,string,address)\":{\"notice\":\"Register the contract address of an ERC1155 Token\"},\"registerTokenERC20(string,string,address)\":{\"notice\":\"Register the contract address of an ERC20 Token\"},\"registerTokenERC721(string,string,address)\":{\"notice\":\"Register the contract address of an ERC721 Token\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/sergijuanati/Dropbox/Docs/2. Work/16. Privi/3. Code/getcache_ethereum/contracts/interfaces/IBridgeManager.sol\":\"IBridgeManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":500},\"remappings\":[]},\"sources\":{\"/Users/sergijuanati/Dropbox/Docs/2. Work/16. Privi/3. Code/getcache_ethereum/contracts/interfaces/IBridgeManager.sol\":{\"keccak256\":\"0x05310847ff0e781ca355be47c3355441d539e2e30538133fad7e7d1e4de1ab1a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e30c72f4b54ef59dc310a629dbde65e41156063ce09cdbb1336e632acfe9bd96\",\"dweb:/ipfs/QmXCWX4vhayxBV72DBiFZWjrgVbm73AwZYsYZGCck47oAD\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -266,20 +266,20 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\npragma experimental ABIEncoderV2;\n\ninterface IBridgeManager {\n  struct registeredToken {\n    string name;\n    string symbol;\n    address deployedAddress;\n  }\n\n  /**\n   * @notice get an address of a registered erc20 tokens\n   */\n  function getErc20AddressRegistered(string calldata tokenSymbol)\n    external\n    view\n    returns (address returnAddress);\n\n  /**\n   * @notice get an array of all registered erc20 tokens\n   */\n  function getAllErc20Registered()\n    external\n    view\n    returns (registeredToken[] memory);\n\n  /**\n   * @notice get count of all registered erc20 tokens\n   */\n  function getAllErc20Count() external view returns (uint256);\n\n  /**\n   * @notice get an address of a registered erc721 tokens\n   */\n  function getErc721AddressRegistered(string calldata tokenSymbol)\n    external\n    view\n    returns (address returnAddress);\n\n  /**\n   * @notice get an array of all registered erc721 tokens\n   */\n  function getAllErc721Registered()\n    external\n    view\n    returns (registeredToken[] memory);\n\n  /**\n   * @notice get count of all registered erc721 tokens\n   */\n  function getAllErc721Count() external view returns (uint256);\n\n  /**\n   * @notice get an address of a registered erc1155 tokens\n   */\n  function getErc1155AddressRegistered(string calldata tokenURI)\n    external\n    view\n    returns (address returnAddress);\n\n  /**\n   * @notice get an array of all registered erc1155 tokens\n   */\n  function getAllErc1155Registered()\n    external\n    view\n    returns (registeredToken[] memory);\n\n  /**\n   * @notice get count of all registered erc1155 tokens\n   */\n  function getAllErc1155Count() external view returns (uint256);\n\n  /**\n   * @notice  Register the contract address of an ERC20 Token\n   * @dev     - Token name and address can't be already registered\n   *          - Length of token name can't be higher than 25\n   * @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)\n   * @param   tokenContractAddress Contract address of the ERC20 Token\n   */\n  function registerTokenERC20(\n    string calldata tokenName,\n    string calldata tokenSymbol,\n    address tokenContractAddress\n  ) external;\n\n  /**\n   * @notice  Register the contract address of an ERC721 Token\n   * @dev     - Token name and address can't be already registered\n   *          - Length of token name can't be higher than 25\n   * @param   tokenName Name of the token to be registered\n   * @param   tokenContractAddress Contract address of the ERC721 Token\n   */\n  function registerTokenERC721(\n    string calldata tokenName,\n    string calldata tokenSymbol,\n    address tokenContractAddress\n  ) external;\n\n  /**\n   * @notice  Register the contract address of an ERC1155 Token\n   * @dev     - Token name and address can't be already registered\n   *          - Length of token name can't be higher than 25\n   * @param   tokenURI URI of the token to be registered\n   * @param   tokenContractAddress Contract address of the ERC1155 Token\n   */\n  function registerTokenERC1155(\n    string calldata tokenName,\n    string calldata tokenURI,\n    address tokenContractAddress\n  ) external;\n}\n",
-  "sourcePath": "/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/interfaces/IBridgeManager.sol",
+  "sourcePath": "/Users/sergijuanati/Dropbox/Docs/2. Work/16. Privi/3. Code/getcache_ethereum/contracts/interfaces/IBridgeManager.sol",
   "ast": {
-    "absolutePath": "/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/interfaces/IBridgeManager.sol",
+    "absolutePath": "/Users/sergijuanati/Dropbox/Docs/2. Work/16. Privi/3. Code/getcache_ethereum/contracts/interfaces/IBridgeManager.sol",
     "exportedSymbols": {
       "IBridgeManager": [
-        3337
+        3330
       ]
     },
-    "id": 3338,
+    "id": 3331,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3232,
+        "id": 3225,
         "literals": [
           "solidity",
           "^",
@@ -290,7 +290,7 @@
         "src": "32:23:9"
       },
       {
-        "id": 3233,
+        "id": 3226,
         "literals": [
           "experimental",
           "ABIEncoderV2"
@@ -304,24 +304,24 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 3337,
+        "id": 3330,
         "linearizedBaseContracts": [
-          3337
+          3330
         ],
         "name": "IBridgeManager",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "IBridgeManager.registeredToken",
-            "id": 3240,
+            "id": 3233,
             "members": [
               {
                 "constant": false,
-                "id": 3235,
+                "id": 3228,
                 "mutability": "mutable",
                 "name": "name",
                 "nodeType": "VariableDeclaration",
-                "scope": 3240,
+                "scope": 3233,
                 "src": "149:11:9",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -330,7 +330,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 3234,
+                  "id": 3227,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "149:6:9",
@@ -343,11 +343,11 @@
               },
               {
                 "constant": false,
-                "id": 3237,
+                "id": 3230,
                 "mutability": "mutable",
                 "name": "symbol",
                 "nodeType": "VariableDeclaration",
-                "scope": 3240,
+                "scope": 3233,
                 "src": "166:13:9",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -356,7 +356,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 3236,
+                  "id": 3229,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "166:6:9",
@@ -369,11 +369,11 @@
               },
               {
                 "constant": false,
-                "id": 3239,
+                "id": 3232,
                 "mutability": "mutable",
                 "name": "deployedAddress",
                 "nodeType": "VariableDeclaration",
-                "scope": 3240,
+                "scope": 3233,
                 "src": "185:23:9",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -382,7 +382,7 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 3238,
+                  "id": 3231,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "185:7:9",
@@ -397,35 +397,35 @@
             ],
             "name": "registeredToken",
             "nodeType": "StructDefinition",
-            "scope": 3337,
+            "scope": 3330,
             "src": "120:93:9",
             "visibility": "public"
           },
           {
             "documentation": {
-              "id": 3241,
+              "id": 3234,
               "nodeType": "StructuredDocumentation",
               "src": "217:66:9",
               "text": " @notice get an address of a registered erc20 tokens"
             },
             "functionSelector": "10a43eba",
-            "id": 3248,
+            "id": 3241,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getErc20AddressRegistered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3244,
+              "id": 3237,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3243,
+                  "id": 3236,
                   "mutability": "mutable",
                   "name": "tokenSymbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3248,
+                  "scope": 3241,
                   "src": "321:27:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -434,7 +434,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3242,
+                    "id": 3235,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "321:6:9",
@@ -449,16 +449,16 @@
               "src": "320:29:9"
             },
             "returnParameters": {
-              "id": 3247,
+              "id": 3240,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3246,
+                  "id": 3239,
                   "mutability": "mutable",
                   "name": "returnAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3248,
+                  "scope": 3241,
                   "src": "385:21:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -467,7 +467,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3245,
+                    "id": 3238,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "385:7:9",
@@ -482,7 +482,7 @@
               ],
               "src": "384:23:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "286:122:9",
             "stateMutability": "view",
             "virtual": false,
@@ -490,65 +490,65 @@
           },
           {
             "documentation": {
-              "id": 3249,
+              "id": 3242,
               "nodeType": "StructuredDocumentation",
               "src": "412:66:9",
               "text": " @notice get an array of all registered erc20 tokens"
             },
             "functionSelector": "53206452",
-            "id": 3256,
+            "id": 3249,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc20Registered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3250,
+              "id": 3243,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "511:2:9"
             },
             "returnParameters": {
-              "id": 3255,
+              "id": 3248,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3254,
+                  "id": 3247,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3256,
+                  "scope": 3249,
                   "src": "549:24:9",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct IBridgeManager.registeredToken[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 3252,
+                      "id": 3245,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 3251,
+                        "id": 3244,
                         "name": "registeredToken",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 3240,
+                        "referencedDeclaration": 3233,
                         "src": "549:15:9"
                       },
-                      "referencedDeclaration": 3240,
+                      "referencedDeclaration": 3233,
                       "src": "549:15:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_registeredToken_$3240_storage_ptr",
+                        "typeIdentifier": "t_struct$_registeredToken_$3233_storage_ptr",
                         "typeString": "struct IBridgeManager.registeredToken"
                       }
                     },
-                    "id": 3253,
+                    "id": 3246,
                     "nodeType": "ArrayTypeName",
                     "src": "549:17:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_storage_$dyn_storage_ptr",
                       "typeString": "struct IBridgeManager.registeredToken[]"
                     }
                   },
@@ -557,7 +557,7 @@
               ],
               "src": "548:26:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "481:94:9",
             "stateMutability": "view",
             "virtual": false,
@@ -565,35 +565,35 @@
           },
           {
             "documentation": {
-              "id": 3257,
+              "id": 3250,
               "nodeType": "StructuredDocumentation",
               "src": "579:63:9",
               "text": " @notice get count of all registered erc20 tokens"
             },
             "functionSelector": "455686c3",
-            "id": 3262,
+            "id": 3255,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc20Count",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3258,
+              "id": 3251,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "670:2:9"
             },
             "returnParameters": {
-              "id": 3261,
+              "id": 3254,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3260,
+                  "id": 3253,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3262,
+                  "scope": 3255,
                   "src": "696:7:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -602,7 +602,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3259,
+                    "id": 3252,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "696:7:9",
@@ -616,7 +616,7 @@
               ],
               "src": "695:9:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "645:60:9",
             "stateMutability": "view",
             "virtual": false,
@@ -624,29 +624,29 @@
           },
           {
             "documentation": {
-              "id": 3263,
+              "id": 3256,
               "nodeType": "StructuredDocumentation",
               "src": "709:67:9",
               "text": " @notice get an address of a registered erc721 tokens"
             },
             "functionSelector": "91567da8",
-            "id": 3270,
+            "id": 3263,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getErc721AddressRegistered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3266,
+              "id": 3259,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3265,
+                  "id": 3258,
                   "mutability": "mutable",
                   "name": "tokenSymbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3270,
+                  "scope": 3263,
                   "src": "815:27:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -655,7 +655,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3264,
+                    "id": 3257,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "815:6:9",
@@ -670,16 +670,16 @@
               "src": "814:29:9"
             },
             "returnParameters": {
-              "id": 3269,
+              "id": 3262,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3268,
+                  "id": 3261,
                   "mutability": "mutable",
                   "name": "returnAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3270,
+                  "scope": 3263,
                   "src": "879:21:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -688,7 +688,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3267,
+                    "id": 3260,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "879:7:9",
@@ -703,7 +703,7 @@
               ],
               "src": "878:23:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "779:123:9",
             "stateMutability": "view",
             "virtual": false,
@@ -711,65 +711,65 @@
           },
           {
             "documentation": {
-              "id": 3271,
+              "id": 3264,
               "nodeType": "StructuredDocumentation",
               "src": "906:67:9",
               "text": " @notice get an array of all registered erc721 tokens"
             },
             "functionSelector": "9f45c1d3",
-            "id": 3278,
+            "id": 3271,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc721Registered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3272,
+              "id": 3265,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1007:2:9"
             },
             "returnParameters": {
-              "id": 3277,
+              "id": 3270,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3276,
+                  "id": 3269,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3278,
+                  "scope": 3271,
                   "src": "1045:24:9",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct IBridgeManager.registeredToken[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 3274,
+                      "id": 3267,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 3273,
+                        "id": 3266,
                         "name": "registeredToken",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 3240,
+                        "referencedDeclaration": 3233,
                         "src": "1045:15:9"
                       },
-                      "referencedDeclaration": 3240,
+                      "referencedDeclaration": 3233,
                       "src": "1045:15:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_registeredToken_$3240_storage_ptr",
+                        "typeIdentifier": "t_struct$_registeredToken_$3233_storage_ptr",
                         "typeString": "struct IBridgeManager.registeredToken"
                       }
                     },
-                    "id": 3275,
+                    "id": 3268,
                     "nodeType": "ArrayTypeName",
                     "src": "1045:17:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_storage_$dyn_storage_ptr",
                       "typeString": "struct IBridgeManager.registeredToken[]"
                     }
                   },
@@ -778,7 +778,7 @@
               ],
               "src": "1044:26:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "976:95:9",
             "stateMutability": "view",
             "virtual": false,
@@ -786,35 +786,35 @@
           },
           {
             "documentation": {
-              "id": 3279,
+              "id": 3272,
               "nodeType": "StructuredDocumentation",
               "src": "1075:64:9",
               "text": " @notice get count of all registered erc721 tokens"
             },
             "functionSelector": "01ab669c",
-            "id": 3284,
+            "id": 3277,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc721Count",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3280,
+              "id": 3273,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1168:2:9"
             },
             "returnParameters": {
-              "id": 3283,
+              "id": 3276,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3282,
+                  "id": 3275,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3284,
+                  "scope": 3277,
                   "src": "1194:7:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -823,7 +823,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3281,
+                    "id": 3274,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1194:7:9",
@@ -837,7 +837,7 @@
               ],
               "src": "1193:9:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "1142:61:9",
             "stateMutability": "view",
             "virtual": false,
@@ -845,29 +845,29 @@
           },
           {
             "documentation": {
-              "id": 3285,
+              "id": 3278,
               "nodeType": "StructuredDocumentation",
               "src": "1207:68:9",
               "text": " @notice get an address of a registered erc1155 tokens"
             },
             "functionSelector": "4dd1b5f8",
-            "id": 3292,
+            "id": 3285,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getErc1155AddressRegistered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3288,
+              "id": 3281,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3287,
+                  "id": 3280,
                   "mutability": "mutable",
                   "name": "tokenURI",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3292,
+                  "scope": 3285,
                   "src": "1315:24:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -876,7 +876,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3286,
+                    "id": 3279,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "1315:6:9",
@@ -891,16 +891,16 @@
               "src": "1314:26:9"
             },
             "returnParameters": {
-              "id": 3291,
+              "id": 3284,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3290,
+                  "id": 3283,
                   "mutability": "mutable",
                   "name": "returnAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3292,
+                  "scope": 3285,
                   "src": "1376:21:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -909,7 +909,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3289,
+                    "id": 3282,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1376:7:9",
@@ -924,7 +924,7 @@
               ],
               "src": "1375:23:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "1278:121:9",
             "stateMutability": "view",
             "virtual": false,
@@ -932,65 +932,65 @@
           },
           {
             "documentation": {
-              "id": 3293,
+              "id": 3286,
               "nodeType": "StructuredDocumentation",
               "src": "1403:68:9",
               "text": " @notice get an array of all registered erc1155 tokens"
             },
             "functionSelector": "c7092a82",
-            "id": 3300,
+            "id": 3293,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc1155Registered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3294,
+              "id": 3287,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1506:2:9"
             },
             "returnParameters": {
-              "id": 3299,
+              "id": 3292,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3298,
+                  "id": 3291,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3300,
+                  "scope": 3293,
                   "src": "1544:24:9",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct IBridgeManager.registeredToken[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 3296,
+                      "id": 3289,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 3295,
+                        "id": 3288,
                         "name": "registeredToken",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 3240,
+                        "referencedDeclaration": 3233,
                         "src": "1544:15:9"
                       },
-                      "referencedDeclaration": 3240,
+                      "referencedDeclaration": 3233,
                       "src": "1544:15:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_registeredToken_$3240_storage_ptr",
+                        "typeIdentifier": "t_struct$_registeredToken_$3233_storage_ptr",
                         "typeString": "struct IBridgeManager.registeredToken"
                       }
                     },
-                    "id": 3297,
+                    "id": 3290,
                     "nodeType": "ArrayTypeName",
                     "src": "1544:17:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_storage_$dyn_storage_ptr",
                       "typeString": "struct IBridgeManager.registeredToken[]"
                     }
                   },
@@ -999,7 +999,7 @@
               ],
               "src": "1543:26:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "1474:96:9",
             "stateMutability": "view",
             "virtual": false,
@@ -1007,35 +1007,35 @@
           },
           {
             "documentation": {
-              "id": 3301,
+              "id": 3294,
               "nodeType": "StructuredDocumentation",
               "src": "1574:65:9",
               "text": " @notice get count of all registered erc1155 tokens"
             },
             "functionSelector": "90344f62",
-            "id": 3306,
+            "id": 3299,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc1155Count",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3302,
+              "id": 3295,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1669:2:9"
             },
             "returnParameters": {
-              "id": 3305,
+              "id": 3298,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3304,
+                  "id": 3297,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3306,
+                  "scope": 3299,
                   "src": "1695:7:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1044,7 +1044,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3303,
+                    "id": 3296,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1695:7:9",
@@ -1058,7 +1058,7 @@
               ],
               "src": "1694:9:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "1642:62:9",
             "stateMutability": "view",
             "virtual": false,
@@ -1066,29 +1066,29 @@
           },
           {
             "documentation": {
-              "id": 3307,
+              "id": 3300,
               "nodeType": "StructuredDocumentation",
               "src": "1708:346:9",
               "text": " @notice  Register the contract address of an ERC20 Token\n @dev     - Token name and address can't be already registered\n          - Length of token name can't be higher than 25\n @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)\n @param   tokenContractAddress Contract address of the ERC20 Token"
             },
             "functionSelector": "dd2c859c",
-            "id": 3316,
+            "id": 3309,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "registerTokenERC20",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3314,
+              "id": 3307,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3309,
+                  "id": 3302,
                   "mutability": "mutable",
                   "name": "tokenName",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3316,
+                  "scope": 3309,
                   "src": "2090:25:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1097,7 +1097,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3308,
+                    "id": 3301,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "2090:6:9",
@@ -1110,11 +1110,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3311,
+                  "id": 3304,
                   "mutability": "mutable",
                   "name": "tokenSymbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3316,
+                  "scope": 3309,
                   "src": "2121:27:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1123,7 +1123,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3310,
+                    "id": 3303,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "2121:6:9",
@@ -1136,11 +1136,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3313,
+                  "id": 3306,
                   "mutability": "mutable",
                   "name": "tokenContractAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3316,
+                  "scope": 3309,
                   "src": "2154:28:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1149,7 +1149,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3312,
+                    "id": 3305,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2154:7:9",
@@ -1165,12 +1165,12 @@
               "src": "2084:102:9"
             },
             "returnParameters": {
-              "id": 3315,
+              "id": 3308,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2195:0:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "2057:139:9",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -1178,29 +1178,29 @@
           },
           {
             "documentation": {
-              "id": 3317,
+              "id": 3310,
               "nodeType": "StructuredDocumentation",
               "src": "2200:331:9",
               "text": " @notice  Register the contract address of an ERC721 Token\n @dev     - Token name and address can't be already registered\n          - Length of token name can't be higher than 25\n @param   tokenName Name of the token to be registered\n @param   tokenContractAddress Contract address of the ERC721 Token"
             },
             "functionSelector": "c082713b",
-            "id": 3326,
+            "id": 3319,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "registerTokenERC721",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3324,
+              "id": 3317,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3319,
+                  "id": 3312,
                   "mutability": "mutable",
                   "name": "tokenName",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3326,
+                  "scope": 3319,
                   "src": "2568:25:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1209,7 +1209,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3318,
+                    "id": 3311,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "2568:6:9",
@@ -1222,11 +1222,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3321,
+                  "id": 3314,
                   "mutability": "mutable",
                   "name": "tokenSymbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3326,
+                  "scope": 3319,
                   "src": "2599:27:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1235,7 +1235,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3320,
+                    "id": 3313,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "2599:6:9",
@@ -1248,11 +1248,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3323,
+                  "id": 3316,
                   "mutability": "mutable",
                   "name": "tokenContractAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3326,
+                  "scope": 3319,
                   "src": "2632:28:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1261,7 +1261,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3322,
+                    "id": 3315,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2632:7:9",
@@ -1277,12 +1277,12 @@
               "src": "2562:102:9"
             },
             "returnParameters": {
-              "id": 3325,
+              "id": 3318,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2673:0:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "2534:140:9",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -1290,29 +1290,29 @@
           },
           {
             "documentation": {
-              "id": 3327,
+              "id": 3320,
               "nodeType": "StructuredDocumentation",
               "src": "2678:331:9",
               "text": " @notice  Register the contract address of an ERC1155 Token\n @dev     - Token name and address can't be already registered\n          - Length of token name can't be higher than 25\n @param   tokenURI URI of the token to be registered\n @param   tokenContractAddress Contract address of the ERC1155 Token"
             },
             "functionSelector": "4d4825a0",
-            "id": 3336,
+            "id": 3329,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "registerTokenERC1155",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3334,
+              "id": 3327,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3329,
+                  "id": 3322,
                   "mutability": "mutable",
                   "name": "tokenName",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3336,
+                  "scope": 3329,
                   "src": "3047:25:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1321,7 +1321,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3328,
+                    "id": 3321,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "3047:6:9",
@@ -1334,11 +1334,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3331,
+                  "id": 3324,
                   "mutability": "mutable",
                   "name": "tokenURI",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3336,
+                  "scope": 3329,
                   "src": "3078:24:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1347,7 +1347,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3330,
+                    "id": 3323,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "3078:6:9",
@@ -1360,11 +1360,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3333,
+                  "id": 3326,
                   "mutability": "mutable",
                   "name": "tokenContractAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3336,
+                  "scope": 3329,
                   "src": "3108:28:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1373,7 +1373,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3332,
+                    "id": 3325,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "3108:7:9",
@@ -1389,37 +1389,37 @@
               "src": "3041:99:9"
             },
             "returnParameters": {
-              "id": 3335,
+              "id": 3328,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3149:0:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "3012:138:9",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3338,
+        "scope": 3331,
         "src": "91:3061:9"
       }
     ],
     "src": "32:3121:9"
   },
   "legacyAST": {
-    "absolutePath": "/home/rekard0/Documents/WORK/PriviEthereum/PRIVIethereum/contracts/interfaces/IBridgeManager.sol",
+    "absolutePath": "/Users/sergijuanati/Dropbox/Docs/2. Work/16. Privi/3. Code/getcache_ethereum/contracts/interfaces/IBridgeManager.sol",
     "exportedSymbols": {
       "IBridgeManager": [
-        3337
+        3330
       ]
     },
-    "id": 3338,
+    "id": 3331,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3232,
+        "id": 3225,
         "literals": [
           "solidity",
           "^",
@@ -1430,7 +1430,7 @@
         "src": "32:23:9"
       },
       {
-        "id": 3233,
+        "id": 3226,
         "literals": [
           "experimental",
           "ABIEncoderV2"
@@ -1444,24 +1444,24 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 3337,
+        "id": 3330,
         "linearizedBaseContracts": [
-          3337
+          3330
         ],
         "name": "IBridgeManager",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "IBridgeManager.registeredToken",
-            "id": 3240,
+            "id": 3233,
             "members": [
               {
                 "constant": false,
-                "id": 3235,
+                "id": 3228,
                 "mutability": "mutable",
                 "name": "name",
                 "nodeType": "VariableDeclaration",
-                "scope": 3240,
+                "scope": 3233,
                 "src": "149:11:9",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1470,7 +1470,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 3234,
+                  "id": 3227,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "149:6:9",
@@ -1483,11 +1483,11 @@
               },
               {
                 "constant": false,
-                "id": 3237,
+                "id": 3230,
                 "mutability": "mutable",
                 "name": "symbol",
                 "nodeType": "VariableDeclaration",
-                "scope": 3240,
+                "scope": 3233,
                 "src": "166:13:9",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1496,7 +1496,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 3236,
+                  "id": 3229,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "166:6:9",
@@ -1509,11 +1509,11 @@
               },
               {
                 "constant": false,
-                "id": 3239,
+                "id": 3232,
                 "mutability": "mutable",
                 "name": "deployedAddress",
                 "nodeType": "VariableDeclaration",
-                "scope": 3240,
+                "scope": 3233,
                 "src": "185:23:9",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1522,7 +1522,7 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 3238,
+                  "id": 3231,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "185:7:9",
@@ -1537,35 +1537,35 @@
             ],
             "name": "registeredToken",
             "nodeType": "StructDefinition",
-            "scope": 3337,
+            "scope": 3330,
             "src": "120:93:9",
             "visibility": "public"
           },
           {
             "documentation": {
-              "id": 3241,
+              "id": 3234,
               "nodeType": "StructuredDocumentation",
               "src": "217:66:9",
               "text": " @notice get an address of a registered erc20 tokens"
             },
             "functionSelector": "10a43eba",
-            "id": 3248,
+            "id": 3241,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getErc20AddressRegistered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3244,
+              "id": 3237,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3243,
+                  "id": 3236,
                   "mutability": "mutable",
                   "name": "tokenSymbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3248,
+                  "scope": 3241,
                   "src": "321:27:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1574,7 +1574,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3242,
+                    "id": 3235,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "321:6:9",
@@ -1589,16 +1589,16 @@
               "src": "320:29:9"
             },
             "returnParameters": {
-              "id": 3247,
+              "id": 3240,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3246,
+                  "id": 3239,
                   "mutability": "mutable",
                   "name": "returnAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3248,
+                  "scope": 3241,
                   "src": "385:21:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1607,7 +1607,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3245,
+                    "id": 3238,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "385:7:9",
@@ -1622,7 +1622,7 @@
               ],
               "src": "384:23:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "286:122:9",
             "stateMutability": "view",
             "virtual": false,
@@ -1630,65 +1630,65 @@
           },
           {
             "documentation": {
-              "id": 3249,
+              "id": 3242,
               "nodeType": "StructuredDocumentation",
               "src": "412:66:9",
               "text": " @notice get an array of all registered erc20 tokens"
             },
             "functionSelector": "53206452",
-            "id": 3256,
+            "id": 3249,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc20Registered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3250,
+              "id": 3243,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "511:2:9"
             },
             "returnParameters": {
-              "id": 3255,
+              "id": 3248,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3254,
+                  "id": 3247,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3256,
+                  "scope": 3249,
                   "src": "549:24:9",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct IBridgeManager.registeredToken[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 3252,
+                      "id": 3245,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 3251,
+                        "id": 3244,
                         "name": "registeredToken",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 3240,
+                        "referencedDeclaration": 3233,
                         "src": "549:15:9"
                       },
-                      "referencedDeclaration": 3240,
+                      "referencedDeclaration": 3233,
                       "src": "549:15:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_registeredToken_$3240_storage_ptr",
+                        "typeIdentifier": "t_struct$_registeredToken_$3233_storage_ptr",
                         "typeString": "struct IBridgeManager.registeredToken"
                       }
                     },
-                    "id": 3253,
+                    "id": 3246,
                     "nodeType": "ArrayTypeName",
                     "src": "549:17:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_storage_$dyn_storage_ptr",
                       "typeString": "struct IBridgeManager.registeredToken[]"
                     }
                   },
@@ -1697,7 +1697,7 @@
               ],
               "src": "548:26:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "481:94:9",
             "stateMutability": "view",
             "virtual": false,
@@ -1705,35 +1705,35 @@
           },
           {
             "documentation": {
-              "id": 3257,
+              "id": 3250,
               "nodeType": "StructuredDocumentation",
               "src": "579:63:9",
               "text": " @notice get count of all registered erc20 tokens"
             },
             "functionSelector": "455686c3",
-            "id": 3262,
+            "id": 3255,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc20Count",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3258,
+              "id": 3251,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "670:2:9"
             },
             "returnParameters": {
-              "id": 3261,
+              "id": 3254,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3260,
+                  "id": 3253,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3262,
+                  "scope": 3255,
                   "src": "696:7:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1742,7 +1742,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3259,
+                    "id": 3252,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "696:7:9",
@@ -1756,7 +1756,7 @@
               ],
               "src": "695:9:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "645:60:9",
             "stateMutability": "view",
             "virtual": false,
@@ -1764,29 +1764,29 @@
           },
           {
             "documentation": {
-              "id": 3263,
+              "id": 3256,
               "nodeType": "StructuredDocumentation",
               "src": "709:67:9",
               "text": " @notice get an address of a registered erc721 tokens"
             },
             "functionSelector": "91567da8",
-            "id": 3270,
+            "id": 3263,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getErc721AddressRegistered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3266,
+              "id": 3259,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3265,
+                  "id": 3258,
                   "mutability": "mutable",
                   "name": "tokenSymbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3270,
+                  "scope": 3263,
                   "src": "815:27:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1795,7 +1795,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3264,
+                    "id": 3257,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "815:6:9",
@@ -1810,16 +1810,16 @@
               "src": "814:29:9"
             },
             "returnParameters": {
-              "id": 3269,
+              "id": 3262,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3268,
+                  "id": 3261,
                   "mutability": "mutable",
                   "name": "returnAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3270,
+                  "scope": 3263,
                   "src": "879:21:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1828,7 +1828,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3267,
+                    "id": 3260,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "879:7:9",
@@ -1843,7 +1843,7 @@
               ],
               "src": "878:23:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "779:123:9",
             "stateMutability": "view",
             "virtual": false,
@@ -1851,65 +1851,65 @@
           },
           {
             "documentation": {
-              "id": 3271,
+              "id": 3264,
               "nodeType": "StructuredDocumentation",
               "src": "906:67:9",
               "text": " @notice get an array of all registered erc721 tokens"
             },
             "functionSelector": "9f45c1d3",
-            "id": 3278,
+            "id": 3271,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc721Registered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3272,
+              "id": 3265,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1007:2:9"
             },
             "returnParameters": {
-              "id": 3277,
+              "id": 3270,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3276,
+                  "id": 3269,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3278,
+                  "scope": 3271,
                   "src": "1045:24:9",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct IBridgeManager.registeredToken[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 3274,
+                      "id": 3267,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 3273,
+                        "id": 3266,
                         "name": "registeredToken",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 3240,
+                        "referencedDeclaration": 3233,
                         "src": "1045:15:9"
                       },
-                      "referencedDeclaration": 3240,
+                      "referencedDeclaration": 3233,
                       "src": "1045:15:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_registeredToken_$3240_storage_ptr",
+                        "typeIdentifier": "t_struct$_registeredToken_$3233_storage_ptr",
                         "typeString": "struct IBridgeManager.registeredToken"
                       }
                     },
-                    "id": 3275,
+                    "id": 3268,
                     "nodeType": "ArrayTypeName",
                     "src": "1045:17:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_storage_$dyn_storage_ptr",
                       "typeString": "struct IBridgeManager.registeredToken[]"
                     }
                   },
@@ -1918,7 +1918,7 @@
               ],
               "src": "1044:26:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "976:95:9",
             "stateMutability": "view",
             "virtual": false,
@@ -1926,35 +1926,35 @@
           },
           {
             "documentation": {
-              "id": 3279,
+              "id": 3272,
               "nodeType": "StructuredDocumentation",
               "src": "1075:64:9",
               "text": " @notice get count of all registered erc721 tokens"
             },
             "functionSelector": "01ab669c",
-            "id": 3284,
+            "id": 3277,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc721Count",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3280,
+              "id": 3273,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1168:2:9"
             },
             "returnParameters": {
-              "id": 3283,
+              "id": 3276,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3282,
+                  "id": 3275,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3284,
+                  "scope": 3277,
                   "src": "1194:7:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1963,7 +1963,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3281,
+                    "id": 3274,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1194:7:9",
@@ -1977,7 +1977,7 @@
               ],
               "src": "1193:9:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "1142:61:9",
             "stateMutability": "view",
             "virtual": false,
@@ -1985,29 +1985,29 @@
           },
           {
             "documentation": {
-              "id": 3285,
+              "id": 3278,
               "nodeType": "StructuredDocumentation",
               "src": "1207:68:9",
               "text": " @notice get an address of a registered erc1155 tokens"
             },
             "functionSelector": "4dd1b5f8",
-            "id": 3292,
+            "id": 3285,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getErc1155AddressRegistered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3288,
+              "id": 3281,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3287,
+                  "id": 3280,
                   "mutability": "mutable",
                   "name": "tokenURI",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3292,
+                  "scope": 3285,
                   "src": "1315:24:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -2016,7 +2016,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3286,
+                    "id": 3279,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "1315:6:9",
@@ -2031,16 +2031,16 @@
               "src": "1314:26:9"
             },
             "returnParameters": {
-              "id": 3291,
+              "id": 3284,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3290,
+                  "id": 3283,
                   "mutability": "mutable",
                   "name": "returnAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3292,
+                  "scope": 3285,
                   "src": "1376:21:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2049,7 +2049,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3289,
+                    "id": 3282,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1376:7:9",
@@ -2064,7 +2064,7 @@
               ],
               "src": "1375:23:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "1278:121:9",
             "stateMutability": "view",
             "virtual": false,
@@ -2072,65 +2072,65 @@
           },
           {
             "documentation": {
-              "id": 3293,
+              "id": 3286,
               "nodeType": "StructuredDocumentation",
               "src": "1403:68:9",
               "text": " @notice get an array of all registered erc1155 tokens"
             },
             "functionSelector": "c7092a82",
-            "id": 3300,
+            "id": 3293,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc1155Registered",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3294,
+              "id": 3287,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1506:2:9"
             },
             "returnParameters": {
-              "id": 3299,
+              "id": 3292,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3298,
+                  "id": 3291,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3300,
+                  "scope": 3293,
                   "src": "1544:24:9",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct IBridgeManager.registeredToken[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 3296,
+                      "id": 3289,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 3295,
+                        "id": 3288,
                         "name": "registeredToken",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 3240,
+                        "referencedDeclaration": 3233,
                         "src": "1544:15:9"
                       },
-                      "referencedDeclaration": 3240,
+                      "referencedDeclaration": 3233,
                       "src": "1544:15:9",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_registeredToken_$3240_storage_ptr",
+                        "typeIdentifier": "t_struct$_registeredToken_$3233_storage_ptr",
                         "typeString": "struct IBridgeManager.registeredToken"
                       }
                     },
-                    "id": 3297,
+                    "id": 3290,
                     "nodeType": "ArrayTypeName",
                     "src": "1544:17:9",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3240_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_registeredToken_$3233_storage_$dyn_storage_ptr",
                       "typeString": "struct IBridgeManager.registeredToken[]"
                     }
                   },
@@ -2139,7 +2139,7 @@
               ],
               "src": "1543:26:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "1474:96:9",
             "stateMutability": "view",
             "virtual": false,
@@ -2147,35 +2147,35 @@
           },
           {
             "documentation": {
-              "id": 3301,
+              "id": 3294,
               "nodeType": "StructuredDocumentation",
               "src": "1574:65:9",
               "text": " @notice get count of all registered erc1155 tokens"
             },
             "functionSelector": "90344f62",
-            "id": 3306,
+            "id": 3299,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllErc1155Count",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3302,
+              "id": 3295,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1669:2:9"
             },
             "returnParameters": {
-              "id": 3305,
+              "id": 3298,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3304,
+                  "id": 3297,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3306,
+                  "scope": 3299,
                   "src": "1695:7:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2184,7 +2184,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3303,
+                    "id": 3296,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1695:7:9",
@@ -2198,7 +2198,7 @@
               ],
               "src": "1694:9:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "1642:62:9",
             "stateMutability": "view",
             "virtual": false,
@@ -2206,29 +2206,29 @@
           },
           {
             "documentation": {
-              "id": 3307,
+              "id": 3300,
               "nodeType": "StructuredDocumentation",
               "src": "1708:346:9",
               "text": " @notice  Register the contract address of an ERC20 Token\n @dev     - Token name and address can't be already registered\n          - Length of token name can't be higher than 25\n @param   tokenName Name of the token to be registered (e.g.: DAI, UNI)\n @param   tokenContractAddress Contract address of the ERC20 Token"
             },
             "functionSelector": "dd2c859c",
-            "id": 3316,
+            "id": 3309,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "registerTokenERC20",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3314,
+              "id": 3307,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3309,
+                  "id": 3302,
                   "mutability": "mutable",
                   "name": "tokenName",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3316,
+                  "scope": 3309,
                   "src": "2090:25:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -2237,7 +2237,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3308,
+                    "id": 3301,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "2090:6:9",
@@ -2250,11 +2250,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3311,
+                  "id": 3304,
                   "mutability": "mutable",
                   "name": "tokenSymbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3316,
+                  "scope": 3309,
                   "src": "2121:27:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -2263,7 +2263,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3310,
+                    "id": 3303,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "2121:6:9",
@@ -2276,11 +2276,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3313,
+                  "id": 3306,
                   "mutability": "mutable",
                   "name": "tokenContractAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3316,
+                  "scope": 3309,
                   "src": "2154:28:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2289,7 +2289,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3312,
+                    "id": 3305,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2154:7:9",
@@ -2305,12 +2305,12 @@
               "src": "2084:102:9"
             },
             "returnParameters": {
-              "id": 3315,
+              "id": 3308,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2195:0:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "2057:139:9",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -2318,29 +2318,29 @@
           },
           {
             "documentation": {
-              "id": 3317,
+              "id": 3310,
               "nodeType": "StructuredDocumentation",
               "src": "2200:331:9",
               "text": " @notice  Register the contract address of an ERC721 Token\n @dev     - Token name and address can't be already registered\n          - Length of token name can't be higher than 25\n @param   tokenName Name of the token to be registered\n @param   tokenContractAddress Contract address of the ERC721 Token"
             },
             "functionSelector": "c082713b",
-            "id": 3326,
+            "id": 3319,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "registerTokenERC721",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3324,
+              "id": 3317,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3319,
+                  "id": 3312,
                   "mutability": "mutable",
                   "name": "tokenName",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3326,
+                  "scope": 3319,
                   "src": "2568:25:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -2349,7 +2349,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3318,
+                    "id": 3311,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "2568:6:9",
@@ -2362,11 +2362,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3321,
+                  "id": 3314,
                   "mutability": "mutable",
                   "name": "tokenSymbol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3326,
+                  "scope": 3319,
                   "src": "2599:27:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -2375,7 +2375,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3320,
+                    "id": 3313,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "2599:6:9",
@@ -2388,11 +2388,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3323,
+                  "id": 3316,
                   "mutability": "mutable",
                   "name": "tokenContractAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3326,
+                  "scope": 3319,
                   "src": "2632:28:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2401,7 +2401,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3322,
+                    "id": 3315,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2632:7:9",
@@ -2417,12 +2417,12 @@
               "src": "2562:102:9"
             },
             "returnParameters": {
-              "id": 3325,
+              "id": 3318,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2673:0:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "2534:140:9",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -2430,29 +2430,29 @@
           },
           {
             "documentation": {
-              "id": 3327,
+              "id": 3320,
               "nodeType": "StructuredDocumentation",
               "src": "2678:331:9",
               "text": " @notice  Register the contract address of an ERC1155 Token\n @dev     - Token name and address can't be already registered\n          - Length of token name can't be higher than 25\n @param   tokenURI URI of the token to be registered\n @param   tokenContractAddress Contract address of the ERC1155 Token"
             },
             "functionSelector": "4d4825a0",
-            "id": 3336,
+            "id": 3329,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "registerTokenERC1155",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3334,
+              "id": 3327,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3329,
+                  "id": 3322,
                   "mutability": "mutable",
                   "name": "tokenName",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3336,
+                  "scope": 3329,
                   "src": "3047:25:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -2461,7 +2461,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3328,
+                    "id": 3321,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "3047:6:9",
@@ -2474,11 +2474,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3331,
+                  "id": 3324,
                   "mutability": "mutable",
                   "name": "tokenURI",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3336,
+                  "scope": 3329,
                   "src": "3078:24:9",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -2487,7 +2487,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3330,
+                    "id": 3323,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "3078:6:9",
@@ -2500,11 +2500,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 3333,
+                  "id": 3326,
                   "mutability": "mutable",
                   "name": "tokenContractAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3336,
+                  "scope": 3329,
                   "src": "3108:28:9",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2513,7 +2513,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3332,
+                    "id": 3325,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "3108:7:9",
@@ -2529,19 +2529,19 @@
               "src": "3041:99:9"
             },
             "returnParameters": {
-              "id": 3335,
+              "id": 3328,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "3149:0:9"
             },
-            "scope": 3337,
+            "scope": 3330,
             "src": "3012:138:9",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3338,
+        "scope": 3331,
         "src": "91:3061:9"
       }
     ],
@@ -2552,8 +2552,8 @@
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.3.3",
-  "updatedAt": "2021-03-19T09:16:11.345Z",
+  "schemaVersion": "3.3.2",
+  "updatedAt": "2021-03-30T17:28:08.436Z",
   "devdoc": {
     "kind": "dev",
     "methods": {

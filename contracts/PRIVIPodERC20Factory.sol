@@ -33,6 +33,14 @@ contract PRIVIPodERC20Factory is AccessControl {
     bridgeManagerAddress = bridgeAddress;
   }
 
+  function assignRoleSwapManager(address swapManagerAddress) external {
+    require(
+      hasRole(MODERATOR_ROLE, _msgSender()),
+      "PRIVIPodERC20Factory: must have MODERATOR_ROLE to assign SwapManager address"
+    );
+    _setupRole(MODERATOR_ROLE, swapManagerAddress);
+  }
+
   function getTotalTokenCreated() external view returns (uint256 totalPods) {
     totalPods = totalPodCreated;
   }
@@ -66,6 +74,7 @@ contract PRIVIPodERC20Factory is AccessControl {
     string calldata podTokenSymbol
   ) external returns (address podAddress) {
     // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC20Factory: must have MODERATOR_ROLE to create pod.");
+    // TODO: is it Users or Admins to create them? what restrictions shall we applied to call this function?
     require(
       podTokenAddressesById[podId] == address(0),
       "PRIVIPodERC20Factory: Pod id already exists."
