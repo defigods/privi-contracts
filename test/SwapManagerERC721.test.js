@@ -1,5 +1,4 @@
 const { expectRevert, expectEvent, balance, ether, BN, ZERO_ADDRESS } = require('@openzeppelin/test-helpers');
-// const web3 = require('web3');
 const assert = require('assert');
 
 // Artifacts
@@ -10,7 +9,6 @@ const PodERC721Factory = artifacts.require('PRIVIPodERC721Factory');
 const PodERC721RoyaltyFactory = artifacts.require('PRIVIPodERC721RoyaltyFactory');
 const PodERC1155Factory = artifacts.require('PRIVIPodERC1155Factory');
 const PodERC1155RoyaltyFactory = artifacts.require('PRIVIPodERC1155RoyaltyFactory');
-//const FakeUNI = artifacts.require('FakeUNI');
 const FakeERC721 = artifacts.require('PRIVIPodERC721Token');
 const IERC721 = artifacts.require('IERC721');
 
@@ -22,7 +20,6 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
     let podERC721RoyaltyFactory;
     let podERC1155Factory;
     let podERC1155RoyaltyFactory;
-    //let fakeUni;
     let fakeERC721;
     const [admin, investor1, hacker, creator] = accounts
 
@@ -278,5 +275,4 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
             tokenId: new BN(0),
         });
     });
-
 });

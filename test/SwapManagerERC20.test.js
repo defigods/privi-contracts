@@ -1,5 +1,4 @@
-const { expectRevert, expectEvent, balance, ether, BN, ZERO_ADDRESS } = require('@openzeppelin/test-helpers');
-const web3 = require('web3');
+const { expectRevert, expectEvent, BN} = require('@openzeppelin/test-helpers');
 const assert = require('assert');
 
 // Artifacts
@@ -93,7 +92,6 @@ contract('SwapManager for ERC20 tokens', (accounts) => {
 
     /*********** CHECK withdrawERC20Token() **************/
 
-
     it('withdrawERC20Token(): should not withdraw ERC20 tokens - amount must be > 0', async () => {
         await expectRevert(
             swapManagerContract.withdrawERC20Token('UNI', investor1, 0, { from: admin }),
@@ -160,5 +158,4 @@ contract('SwapManager for ERC20 tokens', (accounts) => {
             amount: new BN(50),
         });
     });
-
 });
