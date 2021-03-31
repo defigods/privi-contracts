@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "./token/interfaces/FakeInterface.sol";
 import "./interfaces/IBridgeManager.sol";
 import "./interfaces/IPRIVIPodERC20Factory.sol";
@@ -15,7 +16,7 @@ import "./interfaces/IPRIVIPodERC1155RoyaltyFactory.sol";
 
 /// @author The PRIVI Blockchain team
 /// @title Manages swap and withdraw of Ethers, ERC20 tokens and ERC721 tokens between Users and PRIVI platform
-contract SwapManager is AccessControl {
+contract SwapManager is AccessControl, ERC1155Holder {
   bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
   address private ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
   address public bridgeManagerAddress;
@@ -86,6 +87,17 @@ contract SwapManager is AccessControl {
     erc1155FactoryAddress = erc1155FactoryDeployedAddress;
     erc721RoyaltyFactoryAddress = erc721FactoryRoyaltyDeployedAddress;
     erc1155RoyaltyFactoryAddress = erc1155FactoryRoyaltyDeployedAddress;
+  }
+
+  // To be able to receive ERC1155 tokens (required if inheriting from AccessControl, ERC1155Holder)
+  function supportsInterface(bytes4 interfaceId)
+    public
+    view
+    virtual
+    override(ERC1155Receiver, AccessControl)
+    returns (bool)
+  {
+    return super.supportsInterface(interfaceId);
   }
 
   /**
@@ -264,15 +276,21 @@ contract SwapManager is AccessControl {
       tokenAddress != ZERO_ADDRESS,
       "SwapManager: token is not registered on BridgeManager"
     );
-    /* TO BE TESTED */
     require(
       IERC1155(tokenAddress).isApprovedForAll(msg.sender, address(this)) ==
         true,
       "SwapManager: user did not grant aprove yet"
     );
+    // IERC1155(tokenAddress).safeTransferFrom(
+    //   msg.sender,
+    //   to,
+    //   tokenId,
+    //   amount,
+    //   data
+    // );
     IERC1155(tokenAddress).safeTransferFrom(
-      msg.sender,
-      to,
+      _msgSender(),
+      address(this),
       tokenId,
       amount,
       data
