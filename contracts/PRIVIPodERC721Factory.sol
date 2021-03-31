@@ -33,6 +33,14 @@ contract PRIVIPodERC721Factory is AccessControl {
     bridgeManagerAddress = bridgeAddress;
   }
 
+  function assignRoleSwapManager(address swapManagerAddress) external {
+    require(
+      hasRole(MODERATOR_ROLE, _msgSender()),
+      "PRIVIPodERC20Factory: must have MODERATOR_ROLE to assign SwapManager address"
+    );
+    _setupRole(MODERATOR_ROLE, swapManagerAddress);
+  }
+
   function getTotalTokenCreated() external view returns (uint256 totalPods) {
     totalPods = totalPodCreated;
   }
