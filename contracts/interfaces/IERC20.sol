@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-/// @author The PRIVI Blockchain team
+/// @author OpenZeppelin
 /// @title ERC20 Interface to be used in tests
 
 pragma solidity ^0.8.0;

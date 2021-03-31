@@ -1,9 +1,8 @@
-//const errors = require('./utils/errors');
-//const { registerToken } = require('./utils/helpers');
 const { expectRevert, expectEvent, balance, ether, BN, ZERO_ADDRESS } = require('@openzeppelin/test-helpers');
 const web3 = require('web3');
 const assert = require('assert');
 
+// Artifacts
 const SwapManager = artifacts.require('SwapManager');
 const BridgeManager = artifacts.require('BridgeManager');
 const PodERC20Factory = artifacts.require('PRIVIPodERC20Factory');
@@ -14,7 +13,7 @@ const PodERC1155RoyaltyFactory = artifacts.require('PRIVIPodERC1155RoyaltyFactor
 const FakeUNI = artifacts.require('FakeUNI');
 const IERC20 = artifacts.require('IERC20');
 
-contract('Swap Manager', (accounts) => {
+contract('SwapManager for ERC721 tokens', (accounts) => {
     let swapManagerContract;
     let bridgeManagerContract;
     let podERC20Factory;
@@ -23,18 +22,7 @@ contract('Swap Manager', (accounts) => {
     let podERC1155Factory;
     let podERC1155RoyaltyFactory;
     let fakeUni;
-    const [admin, mod1, investor1, hacker, ...rest] = accounts
-
-    // const ROLES = {
-    //   DEFAULT_ADMIN: ZERO_ADDRESS,
-    //   REGISTER: web3.utils.keccak256('REGISTER_ROLE'),
-    // };
-
-    // const ROLE_EVENTS = {
-    //   ADMIN_CHANGED: 'RoleAdminChanged',
-    //   GRANTED: 'RoleGranted',
-    //   REVOKED: 'RoleRevoked',
-    // };
+    const [admin, investor1, hacker] = accounts
 
     beforeEach(async () => {
         // Bridge contract
@@ -59,7 +47,7 @@ contract('Swap Manager', (accounts) => {
         );
 
         // Assign MODERATOR_ROLE to SwapManager contract in Factory contracts
-        await podERC20Factory.assignRoleSwapManager(swapManagerContract.address, { from: admin });
+        await podERC721Factory.assignRoleSwapManager(swapManagerContract.address, { from: admin });
 
         // Fake UNI contract
         fakeUni = await FakeUNI.new(swapManagerContract.address, { from: admin });
@@ -75,27 +63,27 @@ contract('Swap Manager', (accounts) => {
         );
     });
 
-    /*********** CHECK depositERC20Token() **************/
+    /*********** CHECK depositERC721Token() **************/
 
-    it('depositERC20Token(): should not deposit ERC20 tokens if not registered in Bridge', async () => {
+    it('depositERC721Token(): should not deposit ERC20 tokens if not registered in Bridge', async () => {
         await expectRevert(
-            swapManagerContract.depositERC20Token('NON_EXISTING', 15, { from: investor1 }),
+            swapManagerContract.depositERC721Token('NON_EXISTING', 15, { from: investor1 }),
             'SwapManager: token is not registered into the platform'
         );
     });
 
-    it('depositERC20Token(): should not deposit ERC20 tokens if not approved by user', async () => {
+    it('depositERC721Token(): should not deposit ERC20 tokens if not approved by user', async () => {
         await expectRevert(
-            swapManagerContract.depositERC20Token('UNI', 15, { from: investor1 }),
+            swapManagerContract.depositERC721Token('UNI', 15, { from: investor1 }),
             'SwapManager: token amount to be transferred to PRIVI is not yet approved by User'
         );
     });
 
-    it('depositERC20Token(): should deposit ERC20 tokens', async () => {
+    it('depositERC721Token(): should deposit ERC20 tokens', async () => {
         const balanceSwapBefore = await fakeUni.balanceOf(swapManagerContract.address);
 
         await fakeUni.approve(swapManagerContract.address, 300, { from: investor1 });
-        await swapManagerContract.depositERC20Token('UNI', 300, { from: investor1 });
+        await swapManagerContract.depositERC721Token('UNI', 300, { from: investor1 });
 
         const balanceSwapAfter = await fakeUni.balanceOf(swapManagerContract.address);
 
@@ -103,53 +91,53 @@ contract('Swap Manager', (accounts) => {
         assert(balanceSwapAfter.toString() === '300', 'Swap balance should be 300');
     });
 
-    /*********** CHECK withdrawERC20Token() **************/
+    /*********** CHECK withdrawERC721Token() **************/
 
 
-    it('withdrawERC20Token(): should not withdraw ERC20 tokens - amount must be > 0', async () => {
+    it('withdrawERC721Token(): should not withdraw ERC20 tokens - amount must be > 0', async () => {
         await expectRevert(
-            swapManagerContract.withdrawERC20Token('UNI', investor1, 0, { from: admin }),
+            swapManagerContract.withdrawERC721Token('UNI', investor1, 0, { from: admin }),
             'SwapManager: amount must be greater than 0'
         );
     });
 
-    it('withdrawERC20Token(): should not withdraw ERC20 tokens - only TRANSFER_ROLE', async () => {
+    it('withdrawERC721Token(): should not withdraw ERC20 tokens - only TRANSFER_ROLE', async () => {
         await expectRevert(
-            swapManagerContract.withdrawERC20Token('UNI', hacker, 15, { from: hacker }),
+            swapManagerContract.withdrawERC721Token('UNI', hacker, 15, { from: hacker }),
             'SwapManager: must have TRANSFER_ROLE to withdraw token'
         );
     });
 
-    it('withdrawERC20Token(): should not withdraw ERC20 tokens - cannot withdraw any amount', async () => {
+    it('withdrawERC721Token(): should not withdraw ERC20 tokens - cannot withdraw any amount', async () => {
         await fakeUni.approve(swapManagerContract.address, 300, { from: investor1 });
-        await swapManagerContract.depositERC20Token('UNI', 300, { from: investor1 });
+        await swapManagerContract.depositERC721Token('UNI', 300, { from: investor1 });
 
         await expectRevert(
-            swapManagerContract.withdrawERC20Token('UNI', investor1, 400, { from: admin }),
+            swapManagerContract.withdrawERC721Token('UNI', investor1, 400, { from: admin }),
             'SwapManager: cannot withdraw any amount'
         );
     });
 
-    it('withdrawERC20Token(): should withdraw ERC20 tokens', async () => {
+    it('withdrawERC721Token(): should withdraw ERC20 tokens', async () => {
         const balanceSwapBefore = await fakeUni.balanceOf(swapManagerContract.address);
 
         await fakeUni.approve(swapManagerContract.address, 300, { from: investor1 });
-        await swapManagerContract.depositERC20Token('UNI', 300, { from: investor1 });
-        const txReceipt = await swapManagerContract.withdrawERC20Token('UNI', investor1, 50, { from: admin });
+        await swapManagerContract.depositERC721Token('UNI', 300, { from: investor1 });
+        const txReceipt = await swapManagerContract.withdrawERC721Token('UNI', investor1, 50, { from: admin });
 
         const balanceSwapAfter = await fakeUni.balanceOf(swapManagerContract.address);
 
         assert(balanceSwapBefore.toString() === '0', 'Swap balance should be 0');
         assert(balanceSwapAfter.toString() === '250', 'Swap balance should be 250');
 
-        expectEvent(txReceipt, 'WithdrawERC20Token', {
+        expectEvent(txReceipt, 'withdrawERC721Token', {
             //tokenSymbol: 'UNI',
             to: investor1,
             amount: new BN(50),
         });
     });
 
-    it('withdrawERC20Token(): should mint ERC20 tokens', async () => {
+    it('withdrawERC721Token(): should mint ERC20 tokens', async () => {
         // Create 'TST' contract through PodERC20 factory
         await podERC20Factory.createPod(1, 'Test Token', 'TST', { from: admin });
         const newPodERC20Address = await podERC20Factory.getPodAddressById(1);
@@ -160,13 +148,13 @@ contract('Swap Manager', (accounts) => {
         const balancePodBefore = await newPodERC20.totalSupply();
 
         // Withdraw 'TST' tokens
-        const txReceipt = await swapManagerContract.withdrawERC20Token('TST', investor1, 50, { from: admin });
+        const txReceipt = await swapManagerContract.withdrawERC721Token('TST', investor1, 50, { from: admin });
         const balancePodAfter = await newPodERC20.totalSupply();
 
         assert(balancePodBefore.toString() === '2000', 'Swap balance should be 2000');
         assert(balancePodAfter.toString() === '2050', 'Swap balance should be 2050');
 
-        expectEvent(txReceipt, 'WithdrawERC20Token', {
+        expectEvent(txReceipt, 'withdrawERC721Token', {
             //tokenSymbol: 'UNI',
             to: investor1,
             amount: new BN(50),
