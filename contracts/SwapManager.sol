@@ -174,7 +174,6 @@ contract SwapManager is AccessControl {
       tokenAddress != ZERO_ADDRESS,
       "SwapManager: token is not registered into the platform"
     );
-    /* TO BE TESTED */
     require(
       IERC721(tokenAddress).getApproved(tokenId) == address(this),
       "SwapManager: token to be transferred to PRIVI is not yet approved by User"
@@ -208,14 +207,14 @@ contract SwapManager is AccessControl {
     if (isPodMint == true) {
       if (isRoyalty == true) {
         if (
-          IPRIVIPodERC721RoyaltyFactory(erc721FactoryAddress)
+          IPRIVIPodERC721RoyaltyFactory(erc721RoyaltyFactoryAddress)
             .getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS
         ) {
-          IPRIVIPodERC721RoyaltyFactory(erc721FactoryAddress)
+          IPRIVIPodERC721RoyaltyFactory(erc721RoyaltyFactoryAddress)
             .mintPodTokenBySymbol(tokenSymbol, to);
           emit WithdrawERC721Token(tokenSymbol, to, tokenId);
         } else {
-          revert("SwapManager: cannot withdraw any amount (royalty)");
+          revert("SwapManager: cannot withdraw royalty token");
         }
       } else {
         if (
@@ -229,7 +228,7 @@ contract SwapManager is AccessControl {
           );
           emit WithdrawERC721Token(tokenSymbol, to, tokenId);
         } else {
-          revert("SwapManager: cannot withdraw any amount (non royalty)");
+          revert("SwapManager: cannot withdraw non royalty token");
         }
       }
     } else {
@@ -237,7 +236,7 @@ contract SwapManager is AccessControl {
         IERC721(tokenAddress).transferFrom(address(this), to, tokenId);
         emit WithdrawERC721Token(tokenSymbol, to, tokenId);
       } else {
-        revert("SwapManager: cannot withdraw any standard token amount");
+        revert("SwapManager: cannot withdraw non standard token");
       }
     }
   }
