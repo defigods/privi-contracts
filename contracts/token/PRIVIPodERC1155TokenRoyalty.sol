@@ -21,7 +21,12 @@ contract PRIVIPodERC1155TokenRoyalty is Context, ERC1155Burnable, NFTRoyalty {
    * @dev Sets factory address
    * deploys the contract.
    */
-  constructor(string memory uri, address factory, uint256 royaltyAmount, address creator) ERC1155(uri) NFTRoyalty(royaltyAmount, creator) {
+  constructor(
+    string memory uri,
+    address factory,
+    uint256 royaltyAmount,
+    address creator
+  ) ERC1155(uri) NFTRoyalty(royaltyAmount, creator) {
     parentFactory = factory;
   }
 
