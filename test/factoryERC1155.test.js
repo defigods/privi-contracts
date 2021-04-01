@@ -1,151 +1,254 @@
-const { assert } = require('chai');
-const errors = require('./utils/errors');
+const { expectRevert, expectEvent, BN } = require('@openzeppelin/test-helpers');
+const web3 = require('web3');
+const assert = require('assert');
 
+// Artifacts
 const BridgeManager = artifacts.require('BridgeManager');
-const PRIVIPodERC1155Factory = artifacts.require('PRIVIPodERC1155Factory');
-const PRIVIPodERC1155Token = artifacts.require('PRIVIPodERC1155Token');
+const PodERC1155Factory = artifacts.require('PRIVIPodERC1155Factory');
+const PodERC1155Token = artifacts.require('PRIVIPodERC1155Token');
 
-contract('PRIVIPodERC1155Factory', (accounts) => {
-	let bridgeManagerContract;
-	let erc1155FactoryContract;
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-	const [moderator, investor, regularAccount] = accounts;
+contract('PRIVI Pod Factory ERC1155', (accounts) => {
+    let bridgeManagerContract;
+    let podERC1155Factory;
+    const NO_DATA = web3.utils.fromAscii('nothing');
 
-	const POD_CREATED_EVENT = 'PodCreated';
-	const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+    const [admin, investor1, hacker] = accounts
 
-	const testPod = {
-		uri: 'ipfs/test/pod/uri',
-	};
+    beforeEach(async () => {
+        // Bridge contract
+        bridgeManagerContract = await BridgeManager.new({ from: admin });
 
-	// Errors
-	const UNIQUE_ID = errors.UNIQUE_ID('1155');
-	const ONLY_MODERATOR = errors.ONLY_MODERATOR('1155');
-	const INVESTMENT_ADDRESS = errors.INVESTMENT_ADDRESS('1155');
-	const INVESTMENT_AMOUNT = errors.INVESTMENT_AMOUNT('1155');
+        // Factory contracts
+        podERC1155Factory = await PodERC1155Factory.new(bridgeManagerContract.address, { from: admin });
 
-	beforeEach(async () => {
-		bridgeManagerContract = await BridgeManager.new();
-		erc1155FactoryContract = await PRIVIPodERC1155Factory.new(bridgeManagerContract.address);
-	});
+        // TST Token creation
+        await podERC1155Factory.createPod('ipfs://test0', { from: admin });
+    });
 
-	it('fails to deploy on already registered address', async () => {
-		try {
-			erc1155FactoryContract = await PRIVIPodERC1155Factory.new(bridgeManagerContract.address);
-		} catch (e) {
-			assert.equal(e.reason, errors.ALREADY_REGISTERED);
-		}
-	});
+    /* ********************************************************************** 
+    *                         CHECK assignRoleSwapManager() 
+    * **********************************************************************/
 
-	it('creates a pod end emits a pod created event', async () => {
-		await erc1155FactoryContract.createPod(testPod.uri);
+    it('assignRoleSwapManager(): should not assign role - only admin', async () => {
+        await expectRevert(
+            podERC1155Factory.assignRoleSwapManager(bridgeManagerContract.address, { from: hacker }),
+            'PRIVIPodERC1155Factory: must have MODERATOR_ROLE to assign SwapManager address'
+        );
+    });
 
-		const podAddress = await erc1155FactoryContract.getPodAddressByUri(testPod.uri);
+    /* ********************************************************************** 
+     *                         CHECK createPod() 
+     * **********************************************************************/
 
-		assert.notEqual(podAddress, ZERO_ADDRESS);
 
-		const [podCreatedEvent] = await erc1155FactoryContract.getPastEvents('allEvents');
+    it('createPod(): should not create POD - pod id already exists', async () => {
+        await expectRevert(
+            podERC1155Factory.createPod(
+                'ipfs://test0', // pod uri
+                { from: admin }
+            ),
+            'PRIVIPodERC1155Factory: Pod already exists'
+        );
+    });
 
-		assert.equal(podCreatedEvent.event, POD_CREATED_EVENT);
-		assert.equal(podCreatedEvent.returnValues.podAddress, podAddress);
-	});
+    it('createPod(): should not create POD - empty name', async () => {
+        await expectRevert(
+            podERC1155Factory.createPod(
+                '', // pod uri
+                { from: admin }
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
+    });
 
-	it('fails to create a pod on existing pod uri', async () => {
-		try {
-			await erc1155FactoryContract.createPod(testPod.uri);
-		} catch (e) {
-			assert.equal(e.reason, UNIQUE_ID);
-		}
-	});
+    it('createPod(): should create POD', async () => {
+        const tokensBefore = await podERC1155Factory.totalPodCreated();
 
-	it('correctly assigns parentFactory to pod token contract', async () => {
-		await erc1155FactoryContract.createPod(testPod.uri);
+        const txReceipt = await podERC1155Factory.createPod(
+            'ipfs://test1', // pod uri
+            { from: admin }
+        );
 
-		const podAddress = await erc1155FactoryContract.getPodAddressByUri(testPod.uri);
-		const erc1155TokenContract = await PRIVIPodERC1155Token.at(podAddress);
-		const podFactoryAddress = await erc1155TokenContract.parentFactory();
+        const podAddress = await podERC1155Factory.getPodAddressByUri('ipfs://test1');
+        const tokensAfter = await podERC1155Factory.totalPodCreated();
 
-		assert.equal(erc1155FactoryContract.address, podFactoryAddress);
-	});
+        assert(tokensBefore.toString() === '1', 'number of tokens before should be 1');
+        assert(tokensAfter.toString() === '2', 'number of tokens after should be 2');
+        assert(podAddress !== ZERO_ADDRESS, 'pod token address should not be 0');
 
-	it('allows moderator to mint pod tokens for investor', async () => {
-		const testToken = {
-			tokenId: '1',
-			amount: '20',
-			data: web3.utils.fromAscii('Test token data'),
-		};
+        expectEvent(txReceipt, 'PodCreated', {
+            //uri: 'Test Token1',
+            podAddress: podAddress,
+        });
+    });
 
-		await erc1155FactoryContract.createPod(testPod.uri);
+    it('createPod(): should assign parent Factory to POD token contract', async () => {
+        await podERC1155Factory.createPod('ipfs://test2', { from: admin });
 
-		await erc1155FactoryContract.podMint(testPod.uri, investor, testToken.tokenId, testToken.amount, testToken.data, {
-			from: moderator,
-		});
+        const podAddress = await podERC1155Factory.getPodAddressByUri('ipfs://test2');
+        const erc1155TokenContract = await PodERC1155Token.at(podAddress);
+        const podFactoryAddress = await erc1155TokenContract.parentFactory();
 
-		const podAddress = await erc1155FactoryContract.getPodAddressByUri(testPod.uri);
-		const erc1155TokenContract = await PRIVIPodERC1155Token.at(podAddress);
-		const investorBalance = await erc1155TokenContract.balanceOf(investor, testToken.tokenId);
+        assert(podERC1155Factory.address === podFactoryAddress, 'factory address should match');
+    });
 
-		assert.equal(investorBalance, '20');
-	});
+    /* ********************************************************************** 
+    *                         CHECK podMint() 
+    * **********************************************************************/
 
-	it('fails to mint pod tokens for investor from non-moderator account', async () => {
-		try {
-			const testToken = {
-				tokenId: '1',
-				amount: '20',
-				data: web3.utils.fromAscii('Test token data'),
-			};
+    it('podMint(): should not mint POD - missing MODERATOR_ROLE', async () => {
+        await expectRevert(
+            podERC1155Factory.podMint(
+                'ipfs://test0', // pod uri
+                investor1,      // to
+                0,              // tokenId
+                100,            // amount
+                NO_DATA,        // data
+                { from: hacker }
+            ),
+            'PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor'
+        );
+    });
 
-			await erc1155FactoryContract.createPod(testPod.uri);
+    it('podMint(): should not mint POD - cannot be zero address', async () => {
+        await expectRevert(
+            podERC1155Factory.podMint(
+                'ipfs://test0', // pod uri
+                ZERO_ADDRESS,   // to
+                0,              // tokenId
+                100,            // amount
+                NO_DATA,        // data
+                { from: admin }
+            ),
+            'PRIVIPodERC1155Factory: Account address should not be zero'
+        );
+    });
 
-			await erc1155FactoryContract.podMint(testPod.uri, investor, testToken.tokenId, testToken.amount, testToken.data, {
-				from: regularAccount,
-			});
-		} catch (e) {
-			assert.equal(e.reason, ONLY_MODERATOR);
-		}
-	});
+    it('podMint(): should not mint POD - pod id does not exist', async () => {
+        await expectRevert.unspecified(
+            podERC1155Factory.podMint(
+                '',             // pod uri
+                investor1,      // to
+                0,              // tokenId
+                100,            // amount
+                NO_DATA,        // data
+                { from: admin }
+            )
+        );
+    });
 
-	it('fails to mint pod tokens for investor on invalid address', async () => {
-		try {
-			const testToken = {
-				tokenId: '1',
-				amount: '20',
-				data: web3.utils.fromAscii('Test token data'),
-			};
+    it('podMint(): should not mint POD - amount must be greater than zero', async () => {
+        await expectRevert.unspecified(
+            podERC1155Factory.podMint(
+                'ipfs://test3', // pod uri
+                investor1,      // to
+                0,              // tokenId
+                0,              // amount
+                NO_DATA,        // data
+                { from: admin }
+            )
+        );
+    });
 
-			await erc1155FactoryContract.createPod(testPod.uri);
+    it('podMint(): should mint POD', async () => {
+        const podAddress = await podERC1155Factory.getPodAddressByUri('ipfs://test0');
+        const erc1155TokenContract = await PodERC1155Token.at(podAddress);
 
-			await erc1155FactoryContract.podMint(
-				testPod.uri,
-				ZERO_ADDRESS,
-				testToken.tokenId,
-				testToken.amount,
-				testToken.data,
-				{
-					from: moderator,
-				}
-			);
-		} catch (e) {
-			assert.equal(e.reason, INVESTMENT_ADDRESS);
-		}
-	});
+        const balanceInvestorBefore = await erc1155TokenContract.balanceOf(investor1, 0);
 
-	it('fails to mint pod tokens for investor on invalid amount', async () => {
-		try {
-			const testToken = {
-				tokenId: '1',
-				amount: '0',
-				data: web3.utils.fromAscii('Test token data'),
-			};
+        await podERC1155Factory.podMint(
+            'ipfs://test0', // pod uri
+            investor1,      // to
+            0,              // tokenId
+            100,            // amount
+            NO_DATA,        // data
+            { from: admin }
+        );
 
-			await erc1155FactoryContract.createPod(testPod.uri);
+        const balanceInvestorAfter = await erc1155TokenContract.balanceOf(investor1, 0);
 
-			await erc1155FactoryContract.podMint(testPod.uri, investor, testToken.tokenId, testToken.amount, testToken.data, {
-				from: moderator,
-			});
-		} catch (e) {
-			assert.equal(e.reason, INVESTMENT_AMOUNT);
-		}
-	});
+        assert(balanceInvestorBefore.toString() === '0', 'investors initial amount should be 0');
+        assert(balanceInvestorAfter.toString() === '100', 'investors final amount should be 100');
+    });
+
+    /* ********************************************************************** 
+     *                         CHECK podMintBatch() 
+     * **********************************************************************/
+
+    it('podMintBatch(): should not mint POD - missing MODERATOR_ROLE', async () => {
+        await expectRevert(
+            podERC1155Factory.podMintBatch(
+                'ipfs://test0', // pod uri
+                investor1,      // to
+                [0],            // tokenId
+                [100],          // amount
+                NO_DATA,        // data
+                { from: hacker }
+            ),
+            'PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor'
+        );
+    });
+
+    it('podMintBatch(): should not mint POD - cannot be zero address', async () => {
+        await expectRevert(
+            podERC1155Factory.podMintBatch(
+                'ipfs://test0', // pod uri
+                ZERO_ADDRESS,   // to
+                [0],            // tokenId
+                [100],          // amount
+                NO_DATA,        // data
+                { from: admin }
+            ),
+            'PRIVIPodERC1155Factory: Account address should not be zero'
+        );
+    });
+
+    it('podMintBatch(): should not mint POD - pod id does not exist', async () => {
+        await expectRevert.unspecified(
+            podERC1155Factory.podMintBatch(
+                '',             // pod uri
+                investor1,      // to
+                [0],            // tokenId
+                [100],          // amount
+                NO_DATA,        // data
+                { from: admin }
+            )
+        );
+    });
+
+    it('podMintBatch(): should not mint POD - amount must be greater than zero', async () => {
+        await expectRevert.unspecified(
+            podERC1155Factory.podMintBatch(
+                'ipfs://test3', // pod uri
+                investor1,      // to
+                [0,1],          // tokenId
+                [0,5],          // amount
+                NO_DATA,        // data
+                { from: admin }
+            )
+        );
+    });
+
+    it('podMintBatch(): should mint POD', async () => {
+        const podAddress = await podERC1155Factory.getPodAddressByUri('ipfs://test0');
+        const erc1155TokenContract = await PodERC1155Token.at(podAddress);
+
+        const balanceInvestorBefore = await erc1155TokenContract.balanceOf(investor1, 1);
+
+        await podERC1155Factory.podMintBatch(
+            'ipfs://test0', // pod uri
+            investor1,      // to
+            [0,1],          // tokenId
+            [15,25],          // amount
+            NO_DATA,        // data
+            { from: admin }
+        );
+
+        const balanceInvestorAfter = await erc1155TokenContract.balanceOf(investor1, 1);
+
+        assert(balanceInvestorBefore.toString() === '0', 'investors initial amount should be 0');
+        assert(balanceInvestorAfter.toString() === '25', 'investors final amount should be 25');
+    });
 });
