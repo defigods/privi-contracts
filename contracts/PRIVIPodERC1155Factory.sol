@@ -3,12 +3,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./token/PRIVIPodERC1155Token.sol";
 import "./interfaces/IBridgeManager.sol";
 
 contract PRIVIPodERC1155Factory is AccessControl {
-  using SafeMath for uint256;
 
   bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
   address public bridgeManagerAddress;
@@ -31,7 +29,7 @@ contract PRIVIPodERC1155Factory is AccessControl {
   function assignRoleSwapManager(address swapManagerAddress) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC20Factory: must have MODERATOR_ROLE to assign SwapManager address"
+      "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to assign SwapManager address"
     );
     _setupRole(MODERATOR_ROLE, swapManagerAddress);
   }
@@ -61,12 +59,12 @@ contract PRIVIPodERC1155Factory is AccessControl {
     // );
     require(
       podTokenAddresses[uri] == address(0),
-      "PRIVIPodERC1155Factory: Pod already exists."
+      "PRIVIPodERC1155Factory: Pod already exists"
     );
     PRIVIPodERC1155Token podToken =
       new PRIVIPodERC1155Token(uri, address(this));
     podAddress = address(podToken);
-    totalPodCreated.add(1);
+    totalPodCreated += 1;
     podTokenAddresses[uri] = podAddress;
     IBridgeManager(bridgeManagerAddress).registerTokenERC1155(
       uri,
@@ -92,13 +90,13 @@ contract PRIVIPodERC1155Factory is AccessControl {
   ) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor."
+      "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor"
     );
     require(
       account != address(0),
-      "PRIVIPodERC1155Factory: Account address should not be zero."
+      "PRIVIPodERC1155Factory: Account address should not be zero"
     );
-    require(amount > 0, "PRIVIPodERC1155Factory: amount should not be zero.");
+    require(amount > 0, "PRIVIPodERC1155Factory: amount should not be zero");
     PRIVIPodERC1155Token(podTokenAddresses[uri]).mint(
       account,
       tokenId,
@@ -123,11 +121,11 @@ contract PRIVIPodERC1155Factory is AccessControl {
   ) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor."
+      "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor"
     );
     require(
       account != address(0),
-      "PRIVIPodERC1155Factory: Account address should not be zero."
+      "PRIVIPodERC1155Factory: Account address should not be zero"
     );
     PRIVIPodERC1155Token(podTokenAddresses[uri]).mintBatch(
       account,
