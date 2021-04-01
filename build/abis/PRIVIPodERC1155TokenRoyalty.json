@@ -20000,7 +20000,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.2",
-  "updatedAt": "2021-04-01T07:51:22.237Z",
+  "updatedAt": "2021-04-01T18:28:35.131Z",
   "devdoc": {
     "details": "{ERC1155} token, including:  - ability for holders to burn (destroy) their tokens  - a factoryOnly modifier, that grants mint capabilities only to factory who deployed theis pod token contract",
     "kind": "dev",
