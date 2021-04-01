@@ -1,12 +1,11 @@
-const { assert } = require('chai');
-const errors = require('./utils/errors');
-const { registerToken } = require('./utils/helpers');
+const { expectRevert, expectEvent, BN } = require('@openzeppelin/test-helpers');
+const assert = require('assert');
 
+// Artifacts
 const BridgeManager = artifacts.require('BridgeManager');
 
 contract('BridgeManager', (accounts) => {
     let bridgeManagerContract;
-
     const [admin, ERC20Address, ERC721Address, ERC1155Address] = accounts;
 
     const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -14,12 +13,6 @@ contract('BridgeManager', (accounts) => {
     const ROLES = {
         DEFAULT_ADMIN: ZERO_ADDRESS,
         REGISTER: web3.utils.keccak256('REGISTER_ROLE'),
-    };
-
-    const ROLE_EVENTS = {
-        ADMIN_CHANGED: 'RoleAdminChanged',
-        GRANTED: 'RoleGranted',
-        REVOKED: 'RoleRevoked',
     };
 
     const erc20TestToken = {
@@ -44,125 +37,223 @@ contract('BridgeManager', (accounts) => {
     };
 
     beforeEach(async () => {
-        bridgeManagerContract = await BridgeManager.new();
+        // Bridge contract
+        bridgeManagerContract = await BridgeManager.new({ from: admin });
     });
 
-    it('assigns default admin and register roles', async () => {
+    /* ********************************************************************** 
+    *                         CHECK roles 
+    * **********************************************************************/
+
+    it('admin should have ADMIN & REGISTER roles', async () => {
         const isAdminRole = await bridgeManagerContract.hasRole(ROLES.DEFAULT_ADMIN, admin);
         const isRegisterRole = await bridgeManagerContract.hasRole(ROLES.REGISTER, admin);
 
-        assert.isTrue(isAdminRole);
-        assert.isTrue(isRegisterRole);
+        assert(isAdminRole === true, 'should have ADMIN role');
+        assert(isRegisterRole === true, 'should have REGISTER role');
     });
 
-    it('emits role added event', async () => {
-        const [roleGrantedEvent] = await bridgeManagerContract.getPastEvents('allEvents');
+    /* ********************************************************************** 
+    *                         CHECK registerTokenERC20() 
+    * **********************************************************************/
 
-        assert.equal(roleGrantedEvent.event, ROLE_EVENTS.GRANTED);
-        assert.equal(roleGrantedEvent.returnValues.account, admin);
-        assert.equal(roleGrantedEvent.returnValues.sender, admin);
-    });
-
-    it('registers an ERC20 token', async () => {
-        const { tokenCountEmpty, registeredAddress, tokenCount, tokenAddedEvent } = await registerToken(
-            bridgeManagerContract,
-            erc20TestToken
+    it('registerTokenERC20(): should not register token - already registered', async () => {
+        await bridgeManagerContract.registerTokenERC20(
+            erc20TestToken.name,
+            erc20TestToken.symbol,
+            erc20TestToken.deployedAddress
         );
 
-        // Find way to test indexed event values
-        //assert.equal(tokenAddedEvent.event, getTokenEventName('register', TOKENS.ERC20));
-        assert.equal(tokenCountEmpty, 0);
-        assert.equal(tokenAddedEvent.returnValues.address, erc20TestToken.address);
-        assert.equal(registeredAddress, erc20TestToken.deployedAddress);
-        assert.equal(tokenCount, 1);
-    });
-
-    it('fails to register an ERC20 token on already registered address', async () => {
-        const erc20Token2 = {
-            name: 'ERC20 Test Token 2',
-            symbol: 'TST20 2',
-            deployedAddress: ERC20Address,
-        };
-
-        try {
-            await bridgeManagerContract.registerTokenERC20(
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC20(
                 erc20TestToken.name,
                 erc20TestToken.symbol,
                 erc20TestToken.deployedAddress
-            );
-            await bridgeManagerContract.registerTokenERC20(erc20Token2.name, erc20Token2.symbol, erc20Token2.deployedAddress);
-        } catch (e) {
-            assert.equal(e.reason, errors.ALREADY_REGISTERED);
-        }
+            ),
+            'BridgeManager: token address is already registered'
+        );
     });
 
-    it('registers an ERC721 token', async () => {
-        const { tokenCountEmpty, registeredAddress, tokenCount, tokenAddedEvent } = await registerToken(
-            bridgeManagerContract,
-            erc721TestToken
+    it('registerTokenERC20(): should not register token - symbol too long', async () => {
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC20(
+                erc20TestToken.name,
+                'THIS_SYMBOL_SHOULD_HAVE_A_LENGTH_LOWER_THAN_TWENTY_FIVE',
+                erc20TestToken.deployedAddress
+            ),
+            'BridgeManager: token Symbol too long'
+        );
+    });
+
+    it('registerTokenERC20(): should not register token - empty name', async () => {
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC20(
+                '',
+                erc20TestToken.symbol,
+                erc20TestToken.deployedAddress
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
+    });
+
+    it('registerTokenERC20(): should not register token - empty symbol', async () => {
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC20(
+                erc20TestToken.name,
+                '',
+                erc20TestToken.deployedAddress
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
+    });
+
+    it('registerTokenERC20(): should register token', async () => {
+        const registeredTokensBefore = await bridgeManagerContract.getAllErc20Count();
+
+        const txReceipt = await bridgeManagerContract.registerTokenERC20(
+            erc20TestToken.name,
+            erc20TestToken.symbol,
+            erc20TestToken.deployedAddress
         );
 
-        assert.equal(tokenCountEmpty, 0);
-        assert.equal(tokenAddedEvent.returnValues.address, erc721TestToken.address);
-        assert.equal(registeredAddress, erc721TestToken.deployedAddress);
-        assert.equal(tokenCount, 1);
+        const tokenAddress = await bridgeManagerContract.getErc20AddressRegistered(erc20TestToken.symbol);
+        const registeredTokensAfter = await bridgeManagerContract.getAllErc20Count();
+        
+        assert(registeredTokensBefore.toString() === '0', 'registered tokens should be 0');
+        assert(registeredTokensAfter.toString() === '1', 'registered tokens should be 1');
+
+        expectEvent(txReceipt, 'RegisterERC20Token', {
+            // name: erc20TestToken.name,
+            tokenAddress: tokenAddress
+        });
     });
 
-    it('fails to register an ERC721 token on already registered address', async () => {
-        const erc721Token2 = {
-            name: 'ERC721 Test Token 2',
-            symbol: 'TST721 2',
-            deployedAddress: ERC721Address,
-        };
+    /* ********************************************************************** 
+    *                         CHECK registerTokenERC721() 
+    * **********************************************************************/
 
-        try {
-            await bridgeManagerContract.registerTokenERC721(
+    it('registerTokenERC721(): should not register token - already registered', async () => {
+        await bridgeManagerContract.registerTokenERC721(
+            erc721TestToken.name,
+            erc721TestToken.symbol,
+            erc721TestToken.deployedAddress
+        );
+
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC721(
                 erc721TestToken.name,
                 erc721TestToken.symbol,
                 erc721TestToken.deployedAddress
-            );
-            await bridgeManagerContract.registerTokenERC721(
-                erc721Token2.name,
-                erc721Token2.symbol,
-                erc721Token2.deployedAddress
-            );
-        } catch (e) {
-            assert.equal(e.reason, errors.ALREADY_REGISTERED);
-        }
+            ),
+            'BridgeManager: token address is already registered'
+        );
     });
 
-    it('registers an ERC1155 token', async () => {
-        const { tokenCountEmpty, registeredAddress, tokenCount, tokenAddedEvent } = await registerToken(
-            bridgeManagerContract,
-            erc1155TestToken
+    it('registerTokenERC721(): should not register token - symbol too long', async () => {
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC721(
+                erc721TestToken.name,
+                'THIS_SYMBOL_SHOULD_HAVE_A_LENGTH_LOWER_THAN_TWENTY_FIVE',
+                erc721TestToken.deployedAddress
+            ),
+            'BridgeManager: token Symbol too long'
+        );
+    });
+
+    it('registerTokenERC721(): should not register token - empty name', async () => {
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC721(
+                '',
+                erc721TestToken.symbol,
+                erc721TestToken.deployedAddress
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
+    });
+
+    it('registerTokenERC721(): should not register token - empty symbol', async () => {
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC721(
+                erc721TestToken.name,
+                '',
+                erc721TestToken.deployedAddress
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
+    });
+
+    it('registerTokenERC721(): should register token', async () => {
+        const registeredTokensBefore = await bridgeManagerContract.getAllErc721Count();
+
+        const txReceipt = await bridgeManagerContract.registerTokenERC721(
+            erc721TestToken.name,
+            erc721TestToken.symbol,
+            erc721TestToken.deployedAddress
         );
 
-        assert.equal(tokenCountEmpty, 0);
-        assert.equal(tokenAddedEvent.returnValues.address, erc1155TestToken.address);
-        assert.equal(registeredAddress, erc1155TestToken.deployedAddress);
-        assert.equal(tokenCount, 1);
+        const tokenAddress = await bridgeManagerContract.getErc721AddressRegistered(erc721TestToken.symbol);
+        const registeredTokensAfter = await bridgeManagerContract.getAllErc721Count();
+        
+        assert(registeredTokensBefore.toString() === '0', 'registered tokens should be 0');
+        assert(registeredTokensAfter.toString() === '1', 'registered tokens should be 1');
+
+        expectEvent(txReceipt, 'RegisterERC721Token', {
+            // name: ERC721TestToken.name,
+            tokenAddress: tokenAddress
+        });
     });
 
-    it('fails to register an ERC1155 token on already registered address', async () => {
-        const erc1155Token2 = {
-            name: 'ERC1155 Test Token 2',
-            tokenURI: 'TST1155 2',
-            deployedAddress: ERC1155Address,
-        };
+    /* ********************************************************************** 
+    *                         CHECK registerTokenERC1155() 
+    * **********************************************************************/
 
-        try {
-            await bridgeManagerContract.registerTokenERC1155(
+    it('registerTokenERC1155(): should not register token - already registered', async () => {
+        await bridgeManagerContract.registerTokenERC1155(
+            erc1155TestToken.name,
+            erc1155TestToken.tokenURI,
+            erc1155TestToken.deployedAddress
+        );
+
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC1155(
                 erc1155TestToken.name,
                 erc1155TestToken.tokenURI,
                 erc1155TestToken.deployedAddress
-            );
-            await bridgeManagerContract.registerTokenERC1155(
-                erc1155Token2.name,
-                erc1155Token2.tokenURI,
-                erc1155Token2.deployedAddress
-            );
-        } catch (e) {
-            assert.equal(e.reason, errors.ALREADY_REGISTERED);
-        }
+            ),
+            'BridgeManager: token address is already registered'
+        );
     });
+
+    it('registerTokenERC1155(): should not register token - empty URI', async () => {
+        await expectRevert(
+            bridgeManagerContract.registerTokenERC1155(
+                erc1155TestToken.name,
+                '',
+                erc1155TestToken.deployedAddress
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
+    });
+
+    it('registerTokenERC1155(): should register token', async () => {
+        const registeredTokensBefore = await bridgeManagerContract.getAllErc1155Count();
+
+        const txReceipt = await bridgeManagerContract.registerTokenERC1155(
+            erc1155TestToken.name,
+            erc1155TestToken.tokenURI,
+            erc1155TestToken.deployedAddress
+        );
+
+        const tokenAddress = await bridgeManagerContract.getErc1155AddressRegistered(erc1155TestToken.tokenURI);
+        const registeredTokensAfter = await bridgeManagerContract.getAllErc1155Count();
+        
+        assert(registeredTokensBefore.toString() === '0', 'registered tokens should be 0');
+        assert(registeredTokensAfter.toString() === '1', 'registered tokens should be 1');
+
+        expectEvent(txReceipt, 'RegisterERC1155Token', {
+            // name: ERC1155TestToken.name,
+            tokenAddress: tokenAddress
+        });
+    });
+
 });

@@ -229,10 +229,6 @@ contract BridgeManager is AccessControl {
       contractAddressERC1155[tokenURI] == ZERO_ADDRESS,
       "BridgeManager: token address is already registered"
     );
-    require(
-      bytes(tokenURI).length < 25,
-      "BridgeManager: token Symbol too long"
-    );
     contractAddressERC1155[tokenURI] = tokenContractAddress;
     registeredToken memory regToken;
     regToken.name = tokenName;
