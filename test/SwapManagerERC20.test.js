@@ -62,16 +62,18 @@ contract('SwapManager for ERC20 tokens', (accounts) => {
         );
     });
 
-    /*********** CHECK depositERC20Token() **************/
+    /* ********************************************************************** 
+     *                         CHECK depositERC20Token() 
+     * **********************************************************************/
 
-    it('depositERC20Token(): should not deposit ERC20 tokens if not registered in Bridge', async () => {
+    it('depositERC20Token(): should not deposit ERC20 tokens - not registered', async () => {
         await expectRevert(
             swapManagerContract.depositERC20Token('NON_EXISTING', 15, { from: investor1 }),
             'SwapManager: token is not registered into the platform'
         );
     });
 
-    it('depositERC20Token(): should not deposit ERC20 tokens if not approved by user', async () => {
+    it('depositERC20Token(): should not deposit ERC20 tokens - not approved', async () => {
         await expectRevert(
             swapManagerContract.depositERC20Token('UNI', 15, { from: investor1 }),
             'SwapManager: token amount to be transferred to PRIVI is not yet approved by User'
@@ -82,15 +84,23 @@ contract('SwapManager for ERC20 tokens', (accounts) => {
         const balanceSwapBefore = await fakeUni.balanceOf(swapManagerContract.address);
 
         await fakeUni.approve(swapManagerContract.address, 300, { from: investor1 });
-        await swapManagerContract.depositERC20Token('UNI', 300, { from: investor1 });
+        const txReceipt = await swapManagerContract.depositERC20Token('UNI', 300, { from: investor1 });
 
         const balanceSwapAfter = await fakeUni.balanceOf(swapManagerContract.address);
 
         assert(balanceSwapBefore.toString() === '0', 'Swap balance should be 0');
         assert(balanceSwapAfter.toString() === '300', 'Swap balance should be 300');
+
+        expectEvent(txReceipt, 'DepositERC20Token', {
+            //tokenSymbol: 'UNI',
+            from: investor1,
+            amount: new BN(300),
+        });
     });
 
-    /*********** CHECK withdrawERC20Token() **************/
+    /* ********************************************************************** 
+     *                         CHECK withdrawERC20Token() 
+     * **********************************************************************/
 
     it('withdrawERC20Token(): should not withdraw ERC20 tokens - amount must be > 0', async () => {
         await expectRevert(

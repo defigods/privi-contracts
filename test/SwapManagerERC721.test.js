@@ -1,4 +1,4 @@
-const { expectRevert, expectEvent, balance, ether, BN, ZERO_ADDRESS } = require('@openzeppelin/test-helpers');
+const { expectRevert, expectEvent, BN } = require('@openzeppelin/test-helpers');
 const assert = require('assert');
 
 // Artifacts
@@ -51,10 +51,10 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
 
         // Fake ERC721 contract
         fakeERC721 = await FakeERC721.new(
-            'Token Test',
-            'TST',
-            'ipfs://test',
-            admin,
+            'Token Test',   // name
+            'TST',          // symbol
+            'ipfs://test',  // baseURI
+            admin,          // factory contract address
             { from: admin }
         );
 
@@ -63,13 +63,15 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
 
         // Register TEST token in Bridge
         await bridgeManagerContract.registerTokenERC721(
-            'Token Test',
-            'TST',
-            fakeERC721.address,
+            'Token Test',       // name
+            'TST',              // symbol
+            fakeERC721.address, // ERC721 contract address
         );
     });
 
-    /*********** CHECK depositERC721Token() **************/
+    /* ********************************************************************** 
+     *                         CHECK depositERC721Token() 
+     * **********************************************************************/
 
     it('depositERC721Token(): should not deposit ERC721 tokens - not registered', async () => {
         await expectRevert(
@@ -110,7 +112,9 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         });
     });
 
-    /*********** CHECK withdrawERC721Token() **************/
+    /* ********************************************************************** 
+     *                         CHECK withdrawERC721Token() 
+     * **********************************************************************/
 
     it('withdrawERC721Token(): should not withdraw ERC721 tokens - TRANSFER_ROLE only', async () => {
         await expectRevert(
@@ -190,7 +194,11 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         const newPodERC721address = await podERC721RoyaltyFactory.getPodAddressBySymbol('TST2');
 
         // Mint 'TST2' token
-        await podERC721RoyaltyFactory.mintPodTokenBySymbol('TST2', newPodERC721address, { from: admin });
+        await podERC721RoyaltyFactory.mintPodTokenBySymbol(
+            'TST2',                 // tokenId
+            newPodERC721address,    // contract address
+            { from: admin }
+        );
         const newPodERC721 = await IERC721.at(newPodERC721address);
         const balancePodBefore = await newPodERC721.balanceOf(investor1);
 
@@ -217,26 +225,31 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
     it('withdrawERC721Token(): should mint non-royalty token', async () => {
         // Create 'TST2' contract through PodERC721 factory
         await podERC721Factory.createPod(
-            1,
-            'Test Token 2',
-            'TST2',
-            'ipfs://test',
+            1,              // podId
+            'Test Token 2', // podTokenName
+            'TST2',         // podTokenSymbol
+            'ipfs://test',  // baseURI
             { from: admin });
         const newPodERC721address = await podERC721Factory.getPodAddressById(1);
 
         // Mint 'TST2' token
         await podERC721Factory.mintPodTokenById(1, newPodERC721address, { from: admin });
         const newPodERC721 = await IERC721.at(newPodERC721address);
+
+        // Check investor's balance before the withdrawal
         const balancePodBefore = await newPodERC721.balanceOf(investor1);
 
         // Withdraw 'TST2' token
         const txReceipt = await swapManagerContract.withdrawERC721Token(
-            'TST2',
-            investor1,
-            1,
-            true,
-            false,
-            { from: admin });
+            'TST2',     // tokenSymbol
+            investor1,  // to
+            1,          // tokenId
+            true,       // isPodMint
+            false,      // isRoyalty
+            { from: admin }
+        );
+
+        // Check investor's balance after the withdrawal
         const balancePodAfter = await newPodERC721.balanceOf(investor1);
 
         assert(balancePodBefore.toString() === '0', 'Swap balance should be 0');
@@ -253,6 +266,7 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         await fakeERC721.approve(swapManagerContract.address, 0, { from: investor1 });
         await swapManagerContract.depositERC721Token('TST', 0, { from: investor1 });
 
+        // Check investor's balance before the withdrawal
         const balanceSwapBefore = await fakeERC721.balanceOf(swapManagerContract.address);
 
         // Withdraw 'TST2' token
@@ -262,8 +276,10 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
             0,          // tokenId
             false,      // isPodMint
             false,      // isRoyalty
-            { from: admin })
+            { from: admin }
+        );
 
+        // Check investor's balance after the withdrawal
         const balanceSwapAfter = await fakeERC721.balanceOf(swapManagerContract.address);
 
         assert(balanceSwapBefore.toString() === '1', 'Swap balance should be 1');
