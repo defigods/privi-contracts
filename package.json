@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/Get-Cache/CacheProtocolBlockchain#readme",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.0.0-rc.0",
+    "@openzeppelin/contracts": "^4.0.0",
     "@truffle/hdwallet-provider": "^1.2.3",
     "bn.js": "^5.2.0",
     "dotenv": "^8.2.0",
