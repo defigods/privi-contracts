@@ -48,7 +48,7 @@ contract SwapManager is AccessControl, ERC1155Holder {
   );
   event DepositERC1155Token(
     string indexed tokenURI,
-    address to,
+    address from,
     uint256 tokenId,
     uint256 amount
   );
@@ -260,12 +260,10 @@ contract SwapManager is AccessControl, ERC1155Holder {
    *          - User has to approve first the amount to be transferred WITHIN the original ERC1155 token contract,
    *          and not from this contract. Otherwise, transaction will always fail
    * @param   tokenURI Name of the token to be transferred
-   * @param   to Destination address to receive the tokens
    * @param   tokenId Token identifier to be transferred
    */
   function depositERC1155Token(
     string calldata tokenURI,
-    address to,
     uint256 tokenId,
     uint256 amount,
     bytes memory data
@@ -281,13 +279,6 @@ contract SwapManager is AccessControl, ERC1155Holder {
         true,
       "SwapManager: user did not grant aprove yet"
     );
-    // IERC1155(tokenAddress).safeTransferFrom(
-    //   msg.sender,
-    //   to,
-    //   tokenId,
-    //   amount,
-    //   data
-    // );
     IERC1155(tokenAddress).safeTransferFrom(
       _msgSender(),
       address(this),
@@ -295,7 +286,7 @@ contract SwapManager is AccessControl, ERC1155Holder {
       amount,
       data
     );
-    emit DepositERC1155Token(tokenURI, to, tokenId, amount);
+    emit DepositERC1155Token(tokenURI, _msgSender(), tokenId, amount);
   }
 
   /**

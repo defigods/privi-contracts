@@ -80,7 +80,7 @@ contract('SwapManager for ERC1155 tokens', (accounts) => {
         await expectRevert(
             swapManagerContract.depositERC1155Token(
                 'NON_EXISTING_URI',             // tokenURI
-                investor1,                      // to
+                //investor1,                      // to
                 0,                              // tokenId
                 15,                             // amount
                 web3.utils.fromAscii('nothing'),// data
@@ -94,7 +94,7 @@ contract('SwapManager for ERC1155 tokens', (accounts) => {
         await expectRevert(
             swapManagerContract.depositERC1155Token(
                 'ipfs://TST',                   // tokenURI
-                investor1,                      // to
+                //investor1,                      // to
                 0,                              // tokenId
                 15,                             // amount
                 web3.utils.fromAscii('nothing'),// data
@@ -108,7 +108,7 @@ contract('SwapManager for ERC1155 tokens', (accounts) => {
         await expectRevert(
             swapManagerContract.depositERC1155Token(
                 'ipfs://TST',                   // tokenURI
-                investor1,                      // to
+                //investor1,                      // to
                 0,                              // tokenId
                 150000,                         // amount
                 web3.utils.fromAscii('nothing'),// data
@@ -123,7 +123,7 @@ contract('SwapManager for ERC1155 tokens', (accounts) => {
         await fakeERC1155.setApprovalForAll(swapManagerContract.address, investor1, { from: investor1 });
         await swapManagerContract.depositERC1155Token(
             'ipfs://TST',                   // tokenURI
-            investor1,                      // to
+            //investor1,                      // to
             0,                              // tokenId
             15,                             // amount
             web3.utils.fromAscii('nothing'),// data
@@ -135,32 +135,6 @@ contract('SwapManager for ERC1155 tokens', (accounts) => {
         assert(balanceSwapAfter.toString() === '15', 'Swap balance should be 15');
     });
 
-    /*
-        it('depositERC1155Token(): should not deposit ERC1155 tokens - not approved', async () => {
-            await expectRevert(
-                swapManagerContract.depositERC1155Token('TST', 0, { from: investor1 }),
-                'SwapManager: token to be transferred to PRIVI is not yet approved by User'
-            );
-        });
-    
-        it('depositERC1155Token(): should deposit ERC1155 tokens', async () => {
-            const balanceSwapBefore = await fakeERC1155.balanceOf(swapManagerContract.address);
-    
-            await fakeERC1155.approve(swapManagerContract.address, 0, { from: investor1 });
-            const txReceipt = await swapManagerContract.depositERC1155Token('TST', 0, { from: investor1 });
-    
-            const balanceSwapAfter = await fakeERC1155.balanceOf(swapManagerContract.address);
-    
-            assert(balanceSwapBefore.toString() === '0', 'Swap balance should be 0');
-            assert(balanceSwapAfter.toString() === '1', 'Swap balance should be 1');
-    
-            expectEvent(txReceipt, 'depositERC1155Token', {
-                //tokenSymbol: 'UNI',
-                from: investor1,
-                tokenId: new BN(0),
-            });
-        });
-    */
     /*********** CHECK withdrawERC1155Token() **************/
     /*
         it('withdrawERC1155Token(): should not withdraw ERC1155 tokens - TRANSFER_ROLE only', async () => {
