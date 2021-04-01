@@ -1,180 +1,250 @@
-const { assert } = require('chai');
-const errors = require('./utils/errors');
+const { expectRevert, expectEvent, BN } = require('@openzeppelin/test-helpers');
+const assert = require('assert');
 
+// Artifacts
 const BridgeManager = artifacts.require('BridgeManager');
-const PRIVIPodERC721Factory = artifacts.require('PRIVIPodERC721Factory');
-const PRIVIPodERC721Token = artifacts.require('PRIVIPodERC721Token');
+const PodERC721Factory = artifacts.require('PRIVIPodERC721Factory');
+const PodERC721Token = artifacts.require('PRIVIPodERC721Token');
 
-contract('PRIVIPodERC721Factory', (accounts) => {
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+contract('PRIVI Pod Factory ERC721', (accounts) => {
     let bridgeManagerContract;
-    let erc721FactoryContract;
+    let podERC721Factory;
 
-    const [moderator, investor, regularAccount] = accounts;
-
-    const POD_CREATED_EVENT = 'PodCreated';
-    const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-
-    const testPod = {
-        id: '1',
-        name: 'Test Token',
-        symbol: 'TST',
-        baseURI: 'https://test-token.com',
-    };
-
-    // Errors
-    const UNIQUE_ID = errors.UNIQUE_ID('721');
-    const UNIQUE_SYMBOL = errors.UNIQUE_SYMBOL('721');
-    const ONLY_MODERATOR = errors.ONLY_MODERATOR('721');
-    const INVESTMENT_ADDRESS = errors.INVESTMENT_ADDRESS('721');
+    const [admin, investor1, hacker] = accounts
 
     beforeEach(async () => {
-        bridgeManagerContract = await BridgeManager.new();
-        erc721FactoryContract = await PRIVIPodERC721Factory.new(bridgeManagerContract.address);
+        // Bridge contract
+        bridgeManagerContract = await BridgeManager.new({ from: admin });
+
+        // Factory contracts
+        podERC721Factory = await PodERC721Factory.new(bridgeManagerContract.address, { from: admin });
+
+        // TST Token creation
+        await podERC721Factory.createPod('0', 'Test Token0', 'TST0', 'ipfs://test', { from: admin });
     });
 
-    it('fails to deploy on already registered address', async () => {
-        try {
-            erc721FactoryContract = await PRIVIPodERC721Factory.new(bridgeManagerContract.address);
-        } catch (e) {
-            assert.equal(e.reason, errors.ALREADY_REGISTERED);
-        }
+    /* ********************************************************************** 
+    *                         CHECK assignRoleSwapManager() 
+    * **********************************************************************/
+
+    it('assignRoleSwapManager(): should not assign role - only admin', async () => {
+        await expectRevert(
+            podERC721Factory.assignRoleSwapManager(bridgeManagerContract.address, { from: hacker }),
+            'PRIVIPodERC721Factory: must have MODERATOR_ROLE to assign SwapManager address'
+        );
     });
 
-    it('creates a pod and emits a pod created event', async () => {
-        await erc721FactoryContract.createPod(testPod.id, testPod.name, testPod.symbol, testPod.baseURI);
+    /* ********************************************************************** 
+     *                         CHECK createPod() 
+     * **********************************************************************/
 
-        const podAddress = await erc721FactoryContract.getPodAddressById(testPod.id);
-        assert.notEqual(podAddress, ZERO_ADDRESS);
-
-        const [podCreatedEvent] = await erc721FactoryContract.getPastEvents('allEvents');
-
-        assert.equal(podCreatedEvent.event, POD_CREATED_EVENT);
-        assert.equal(podCreatedEvent.returnValues.podTokenName, testPod.name);
-        assert.equal(podCreatedEvent.returnValues.podTokenSymbol, testPod.symbol);
+    it('createPod(): should not create POD - pod id already exists', async () => {
+        await expectRevert(
+            podERC721Factory.createPod(
+                '0',            // pod id
+                'Test Token1',  // pod token name
+                'TST1',         // pod symbol
+                'ipfs://test1', // pod url
+                { from: admin }
+            ),
+            'PRIVIPodERC721TokenFactory: Pod id already exists'
+        );
     });
 
-    it('fails to create a pod on existing pod id', async () => {
-        try {
-            await erc721FactoryContract.createPod(testPod.id, testPod.name, testPod.symbol, testPod.baseURI);
-        } catch (e) {
-            assert.equal(e.reason, UNIQUE_ID);
-        }
+    it('createPod(): should not create POD - pod symbol already exists', async () => {
+        await expectRevert(
+            podERC721Factory.createPod(
+                '1',            // pod id
+                'Test Token1',  // pod token name
+                'TST0',         // pod symbol
+                'ipfs://test1', // pod url
+                { from: admin }
+            ),
+            'PRIVIPodERC721TokenFactory: Pod symbol already exists'
+        );
     });
 
-    it('fails to create a pod on existing pod symbol', async () => {
-        try {
-            await erc721FactoryContract.createPod(testPod.id, testPod.name, testPod.symbol, testPod.baseURI);
-
-            await erc721FactoryContract.createPod('2', 'some name', testPod.symbol, testPod.baseURI);
-        } catch (e) {
-            assert.equal(e.reason, UNIQUE_SYMBOL);
-        }
+    it('createPod(): should not create POD - empty name', async () => {
+        await expectRevert(
+            podERC721Factory.createPod(
+                '1',            // pod id
+                '',             // pod token name
+                'TST1',         // pod symbol
+                'ipfs://test1', // pod url
+                { from: admin }
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
     });
 
-    it('fails to create a pod on empty name', async () => {
-        try {
-            await erc721FactoryContract.createPod(testPod.id, '', testPod.symbol, testPod.baseURI);
-        } catch (e) {
-            assert.equal(e.reason, errors.EMPTY_NAME);
-        }
+    it('createPod(): should not create POD - empty symbol', async () => {
+        await expectRevert(
+            podERC721Factory.createPod(
+                '1',            // pod id
+                'Test Token1',  // pod token name
+                '',             // pod symbol
+                'ipfs://test1', // pod url
+                { from: admin }
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
     });
 
-    it('fails to create a pod on empty symbol', async () => {
-        try {
-            await erc721FactoryContract.createPod(testPod.id, testPod.name, '', testPod.baseURI);
-        } catch (e) {
-            assert.equal(e.reason, errors.EMPTY_SYMBOL);
-        }
+    it('createPod(): should not create POD - symbol too long', async () => {
+        await expectRevert(
+            podERC721Factory.createPod(
+                '1',            // pod id
+                'Test Token1',  // pod token name
+                'THIS_SYMBOL_SHOULD_HAVE_A_LENGTH_LOWER_THAN_TWENTY_FIVE', // pod symbol
+                'ipfs://test1', // pod url
+                { from: admin }
+            ),
+            `BridgeManager: token Symbol too long`
+        );
     });
 
-    it('fails to create a pod on long symbol', async () => {
-        try {
-            await erc721FactoryContract.createPod(
-                testPod.id,
-                testPod.name,
-                'THIS_SYMBOL_SHOULD_HAVE_A_LENGTH_LOWER_THAN_TWENTY_FIVE',
-                testPod.baseURI
-            );
-        } catch (e) {
-            assert.equal(e.reason, errors.SYMBOL_TOO_LONG);
-        }
+    it('createPod(): should create POD', async () => {
+        const tokensBefore = await podERC721Factory.getTotalTokenCreated();
+
+        const txReceipt = await podERC721Factory.createPod(
+            '1',            // pod id
+            'Test Token1',  // pod token name
+            'TST1',         // pod symbol
+            'ipfs://test1', // pod url
+            { from: admin }
+        );
+
+        const podAddress = await podERC721Factory.getPodAddressById('1');
+        const tokensAfter = await podERC721Factory.getTotalTokenCreated();
+
+        assert(tokensBefore.toString() === '1', 'number of tokens before should be 1');
+        assert(tokensAfter.toString() === '2', 'number of tokens after should be 2');
+        assert(podAddress !== ZERO_ADDRESS, 'pod token address should not be 0');
+
+        expectEvent(txReceipt, 'PodCreated', {
+            //podId: '1',
+            podTokenName: 'Test Token1',
+            podTokenSymbol: 'TST1'
+        });
     });
 
-    it('correctly assigns parentFactory to pod token contract', async () => {
-        await erc721FactoryContract.createPod(testPod.id, testPod.name, testPod.symbol, testPod.baseURI);
+    it('createPod(): should assign parent Factory to POD token contract', async () => {
+        await podERC721Factory.createPod('2', 'Test Token2', 'TST2', 'ipfs://test2', { from: admin });
 
-        const podAddress = await erc721FactoryContract.getPodAddressById(testPod.id);
-        const erc721TokenContract = await PRIVIPodERC721Token.at(podAddress);
+        const podAddress = await podERC721Factory.getPodAddressById('2');
+        const erc721TokenContract = await PodERC721Token.at(podAddress);
         const podFactoryAddress = await erc721TokenContract.parentFactory();
 
-        assert.equal(erc721FactoryContract.address, podFactoryAddress);
+        assert(podERC721Factory.address === podFactoryAddress, 'factory address should match');
     });
 
-    it('allows moderator to mint pod tokens by id for investor', async () => {
-        await erc721FactoryContract.createPod(testPod.id, testPod.name, testPod.symbol, testPod.baseURI);
+    /* ********************************************************************** 
+    *                         CHECK mintPodTokenById() 
+    * **********************************************************************/
 
-        await erc721FactoryContract.mintPodTokenById(testPod.id, investor, {
-            from: moderator,
+    it('mintPodTokenById(): should not mint POD - missing MODERATOR_ROLE', async () => {
+        await expectRevert(
+            podERC721Factory.mintPodTokenById(
+                '2',            // pod id
+                investor1,      // to
+                { from: hacker }
+            ),
+            'PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor'
+        );
+    });
+
+    it('mintPodTokenById(): should not mint POD - cannot be zero address', async () => {
+        await expectRevert(
+            podERC721Factory.mintPodTokenById(
+                '2',            // pod id
+                ZERO_ADDRESS,   // to
+                { from: admin }
+            ),
+            'PRIVIPodERC721Token: Account address should not be zero'
+        );
+    });
+
+    it('mintPodTokenById(): should not mint POD - pod id does not exist', async () => {
+        await expectRevert.unspecified(
+            podERC721Factory.mintPodTokenById(
+                'NON_EXISTING', // pod id
+                investor1,      // to
+                { from: admin }
+            )
+        );
+    });
+
+    it('mintPodTokenById(): should mint POD', async () => {
+        const podAddress = await podERC721Factory.getPodAddressById('0');
+        const erc721TokenContract = await PodERC721Token.at(podAddress);
+
+        const balanceInvestorBefore = await erc721TokenContract.balanceOf(investor1);
+
+        await podERC721Factory.mintPodTokenById(
+            '0',            // pod id
+            investor1,      // to
+            { from: admin }
+        );
+
+        const balanceInvestorAfter = await erc721TokenContract.balanceOf(investor1);
+
+        assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
+        assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
+    });
+
+    /* ********************************************************************** 
+     *                         CHECK mintPodTokenBySymbol() 
+     * **********************************************************************/
+
+        it('mintPodTokenBySymbol(): should not mint POD - missing MODERATOR_ROLE', async () => {
+            await expectRevert(
+                podERC721Factory.mintPodTokenBySymbol(
+                    'TST2',         // pod symbol
+                    investor1,      // to
+                    { from: hacker }
+                ),
+                'PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor'
+            );
         });
 
-        const podAddress = await erc721FactoryContract.getPodAddressById(testPod.id);
-        const erc721TokenContract = await PRIVIPodERC721Token.at(podAddress);
-        const investorBalance = await erc721TokenContract.balanceOf(investor);
-
-        assert.equal(investorBalance, '1');
-    });
-
-    it('fails to mint pod tokens by id for investor from non-moderator account', async () => {
-        try {
-            await erc721FactoryContract.mintPodTokenById(testPod.id, investor, {
-                from: regularAccount,
-            });
-        } catch (e) {
-            assert.equal(e.reason, ONLY_MODERATOR);
-        }
-    });
-
-    it('fails to mint pod tokens by id for investor on invalid address', async () => {
-        try {
-            await erc721FactoryContract.mintPodTokenById(testPod.id, ZERO_ADDRESS, {
-                from: moderator,
-            });
-        } catch (e) {
-            assert.equal(e.reason, INVESTMENT_ADDRESS);
-        }
-    });
-
-    it('allows moderator to mint pod tokens by symbol for investor', async () => {
-        await erc721FactoryContract.createPod(testPod.id, testPod.name, testPod.symbol, testPod.baseURI);
-
-        await erc721FactoryContract.mintPodTokenBySymbol(testPod.symbol, investor, {
-            from: moderator,
+        it('mintPodTokenBySymbol(): should not mint POD - cannot be zero address', async () => {
+            await expectRevert(
+                podERC721Factory.mintPodTokenBySymbol(
+                    'TST2',         // pod symbol
+                    ZERO_ADDRESS,   // to
+                    { from: admin }
+                ),
+                'PRIVIPodERC721Token: Account address should not be zero'
+            );
+        });
+    
+        it('mintPodTokenBySymbol(): should not mint POD - pod id does not exist', async () => {
+            await expectRevert.unspecified(
+                podERC721Factory.mintPodTokenBySymbol(
+                    '2',            // pod symbol
+                    investor1,      // to
+                    { from: admin }
+                )
+            );
         });
 
-        const podAddress = await erc721FactoryContract.getPodAddressById(testPod.id);
-        const erc721TokenContract = await PRIVIPodERC721Token.at(podAddress);
-        const investorBalance = await erc721TokenContract.balanceOf(investor);
-
-        assert.equal(investorBalance, '1');
-    });
-
-    it('fails to mint pod tokens by symbol for investor from non-moderator account', async () => {
-        try {
-            await erc721FactoryContract.mintPodTokenById(testPod.symbol, investor, {
-                from: regularAccount,
-            });
-        } catch (e) {
-            assert.equal(e.reason, ONLY_MODERATOR);
-        }
-    });
-
-    it('fails to mint pod tokens by symbol for investor on invalid address', async () => {
-        try {
-            await erc721FactoryContract.mintPodTokenBySymbol(testPod.symbol, ZERO_ADDRESS, {
-                from: moderator,
-            });
-        } catch (e) {
-            assert.equal(e.reason, INVESTMENT_ADDRESS);
-        }
-    });
+        it('mintPodTokenBySymbol(): should mint POD', async () => {
+            const podAddress = await podERC721Factory.getPodAddressBySymbol('TST0');
+            const erc721TokenContract = await PodERC721Token.at(podAddress);
+    
+            const balanceInvestorBefore = await erc721TokenContract.balanceOf(investor1);
+    
+            await podERC721Factory.mintPodTokenBySymbol(
+                'TST0',         // pod symbol
+                investor1,      // to
+                { from: admin }
+            );
+    
+            const balanceInvestorAfter = await erc721TokenContract.balanceOf(investor1);
+    
+            assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
+            assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
+        });
 });
