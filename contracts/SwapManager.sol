@@ -317,10 +317,10 @@ contract SwapManager is AccessControl, ERC1155Holder {
     if (isPodMint == true) {
       if (isRoyalty) {
         if (
-          IPRIVIPodERC1155RoyaltyFactory(erc1155FactoryAddress)
+          IPRIVIPodERC1155RoyaltyFactory(erc1155RoyaltyFactoryAddress)
             .getPodAddressByUri(tokenURI) != ZERO_ADDRESS
         ) {
-          IPRIVIPodERC1155RoyaltyFactory(erc1155FactoryAddress).podMint(
+          IPRIVIPodERC1155RoyaltyFactory(erc1155RoyaltyFactoryAddress).podMint(
             tokenURI,
             to,
             tokenId,
