@@ -14,8 +14,12 @@ import "./interfaces/IPRIVIPodERC1155Factory.sol";
 import "./interfaces/IPRIVIPodERC721RoyaltyFactory.sol";
 import "./interfaces/IPRIVIPodERC1155RoyaltyFactory.sol";
 
-/// @author The PRIVI Blockchain team
-/// @title Manages swap and withdraw of Ethers, ERC20 tokens and ERC721 tokens between Users and PRIVI platform
+/**
+ * @title   SwapManager contract
+ * @dev     Manages swaps and withdraws of Ether, ERC20 tokens, ERC721 tokens
+ * and ERC1155 tokens between Ethereum and PRIVI blockchains
+ * @author  PRIVI
+ **/
 contract SwapManager is AccessControl, ERC1155Holder {
   bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
   address private ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
