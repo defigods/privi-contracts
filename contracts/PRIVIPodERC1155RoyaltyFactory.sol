@@ -1,16 +1,12 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./token/PRIVIPodERC1155TokenRoyalty.sol";
 import "./deployable_managers/MultiCreatorNftManager.sol";
 import "./interfaces/IBridgeManager.sol";
 
 contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
-  using SafeMath for uint256;
-
   bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
   address public bridgeManagerAddress;
   uint256 public totalPodCreated;
@@ -73,7 +69,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
         creator
       );
     podAddress = address(podToken);
-    totalPodCreated.add(1);
+    totalPodCreated += 1;
     podTokenAddresses[uri] = podAddress;
     IBridgeManager(bridgeManagerAddress).registerTokenERC1155(
       uri,
@@ -114,7 +110,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
         address(multiCreatorManager)
       );
     podAddress = address(podToken);
-    totalPodCreated.add(1);
+    totalPodCreated += 1;
     podTokenAddresses[uri] = podAddress;
     IBridgeManager(bridgeManagerAddress).registerTokenERC1155(
       uri,

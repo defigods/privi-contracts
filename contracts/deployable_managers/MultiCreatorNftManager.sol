@@ -1,15 +1,12 @@
 pragma solidity ^0.8.0;
-
 // SPDX-License-Identifier: MIT
 
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 /**
  * @notice this contract under heavy development and it is not ready for production.
  */
 contract MultiCreatorNftManager {
-  using SafeMath for uint256;
   using Counters for Counters.Counter;
 
   address[] public creators;
@@ -48,15 +45,8 @@ contract MultiCreatorNftManager {
       i <= recieveCounter.current();
       i++
     ) {
-      shareTotal =
-        shareTotal.add(
-          (
-            shares[_creatorIndex]
-            .mul(recievedPayments[i])
-          )
-          .div(100)
-        );
-        
+      //shareTotal = shareTotal.add((shares[_creatorIndex].mul(recievedPayments[i])).div(100));
+      shareTotal += ((shares[_creatorIndex] * recievedPayments[i]) / 100);
     }
   }
 

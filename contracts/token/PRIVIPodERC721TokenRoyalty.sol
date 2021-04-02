@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "../abstracts/NFTRoyalty.sol";
@@ -17,7 +15,6 @@ import "../abstracts/NFTRoyalty.sol";
  *
  */
 contract PRIVIPodERC721TokenRoyalty is Context, ERC721Burnable, NFTRoyalty {
-  using SafeMath for uint256;
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIdTracker;
   address public parentFactory;
@@ -95,12 +92,14 @@ contract PRIVIPodERC721TokenRoyalty is Context, ERC721Burnable, NFTRoyalty {
     );
 
     // pay creator
-    uint256 creatorShare = (msg.value.mul(royalty_amount)).div(100); // TODO: needs testing for very low and hi amount
+    uint256 creatorShare = (msg.value * royalty_amount) / 100;
+    //uint256 creatorShare = (msg.value.mul(royalty_amount)).div(100); // TODO: needs testing for very low and hi amount
     address payable royaltyOwner = payable(creator);
     royaltyOwner.transfer(creatorShare);
 
     // pay current owner
-    payable(from).transfer(msg.value.sub(creatorShare));
+    //payable(from).transfer(msg.value.sub(creatorShare));
+    payable(from).transfer(msg.value - creatorShare);
 
     // transfer token
     safeTransferFrom(from, to, tokenId, bytes("royalty paid"));
