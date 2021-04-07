@@ -14,7 +14,7 @@ import "../abstracts/NFTRoyalty.sol";
  *  - a factoryOnly modifier, that grants mint capabilities only to factory who deployed this pod token contract
  *
  */
-contract PRIVIPodERC721TokenRoyalty is Context, ERC721Burnable, NFTRoyalty {
+contract PRIVIPodERC721RoyaltyToken is Context, ERC721Burnable, NFTRoyalty {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIdTracker;
   address public parentFactory;

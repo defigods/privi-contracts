@@ -79,8 +79,8 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
       "PRIVIPodERC1155Factory: Pod already exists."
     );
 
-    PRIVIPodERC1155TokenRoyalty podToken =
-      new PRIVIPodERC1155TokenRoyalty(
+    PRIVIPodERC1155RoyaltyToken podToken =
+      new PRIVIPodERC1155RoyaltyToken(
         uri,
         address(this),
         royaltyAmount,
@@ -130,8 +130,8 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
     MultiCreatorNftManager multiCreatorManager =
       new MultiCreatorNftManager(creators, royaltyShares);
 
-    PRIVIPodERC1155TokenRoyalty podToken =
-      new PRIVIPodERC1155TokenRoyalty(
+    PRIVIPodERC1155RoyaltyToken podToken =
+      new PRIVIPodERC1155RoyaltyToken(
         uri,
         address(this),
         royaltyAmount,
@@ -180,7 +180,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
     );
     require(amount > 0, "PRIVIPodERC1155Factory: amount should not be zero.");
 
-    PRIVIPodERC1155TokenRoyalty(podTokenAddresses[uri]).mint(
+    PRIVIPodERC1155RoyaltyToken(podTokenAddresses[uri]).mint(
       account,
       tokenId,
       amount,
@@ -215,7 +215,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
       "PRIVIPodERC1155Factory: Account address should not be zero."
     );
     
-    PRIVIPodERC1155TokenRoyalty(podTokenAddresses[uri]).mintBatch(
+    PRIVIPodERC1155RoyaltyToken(podTokenAddresses[uri]).mintBatch(
       account,
       tokenIds,
       amounts,

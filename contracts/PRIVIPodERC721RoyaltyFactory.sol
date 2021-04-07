@@ -42,7 +42,7 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
   function assignRoleSwapManager(address swapManagerAddress) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC20RoyaltyFactory: must have MODERATOR_ROLE to assign SwapManager address"
+      "PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to assign SwapManager address"
     );
     _setupRole(MODERATOR_ROLE, swapManagerAddress);
   }
@@ -106,15 +106,15 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
     // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
     require(
       podTokenAddressesById[podId] == address(0),
-      "PRIVIPodERC721TokenFactory: Pod id already exists."
+      "PRIVIPodERC721RoyaltyFactory: Pod id already exists."
     );
     require(
       podTokenAddressesBySymbol[podTokenSymbol] == address(0),
-      "PRIVIPodERC721TokenFactory: Pod symbol already exists."
+      "PRIVIPodERC721RoyaltyFactory: Pod symbol already exists."
     );
 
-    PRIVIPodERC721TokenRoyalty podToken =
-      new PRIVIPodERC721TokenRoyalty(
+    PRIVIPodERC721RoyaltyToken podToken =
+      new PRIVIPodERC721RoyaltyToken(
         podTokenName,
         podTokenSymbol,
         baseURI,
@@ -167,18 +167,18 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
     // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
     require(
       podTokenAddressesById[podId] == address(0),
-      "PRIVIPodERC721TokenFactory: Pod id already exists."
+      "PRIVIPodERC721RoyaltyFactory: Pod id already exists."
     );
     require(
       podTokenAddressesBySymbol[podTokenSymbol] == address(0),
-      "PRIVIPodERC721TokenFactory: Pod symbol already exists."
+      "PRIVIPodERC721RoyaltyFactory: Pod symbol already exists."
     );
 
     MultiCreatorNftManager multiCreatorManager =
       new MultiCreatorNftManager(creators, royaltyShares);
 
-    PRIVIPodERC721TokenRoyalty podToken =
-      new PRIVIPodERC721TokenRoyalty(
+    PRIVIPodERC721RoyaltyToken podToken =
+      new PRIVIPodERC721RoyaltyToken(
         podTokenName,
         podTokenSymbol,
         baseURI,
@@ -212,14 +212,14 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
   function mintPodTokenById(string calldata podId, address account) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC721TokenRoyalty: must have MODERATOR_ROLE to invest for investor."
+      "PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to invest for investor."
     );
     require(
       account != address(0),
-      "PRIVIPodERC721TokenRoyalty: Account address should not be zero."
+      "PRIVIPodERC721RoyaltyFactory: Account address should not be zero."
     );
 
-    PRIVIPodERC721TokenRoyalty(podTokenAddressesById[podId]).mint(account);
+    PRIVIPodERC721RoyaltyToken(podTokenAddressesById[podId]).mint(account);
   }
 
   /**
@@ -234,14 +234,14 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
   {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC721TokenRoyalty: must have MODERATOR_ROLE to invest for investor."
+      "PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to invest for investor."
     );
     require(
       account != address(0),
-      "PRIVIPodERC721TokenRoyalty: Account address should not be zero."
+      "PRIVIPodERC721RoyaltyFactory: Account address should not be zero."
     );
 
-    PRIVIPodERC721TokenRoyalty(podTokenAddressesBySymbol[tokenSymbol]).mint(
+    PRIVIPodERC721RoyaltyToken(podTokenAddressesBySymbol[tokenSymbol]).mint(
       account
     );
   }

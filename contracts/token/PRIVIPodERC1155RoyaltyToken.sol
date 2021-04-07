@@ -14,7 +14,7 @@ import "../abstracts/NFTRoyalty.sol";
  *  - ability for holders to burn (destroy) their tokens
  *  - a factoryOnly modifier, that grants mint capabilities only to factory who deployed theis pod token contract
  */
-contract PRIVIPodERC1155TokenRoyalty is Context, ERC1155Burnable, NFTRoyalty {
+contract PRIVIPodERC1155RoyaltyToken is Context, ERC1155Burnable, NFTRoyalty {
   address public parentFactory;
 
   /**
