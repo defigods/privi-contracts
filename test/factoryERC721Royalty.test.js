@@ -3,26 +3,33 @@ const assert = require('assert');
 
 // Artifacts
 const BridgeManager = artifacts.require('BridgeManager');
-const PodERC721Factory = artifacts.require('PRIVIPodERC721Factory');
-const PodERC721Token = artifacts.require('PRIVIPodERC721Token');
+const PodERC721RoyaltyFactory = artifacts.require('PRIVIPodERC721RoyaltyFactory');
+const PodERC721RoyaltyToken = artifacts.require('PRIVIPodERC721RoyaltyToken');
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-contract('PRIVI Pod Factory ERC721', (accounts) => {
+contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
     let bridgeManagerContract;
-    let podERC721Factory;
+    let podERC721RoyaltyFactory;
 
-    const [admin, investor1, hacker] = accounts
+    const [admin, investor1, creator1, creator2, hacker] = accounts
 
     beforeEach(async () => {
         // Bridge contract
         bridgeManagerContract = await BridgeManager.new({ from: admin });
 
         // Factory contracts
-        podERC721Factory = await PodERC721Factory.new(bridgeManagerContract.address, { from: admin });
+        podERC721RoyaltyFactory = await PodERC721RoyaltyFactory.new(bridgeManagerContract.address, { from: admin });
 
         // TST Token creation
-        await podERC721Factory.createPod('0', 'Test Token0', 'TST0', 'ipfs://test', { from: admin });
+        await podERC721RoyaltyFactory.createPod(
+            '0',            // pod id
+            'Test Token0',  // pod name
+            'TST0',         // pod symbol
+            'ipfs://test',  // baseURI
+            2,              // royaltyAmount
+            creator1,       // creator
+            { from: admin });
     });
 
     /* ********************************************************************** 
@@ -31,48 +38,54 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
 
     it('assignRoleSwapManager(): should not assign role - only admin', async () => {
         await expectRevert(
-            podERC721Factory.assignRoleSwapManager(bridgeManagerContract.address, { from: hacker }),
-            'PRIVIPodERC721Factory: must have MODERATOR_ROLE to assign SwapManager address'
+            podERC721RoyaltyFactory.assignRoleSwapManager(bridgeManagerContract.address, { from: hacker }),
+            'PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to assign SwapManager address'
         );
     });
 
     /* ********************************************************************** 
      *                         CHECK createPod() 
      * **********************************************************************/
-/*
+
     it('createPod(): should not create POD - pod id already exists', async () => {
         await expectRevert(
-            podERC721Factory.createPod(
+            podERC721RoyaltyFactory.createPod(
                 '0',            // pod id
-                'Test Token1',  // pod token name
+                'Test Token1',  // pod name
                 'TST1',         // pod symbol
                 'ipfs://test1', // pod url
+                2,              // royaltyAmount
+                creator1,       // creator
                 { from: admin }
             ),
-            'PRIVIPodERC721TokenFactory: Pod id already exists'
+            'PRIVIPodERC721RoyaltyFactory: Pod id already exists'
         );
     });
 
     it('createPod(): should not create POD - pod symbol already exists', async () => {
         await expectRevert(
-            podERC721Factory.createPod(
+            podERC721RoyaltyFactory.createPod(
                 '1',            // pod id
-                'Test Token1',  // pod token name
+                'Test Token1',  // pod name
                 'TST0',         // pod symbol
                 'ipfs://test1', // pod url
+                2,              // royaltyAmount
+                creator1,       // creator
                 { from: admin }
             ),
-            'PRIVIPodERC721TokenFactory: Pod symbol already exists'
+            'PRIVIPodERC721RoyaltyFactory: Pod symbol already exists'
         );
     });
 
     it('createPod(): should not create POD - empty name', async () => {
         await expectRevert(
-            podERC721Factory.createPod(
+            podERC721RoyaltyFactory.createPod(
                 '1',            // pod id
-                '',             // pod token name
+                '',             // pod name
                 'TST1',         // pod symbol
                 'ipfs://test1', // pod url
+                2,              // royaltyAmount
+                creator1,       // creator
                 { from: admin }
             ),
             `BridgeManager: token name and symbol can't be empty`
@@ -81,11 +94,13 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
 
     it('createPod(): should not create POD - empty symbol', async () => {
         await expectRevert(
-            podERC721Factory.createPod(
+            podERC721RoyaltyFactory.createPod(
                 '1',            // pod id
-                'Test Token1',  // pod token name
+                'Test Token1',  // pod name
                 '',             // pod symbol
                 'ipfs://test1', // pod url
+                2,              // royaltyAmount
+                creator1,       // creator
                 { from: admin }
             ),
             `BridgeManager: token name and symbol can't be empty`
@@ -94,11 +109,13 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
 
     it('createPod(): should not create POD - symbol too long', async () => {
         await expectRevert(
-            podERC721Factory.createPod(
+            podERC721RoyaltyFactory.createPod(
                 '1',            // pod id
-                'Test Token1',  // pod token name
+                'Test Token1',  // pod name
                 'THIS_SYMBOL_SHOULD_HAVE_A_LENGTH_LOWER_THAN_TWENTY_FIVE', // pod symbol
                 'ipfs://test1', // pod url
+                2,              // royaltyAmount
+                creator1,       // creator
                 { from: admin }
             ),
             `BridgeManager: token Symbol too long`
@@ -106,18 +123,20 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
     });
 
     it('createPod(): should create POD', async () => {
-        const tokensBefore = await podERC721Factory.getTotalTokenCreated();
+        const tokensBefore = await podERC721RoyaltyFactory.getTotalTokenCreated();
 
-        const txReceipt = await podERC721Factory.createPod(
+        const txReceipt = await podERC721RoyaltyFactory.createPod(
             '1',            // pod id
-            'Test Token1',  // pod token name
+            'Test Token1',  // pod name
             'TST1',         // pod symbol
             'ipfs://test1', // pod url
+            2,              // royaltyAmount
+            creator1,       // creator
             { from: admin }
         );
 
-        const podAddress = await podERC721Factory.getPodAddressById('1');
-        const tokensAfter = await podERC721Factory.getTotalTokenCreated();
+        const podAddress = await podERC721RoyaltyFactory.getPodAddressById('1');
+        const tokensAfter = await podERC721RoyaltyFactory.getTotalTokenCreated();
 
         assert(tokensBefore.toString() === '1', 'number of tokens before should be 1');
         assert(tokensAfter.toString() === '2', 'number of tokens after should be 2');
@@ -131,113 +150,197 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
     });
 
     it('createPod(): should assign parent Factory to POD token contract', async () => {
-        await podERC721Factory.createPod('2', 'Test Token2', 'TST2', 'ipfs://test2', { from: admin });
+        await podERC721RoyaltyFactory.createPod(
+            '2',            // pod id
+            'Test Token2',  // pod name
+            'TST2',         // pod symbol
+            'ipfs://test2', // pod url
+            2,              // royaltyAmount
+            creator1,       // creator
+            { from: admin });
 
-        const podAddress = await podERC721Factory.getPodAddressById('2');
-        const erc721TokenContract = await PodERC721Token.at(podAddress);
+        const podAddress = await podERC721RoyaltyFactory.getPodAddressById('2');
+        const erc721TokenContract = await PodERC721RoyaltyToken.at(podAddress);
         const podFactoryAddress = await erc721TokenContract.parentFactory();
 
-        assert(podERC721Factory.address === podFactoryAddress, 'factory address should match');
+        assert(podERC721RoyaltyFactory.address === podFactoryAddress, 'factory address should match');
     });
-*/
+
+
     /* ********************************************************************** 
-    *                         CHECK mintPodTokenById() 
-    * **********************************************************************/
-/*
-    it('mintPodTokenById(): should not mint POD - missing MODERATOR_ROLE', async () => {
-        await expectRevert(
-            podERC721Factory.mintPodTokenById(
-                '2',            // pod id
-                investor1,      // to
-                { from: hacker }
-            ),
-            'PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor'
-        );
-    });
+     *                         CHECK createMultiCreatorPod() 
+     * **********************************************************************/
 
-    it('mintPodTokenById(): should not mint POD - cannot be zero address', async () => {
+    it('createMultiCreatorPod(): should not create POD - pod id already exists', async () => {
         await expectRevert(
-            podERC721Factory.mintPodTokenById(
-                '2',            // pod id
-                ZERO_ADDRESS,   // to
+            podERC721RoyaltyFactory.createMultiCreatorPod(
+                '0',                    // pod id
+                'Test Token1',          // pod name
+                'TST1',                 // pod symbol
+                'ipfs://test1',         // pod url
+                2,                      // royaltyAmount
+                [50, 50],               // royaltyShares
+                [creator1, creator2],   // creators
                 { from: admin }
             ),
-            'PRIVIPodERC721Token: Account address should not be zero'
+            'PRIVIPodERC721RoyaltyFactory: Pod id already exists'
         );
     });
 
-    it('mintPodTokenById(): should not mint POD - pod id does not exist', async () => {
-        await expectRevert.unspecified(
-            podERC721Factory.mintPodTokenById(
-                'NON_EXISTING', // pod id
-                investor1,      // to
+    it('createMultiCreatorPod(): should not create POD - pod symbol already exists', async () => {
+        await expectRevert(
+            podERC721RoyaltyFactory.createMultiCreatorPod(
+                '1',                    // pod id
+                'Test Token1',          // pod name
+                'TST0',                 // pod symbol
+                'ipfs://test1',         // pod url
+                2,                      // royaltyAmount
+                [50, 50],               // royaltyShares
+                [creator1, creator2],   // creators
                 { from: admin }
-            )
+            ),
+            'PRIVIPodERC721RoyaltyFactory: Pod symbol already exists'
         );
     });
 
-    it('mintPodTokenById(): should mint POD', async () => {
-        const podAddress = await podERC721Factory.getPodAddressById('0');
-        const erc721TokenContract = await PodERC721Token.at(podAddress);
+    it('createMultiCreatorPod(): should not create POD - empty name', async () => {
+        await expectRevert(
+            podERC721RoyaltyFactory.createMultiCreatorPod(
+                '1',                    // pod id
+                '',                     // pod name
+                'TST1',                 // pod symbol
+                'ipfs://test1',         // pod url
+                2,                      // royaltyAmount
+                [50, 50],               // royaltyShares
+                [creator1, creator2],   // creators
+                { from: admin }
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
+    });
 
-        const balanceInvestorBefore = await erc721TokenContract.balanceOf(investor1);
+    it('createMultiCreatorPod(): should not create POD - empty symbol', async () => {
+        await expectRevert(
+            podERC721RoyaltyFactory.createMultiCreatorPod(
+                '1',                    // pod id
+                'Test Token1',          // pod name
+                '',                     // pod symbol
+                'ipfs://test1',         // pod url
+                2,                      // royaltyAmount
+                [50, 50],               // royaltyShares
+                [creator1, creator2],   // creators
+                { from: admin }
+            ),
+            `BridgeManager: token name and symbol can't be empty`
+        );
+    });
 
-        await podERC721Factory.mintPodTokenById(
-            '0',            // pod id
-            investor1,      // to
+    it('createMultiCreatorPod(): should not create POD - symbol too long', async () => {
+        await expectRevert(
+            podERC721RoyaltyFactory.createMultiCreatorPod(
+                '1',                    // pod id
+                'Test Token1',          // pod name
+                'THIS_SYMBOL_SHOULD_HAVE_A_LENGTH_LOWER_THAN_TWENTY_FIVE', // pod symbol
+                'ipfs://test1',         // pod url
+                2,                      // royaltyAmount
+                [50, 50],               // royaltyShares
+                [creator1, creator2],   // creators
+                { from: admin }
+            ),
+            `BridgeManager: token Symbol too long`
+        );
+    });
+
+    it('createMultiCreatorPod(): should create POD', async () => {
+        const tokensBefore = await podERC721RoyaltyFactory.getTotalTokenCreated();
+
+        const txReceipt = await podERC721RoyaltyFactory.createMultiCreatorPod(
+            '1',            // pod id
+            'Test Token1',  // pod name
+            'TST1',         // pod symbol
+            'ipfs://test1', // pod url
+            2,              // royaltyAmount
+            [50, 50],               // royaltyShares
+            [creator1, creator2],   // creators
             { from: admin }
         );
 
-        const balanceInvestorAfter = await erc721TokenContract.balanceOf(investor1);
+        const podAddress = await podERC721RoyaltyFactory.getPodAddressById('1');
+        const tokensAfter = await podERC721RoyaltyFactory.getTotalTokenCreated();
 
-        assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
-        assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
+        assert(tokensBefore.toString() === '1', 'number of tokens before should be 1');
+        assert(tokensAfter.toString() === '2', 'number of tokens after should be 2');
+        assert(podAddress !== ZERO_ADDRESS, 'pod token address should not be 0');
+
+        expectEvent(txReceipt, 'PodCreated', {
+            //podId: '1',
+            podTokenName: 'Test Token1',
+            podTokenSymbol: 'TST1'
+        });
     });
-*/
+
+    it('createMultiCreatorPod(): should assign parent Factory to POD token contract', async () => {
+        await podERC721RoyaltyFactory.createMultiCreatorPod(
+            '2',            // pod id
+            'Test Token2',  // pod name
+            'TST2',         // pod symbol
+            'ipfs://test2', // pod url
+            2,              // royaltyAmount
+            [50, 50],               // royaltyShares
+            [creator1, creator2],   // creators
+            { from: admin });
+
+        const podAddress = await podERC721RoyaltyFactory.getPodAddressById('2');
+        const erc721TokenContract = await PodERC721RoyaltyToken.at(podAddress);
+        const podFactoryAddress = await erc721TokenContract.parentFactory();
+
+        assert(podERC721RoyaltyFactory.address === podFactoryAddress, 'factory address should match');
+    });
+
     /* ********************************************************************** 
-     *                         CHECK mintPodTokenBySymbol() 
-     * **********************************************************************/
-/*
-        it('mintPodTokenBySymbol(): should not mint POD - missing MODERATOR_ROLE', async () => {
+    *                         CHECK mintPodTokenById() 
+    * **********************************************************************/
+    /*
+        it('mintPodTokenById(): should not mint POD - missing MODERATOR_ROLE', async () => {
             await expectRevert(
-                podERC721Factory.mintPodTokenBySymbol(
-                    'TST2',         // pod symbol
+                podERC721Factory.mintPodTokenById(
+                    '2',            // pod id
                     investor1,      // to
                     { from: hacker }
                 ),
-                'PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor'
-            );
-        });
-
-        it('mintPodTokenBySymbol(): should not mint POD - cannot be zero address', async () => {
-            await expectRevert(
-                podERC721Factory.mintPodTokenBySymbol(
-                    'TST2',         // pod symbol
-                    ZERO_ADDRESS,   // to
-                    { from: admin }
-                ),
-                'PRIVIPodERC721Token: Account address should not be zero'
+                'PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to invest for investor'
             );
         });
     
-        it('mintPodTokenBySymbol(): should not mint POD - pod id does not exist', async () => {
+        it('mintPodTokenById(): should not mint POD - cannot be zero address', async () => {
+            await expectRevert(
+                podERC721Factory.mintPodTokenById(
+                    '2',            // pod id
+                    ZERO_ADDRESS,   // to
+                    { from: admin }
+                ),
+                'PRIVIPodERC721RoyaltyFactory: Account address should not be zero'
+            );
+        });
+    
+        it('mintPodTokenById(): should not mint POD - pod id does not exist', async () => {
             await expectRevert.unspecified(
-                podERC721Factory.mintPodTokenBySymbol(
-                    '2',            // pod symbol
+                podERC721Factory.mintPodTokenById(
+                    'NON_EXISTING', // pod id
                     investor1,      // to
                     { from: admin }
                 )
             );
         });
-
-        it('mintPodTokenBySymbol(): should mint POD', async () => {
-            const podAddress = await podERC721Factory.getPodAddressBySymbol('TST0');
+    
+        it('mintPodTokenById(): should mint POD', async () => {
+            const podAddress = await podERC721Factory.getPodAddressById('0');
             const erc721TokenContract = await PodERC721Token.at(podAddress);
     
             const balanceInvestorBefore = await erc721TokenContract.balanceOf(investor1);
     
-            await podERC721Factory.mintPodTokenBySymbol(
-                'TST0',         // pod symbol
+            await podERC721Factory.mintPodTokenById(
+                '0',            // pod id
                 investor1,      // to
                 { from: admin }
             );
@@ -247,5 +350,62 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
             assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
             assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
         });
-        */
+    */
+    /* ********************************************************************** 
+     *                         CHECK mintPodTokenBySymbol() 
+     * **********************************************************************/
+    /*
+            it('mintPodTokenBySymbol(): should not mint POD - missing MODERATOR_ROLE', async () => {
+                await expectRevert(
+                    podERC721Factory.mintPodTokenBySymbol(
+                        'TST2',         // pod symbol
+                        investor1,      // to
+                        { from: hacker }
+                    ),
+                    'PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to invest for investor'
+                );
+            });
+    
+            it('mintPodTokenBySymbol(): should not mint POD - cannot be zero address', async () => {
+                await expectRevert(
+                    podERC721Factory.mintPodTokenBySymbol(
+                        'TST2',         // pod symbol
+                        ZERO_ADDRESS,   // to
+                        { from: admin }
+                    ),
+                    'PRIVIPodERC721RoyaltyFactory: Account address should not be zero'
+                );
+            });
+        
+            it('mintPodTokenBySymbol(): should not mint POD - pod id does not exist', async () => {
+                await expectRevert.unspecified(
+                    podERC721Factory.mintPodTokenBySymbol(
+                        '2',            // pod symbol
+                        investor1,      // to
+                        { from: admin }
+                    )
+                );
+            });
+    
+            it('mintPodTokenBySymbol(): should mint POD', async () => {
+                const podAddress = await podERC721Factory.getPodAddressBySymbol('TST0');
+                const erc721TokenContract = await PodERC721Token.at(podAddress);
+        
+                const balanceInvestorBefore = await erc721TokenContract.balanceOf(investor1);
+        
+                await podERC721Factory.mintPodTokenBySymbol(
+                    'TST0',         // pod symbol
+                    investor1,      // to
+                    { from: admin }
+                );
+        
+                const balanceInvestorAfter = await erc721TokenContract.balanceOf(investor1);
+        
+                assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
+                assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
+            });
+            */
+
+
+            //TODO: check market sell
 });
