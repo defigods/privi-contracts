@@ -102,11 +102,11 @@ contract PRIVIPodERC721Factory is AccessControl {
     // require(hasRole(MODERATOR_ROLE, _msgSender()), "PRIVIPodERC721TokenFactory: must have MODERATOR_ROLE to create pod.");
     require(
       podTokenAddressesById[podId] == address(0),
-      "PRIVIPodERC721TokenFactory: Pod id already exists"
+      "PRIVIPodERC721Factory: Pod id already exists"
     );
     require(
       podTokenAddressesBySymbol[podTokenSymbol] == address(0),
-      "PRIVIPodERC721TokenFactory: Pod symbol already exists"
+      "PRIVIPodERC721Factory: Pod symbol already exists"
     );
 
     PRIVIPodERC721Token podToken =
@@ -142,11 +142,11 @@ contract PRIVIPodERC721Factory is AccessControl {
   function mintPodTokenById(string calldata podId, address account) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor"
+      "PRIVIPodERC721Factory: must have MODERATOR_ROLE to invest for investor"
     );
     require(
       account != address(0),
-      "PRIVIPodERC721Token: Account address should not be zero"
+      "PRIVIPodERC721Factory: Account address should not be zero"
     );
 
     PRIVIPodERC721Token(podTokenAddressesById[podId]).mint(account);
@@ -164,11 +164,11 @@ contract PRIVIPodERC721Factory is AccessControl {
   {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor"
+      "PRIVIPodERC721Factory: must have MODERATOR_ROLE to invest for investor"
     );
     require(
       account != address(0),
-      "PRIVIPodERC721Token: Account address should not be zero"
+      "PRIVIPodERC721Factory: Account address should not be zero"
     );
 
     PRIVIPodERC721Token(podTokenAddressesBySymbol[tokenSymbol]).mint(account);

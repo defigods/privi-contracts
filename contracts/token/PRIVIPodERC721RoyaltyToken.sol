@@ -88,7 +88,7 @@ contract PRIVIPodERC721TokenRoyalty is Context, ERC721Burnable, NFTRoyalty {
     // make sure all the fund is deposited here first
     require(
       msg.value == sellAmount,
-      "PRIVIPodERC721TokenRoyalty: royalty amount is not correct"
+      "PRIVIPodERC721RoyaltyToken: royalty amount is not correct"
     );
 
     // pay creator

@@ -33,7 +33,7 @@ contract PRIVIPodERC1155TokenRoyalty is Context, ERC1155Burnable, NFTRoyalty {
   modifier onlyFactory() {
     require(
       _msgSender() == parentFactory,
-      "PRIVIPodERC1155Token: Only Factory can call this function."
+      "PRIVIPodERC1155RoyaltyToken: Only Factory can call this function."
     );
     _;
   }

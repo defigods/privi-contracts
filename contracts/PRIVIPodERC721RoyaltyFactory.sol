@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "./token/PRIVIPodERC721TokenRoyalty.sol";
+import "./token/PRIVIPodERC721RoyaltyToken.sol";
 import "./interfaces/IBridgeManager.sol";
 import "./deployable_managers/MultiCreatorNftManager.sol";
 
@@ -27,7 +27,7 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
   /**
    * @dev Grants `DEFAULT_ADMIN_ROLE` and `MODERATOR_ROLE` to the
    * account that deploys the contract.
-   *
+   * - Assigns the bridgeManager address
    */
   constructor(address bridgeAddress) {
     _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -42,7 +42,7 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
   function assignRoleSwapManager(address swapManagerAddress) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC20Factory: must have MODERATOR_ROLE to assign SwapManager address"
+      "PRIVIPodERC20RoyaltyFactory: must have MODERATOR_ROLE to assign SwapManager address"
     );
     _setupRole(MODERATOR_ROLE, swapManagerAddress);
   }

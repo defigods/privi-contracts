@@ -39,7 +39,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
     /* ********************************************************************** 
      *                         CHECK createPod() 
      * **********************************************************************/
-
+/*
     it('createPod(): should not create POD - pod id already exists', async () => {
         await expectRevert(
             podERC721Factory.createPod(
@@ -49,7 +49,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
                 'ipfs://test1', // pod url
                 { from: admin }
             ),
-            'PRIVIPodERC721Factory: Pod id already exists'
+            'PRIVIPodERC721TokenFactory: Pod id already exists'
         );
     });
 
@@ -62,7 +62,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
                 'ipfs://test1', // pod url
                 { from: admin }
             ),
-            'PRIVIPodERC721Factory: Pod symbol already exists'
+            'PRIVIPodERC721TokenFactory: Pod symbol already exists'
         );
     });
 
@@ -139,11 +139,11 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
 
         assert(podERC721Factory.address === podFactoryAddress, 'factory address should match');
     });
-
+*/
     /* ********************************************************************** 
     *                         CHECK mintPodTokenById() 
     * **********************************************************************/
-
+/*
     it('mintPodTokenById(): should not mint POD - missing MODERATOR_ROLE', async () => {
         await expectRevert(
             podERC721Factory.mintPodTokenById(
@@ -151,7 +151,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
                 investor1,      // to
                 { from: hacker }
             ),
-            'PRIVIPodERC721Factory: must have MODERATOR_ROLE to invest for investor'
+            'PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor'
         );
     });
 
@@ -162,7 +162,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
                 ZERO_ADDRESS,   // to
                 { from: admin }
             ),
-            'PRIVIPodERC721Factory: Account address should not be zero'
+            'PRIVIPodERC721Token: Account address should not be zero'
         );
     });
 
@@ -193,11 +193,11 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
         assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
         assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
     });
-
+*/
     /* ********************************************************************** 
      *                         CHECK mintPodTokenBySymbol() 
      * **********************************************************************/
-
+/*
         it('mintPodTokenBySymbol(): should not mint POD - missing MODERATOR_ROLE', async () => {
             await expectRevert(
                 podERC721Factory.mintPodTokenBySymbol(
@@ -205,7 +205,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
                     investor1,      // to
                     { from: hacker }
                 ),
-                'PRIVIPodERC721Factory: must have MODERATOR_ROLE to invest for investor'
+                'PRIVIPodERC721Token: must have MODERATOR_ROLE to invest for investor'
             );
         });
 
@@ -216,7 +216,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
                     ZERO_ADDRESS,   // to
                     { from: admin }
                 ),
-                'PRIVIPodERC721Factory: Account address should not be zero'
+                'PRIVIPodERC721Token: Account address should not be zero'
             );
         });
     
@@ -247,4 +247,5 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
             assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
             assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
         });
+        */
 });

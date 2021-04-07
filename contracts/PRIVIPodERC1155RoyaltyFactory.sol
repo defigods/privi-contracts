@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "./token/PRIVIPodERC1155TokenRoyalty.sol";
+import "./token/PRIVIPodERC1155RoyaltyToken.sol";
 import "./deployable_managers/MultiCreatorNftManager.sol";
 import "./interfaces/IBridgeManager.sol";
 
