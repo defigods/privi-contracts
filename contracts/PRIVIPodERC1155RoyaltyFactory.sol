@@ -36,7 +36,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
   function assignRoleSwapManager(address swapManagerAddress) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC20Factory: must have MODERATOR_ROLE to assign SwapManager address"
+      "PRIVIPodERC1155RoyaltyFactory: must have MODERATOR_ROLE to assign SwapManager address"
     );
     _setupRole(MODERATOR_ROLE, swapManagerAddress);
   }
@@ -76,7 +76,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
     // );
     require(
       podTokenAddresses[uri] == address(0),
-      "PRIVIPodERC1155Factory: Pod already exists."
+      "PRIVIPodERC1155RoyaltyFactory: Pod already exists"
     );
 
     PRIVIPodERC1155RoyaltyToken podToken =
@@ -120,11 +120,11 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
     // TODO: Check restrictions to create POD tokens
     // require(
     //   hasRole(MODERATOR_ROLE, _msgSender()),
-    //   "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to create pod."
+    //   "PRIVIPodERC20RoyaltyFactory: must have MODERATOR_ROLE to create pod."
     // );
     require(
       podTokenAddresses[uri] == address(0),
-      "PRIVIPodERC1155Factory: Pod already exists."
+      "PRIVIPodERC1155RoyaltyFactory: Pod already exists"
     );
 
     MultiCreatorNftManager multiCreatorManager =
@@ -172,13 +172,13 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
   ) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor."
+      "PRIVIPodERC1155RoyaltyFactory: must have MODERATOR_ROLE to invest for investor"
     );
     require(
       account != address(0),
-      "PRIVIPodERC1155Factory: Account address should not be zero."
+      "PRIVIPodERC1155RoyaltyFactory: Account address should not be zero"
     );
-    require(amount > 0, "PRIVIPodERC1155Factory: amount should not be zero.");
+    require(amount > 0, "PRIVIPodERC1155RoyaltyFactory: amount should not be zero");
 
     PRIVIPodERC1155RoyaltyToken(podTokenAddresses[uri]).mint(
       account,
@@ -208,11 +208,11 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
   ) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
-      "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to invest for investor."
+      "PRIVIPodERC1155RoyaltyFactory: must have MODERATOR_ROLE to invest for investor"
     );
     require(
       account != address(0),
-      "PRIVIPodERC1155Factory: Account address should not be zero."
+      "PRIVIPodERC1155RoyaltyFactory: Account address should not be zero"
     );
     
     PRIVIPodERC1155RoyaltyToken(podTokenAddresses[uri]).mintBatch(
