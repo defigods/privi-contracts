@@ -79,7 +79,7 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         assert(podAddress !== ZERO_ADDRESS, 'pod token address should not be 0');
 
         expectEvent(txReceipt, 'PodCreated', {
-            //uri: 'Test Token1',
+            uri: web3.utils.keccak256('ipfs://test1'),
             podAddress: podAddress,
         });
     });

@@ -1,4 +1,5 @@
 const { expectRevert, expectEvent, BN } = require('@openzeppelin/test-helpers');
+const web3 = require('web3');
 const assert = require('assert');
 
 // Artifacts
@@ -122,7 +123,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         );
     });
 
-    it('createPod(): should create POD', async () => {
+    it.only('createPod(): should create POD', async () => {
         const tokensBefore = await podERC721RoyaltyFactory.getTotalTokenCreated();
 
         const txReceipt = await podERC721RoyaltyFactory.createPod(
@@ -143,7 +144,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         assert(podAddress !== ZERO_ADDRESS, 'pod token address should not be 0');
 
         expectEvent(txReceipt, 'PodCreated', {
-            //podId: '1',
+            podId: web3.utils.keccak256('1'),
             podTokenName: 'Test Token1',
             podTokenSymbol: 'TST1'
         });
