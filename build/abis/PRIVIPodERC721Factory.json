@@ -7319,7 +7319,7 @@
         1624
       ],
       "PRIVIPodERC721Token": [
-        4650
+        4842
       ],
       "Strings": [
         9875
@@ -7357,7 +7357,7 @@
         "id": 1343,
         "nodeType": "ImportDirective",
         "scope": 1625,
-        "sourceUnit": 4651,
+        "sourceUnit": 4843,
         "src": "116:41:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -7390,7 +7390,7 @@
           }
         ],
         "contractDependencies": [
-          4650,
+          4842,
           5964,
           6244,
           9611,
@@ -9115,7 +9115,7 @@
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                        "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                         "typeString": "contract PRIVIPodERC721Token"
                       },
                       "typeName": {
@@ -9125,13 +9125,13 @@
                           "id": 1495,
                           "name": "PRIVIPodERC721Token",
                           "nodeType": "IdentifierPath",
-                          "referencedDeclaration": 4650,
+                          "referencedDeclaration": 4842,
                           "src": "3602:19:4"
                         },
-                        "referencedDeclaration": 4650,
+                        "referencedDeclaration": 4842,
                         "src": "3602:19:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                           "typeString": "contract PRIVIPodERC721Token"
                         }
                       },
@@ -9261,7 +9261,7 @@
                       "nodeType": "NewExpression",
                       "src": "3639:23:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_creation_nonpayable$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_address_$returns$_t_contract$_PRIVIPodERC721Token_$4650_$",
+                        "typeIdentifier": "t_function_creation_nonpayable$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_address_$returns$_t_contract$_PRIVIPodERC721Token_$4842_$",
                         "typeString": "function (string memory,string memory,string memory,address) returns (contract PRIVIPodERC721Token)"
                       },
                       "typeName": {
@@ -9271,13 +9271,13 @@
                           "id": 1498,
                           "name": "PRIVIPodERC721Token",
                           "nodeType": "IdentifierPath",
-                          "referencedDeclaration": 4650,
+                          "referencedDeclaration": 4842,
                           "src": "3643:19:4"
                         },
-                        "referencedDeclaration": 4650,
+                        "referencedDeclaration": 4842,
                         "src": "3643:19:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                           "typeString": "contract PRIVIPodERC721Token"
                         }
                       }
@@ -9293,7 +9293,7 @@
                     "src": "3639:117:4",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                      "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                       "typeString": "contract PRIVIPodERC721Token"
                     }
                   },
@@ -9331,7 +9331,7 @@
                           "referencedDeclaration": 1497,
                           "src": "3783:8:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                            "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                             "typeString": "contract PRIVIPodERC721Token"
                           }
                         }
@@ -9339,7 +9339,7 @@
                       "expression": {
                         "argumentTypes": [
                           {
-                            "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                            "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                             "typeString": "contract PRIVIPodERC721Token"
                           }
                         ],
@@ -10337,10 +10337,10 @@
                           "name": "PRIVIPodERC721Token",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 4650,
+                          "referencedDeclaration": 4842,
                           "src": "4724:19:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_PRIVIPodERC721Token_$4650_$",
+                            "typeIdentifier": "t_type$_t_contract$_PRIVIPodERC721Token_$4842_$",
                             "typeString": "type(contract PRIVIPodERC721Token)"
                           }
                         },
@@ -10355,7 +10355,7 @@
                         "src": "4724:49:4",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                           "typeString": "contract PRIVIPodERC721Token"
                         }
                       },
@@ -10366,7 +10366,7 @@
                       "lValueRequested": false,
                       "memberName": "mint",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 4629,
+                      "referencedDeclaration": 4821,
                       "src": "4724:54:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -10859,10 +10859,10 @@
                           "name": "PRIVIPodERC721Token",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 4650,
+                          "referencedDeclaration": 4842,
                           "src": "5424:19:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_PRIVIPodERC721Token_$4650_$",
+                            "typeIdentifier": "t_type$_t_contract$_PRIVIPodERC721Token_$4842_$",
                             "typeString": "type(contract PRIVIPodERC721Token)"
                           }
                         },
@@ -10877,7 +10877,7 @@
                         "src": "5424:59:4",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                           "typeString": "contract PRIVIPodERC721Token"
                         }
                       },
@@ -10888,7 +10888,7 @@
                       "lValueRequested": false,
                       "memberName": "mint",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 4629,
+                      "referencedDeclaration": 4821,
                       "src": "5424:64:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -11057,7 +11057,7 @@
         1624
       ],
       "PRIVIPodERC721Token": [
-        4650
+        4842
       ],
       "Strings": [
         9875
@@ -11095,7 +11095,7 @@
         "id": 1343,
         "nodeType": "ImportDirective",
         "scope": 1625,
-        "sourceUnit": 4651,
+        "sourceUnit": 4843,
         "src": "116:41:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -11128,7 +11128,7 @@
           }
         ],
         "contractDependencies": [
-          4650,
+          4842,
           5964,
           6244,
           9611,
@@ -12853,7 +12853,7 @@
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                        "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                         "typeString": "contract PRIVIPodERC721Token"
                       },
                       "typeName": {
@@ -12863,13 +12863,13 @@
                           "id": 1495,
                           "name": "PRIVIPodERC721Token",
                           "nodeType": "IdentifierPath",
-                          "referencedDeclaration": 4650,
+                          "referencedDeclaration": 4842,
                           "src": "3602:19:4"
                         },
-                        "referencedDeclaration": 4650,
+                        "referencedDeclaration": 4842,
                         "src": "3602:19:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                           "typeString": "contract PRIVIPodERC721Token"
                         }
                       },
@@ -12999,7 +12999,7 @@
                       "nodeType": "NewExpression",
                       "src": "3639:23:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_creation_nonpayable$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_address_$returns$_t_contract$_PRIVIPodERC721Token_$4650_$",
+                        "typeIdentifier": "t_function_creation_nonpayable$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_string_memory_ptr_$_t_address_$returns$_t_contract$_PRIVIPodERC721Token_$4842_$",
                         "typeString": "function (string memory,string memory,string memory,address) returns (contract PRIVIPodERC721Token)"
                       },
                       "typeName": {
@@ -13009,13 +13009,13 @@
                           "id": 1498,
                           "name": "PRIVIPodERC721Token",
                           "nodeType": "IdentifierPath",
-                          "referencedDeclaration": 4650,
+                          "referencedDeclaration": 4842,
                           "src": "3643:19:4"
                         },
-                        "referencedDeclaration": 4650,
+                        "referencedDeclaration": 4842,
                         "src": "3643:19:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                           "typeString": "contract PRIVIPodERC721Token"
                         }
                       }
@@ -13031,7 +13031,7 @@
                     "src": "3639:117:4",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                      "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                       "typeString": "contract PRIVIPodERC721Token"
                     }
                   },
@@ -13069,7 +13069,7 @@
                           "referencedDeclaration": 1497,
                           "src": "3783:8:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                            "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                             "typeString": "contract PRIVIPodERC721Token"
                           }
                         }
@@ -13077,7 +13077,7 @@
                       "expression": {
                         "argumentTypes": [
                           {
-                            "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                            "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                             "typeString": "contract PRIVIPodERC721Token"
                           }
                         ],
@@ -14075,10 +14075,10 @@
                           "name": "PRIVIPodERC721Token",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 4650,
+                          "referencedDeclaration": 4842,
                           "src": "4724:19:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_PRIVIPodERC721Token_$4650_$",
+                            "typeIdentifier": "t_type$_t_contract$_PRIVIPodERC721Token_$4842_$",
                             "typeString": "type(contract PRIVIPodERC721Token)"
                           }
                         },
@@ -14093,7 +14093,7 @@
                         "src": "4724:49:4",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                           "typeString": "contract PRIVIPodERC721Token"
                         }
                       },
@@ -14104,7 +14104,7 @@
                       "lValueRequested": false,
                       "memberName": "mint",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 4629,
+                      "referencedDeclaration": 4821,
                       "src": "4724:54:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -14597,10 +14597,10 @@
                           "name": "PRIVIPodERC721Token",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 4650,
+                          "referencedDeclaration": 4842,
                           "src": "5424:19:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_PRIVIPodERC721Token_$4650_$",
+                            "typeIdentifier": "t_type$_t_contract$_PRIVIPodERC721Token_$4842_$",
                             "typeString": "type(contract PRIVIPodERC721Token)"
                           }
                         },
@@ -14615,7 +14615,7 @@
                         "src": "5424:59:4",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4650",
+                          "typeIdentifier": "t_contract$_PRIVIPodERC721Token_$4842",
                           "typeString": "contract PRIVIPodERC721Token"
                         }
                       },
@@ -14626,7 +14626,7 @@
                       "lValueRequested": false,
                       "memberName": "mint",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 4629,
+                      "referencedDeclaration": 4821,
                       "src": "5424:64:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -15074,7 +15074,7 @@
     }
   },
   "schemaVersion": "3.3.2",
-  "updatedAt": "2021-04-07T13:52:55.647Z",
+  "updatedAt": "2021-04-07T14:51:47.721Z",
   "devdoc": {
     "author": "PRIVI*",
     "details": "Creates new ERC721 tokens using a factory pattern",

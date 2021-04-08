@@ -1,5 +1,4 @@
-const { expectRevert, expectEvent, BN } = require('@openzeppelin/test-helpers');
-const web3 = require('web3');
+const { expectRevert, expectEvent, BN, balance, ether } = require('@openzeppelin/test-helpers');
 const assert = require('assert');
 
 // Artifacts
@@ -9,11 +8,18 @@ const PodERC721RoyaltyToken = artifacts.require('PRIVIPodERC721RoyaltyToken');
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
+const getTxCost = async (txReceipt) => {
+    const txGasPrice = new BN((await web3.eth.getTransaction(txReceipt.tx)).gasPrice);
+    const txGasConsumed = new BN(txReceipt.receipt.gasUsed);
+    return txGasPrice.mul(txGasConsumed);
+};
+
 contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
     let bridgeManagerContract;
     let podERC721RoyaltyFactory;
+    let erc721TokenContract;
 
-    const [admin, investor1, creator1, creator2, hacker] = accounts
+    const [admin, investor1, creator1, creator2, buyer1, seller1, hacker] = accounts
 
     beforeEach(async () => {
         // Bridge contract
@@ -28,9 +34,12 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
             'Test Token0',  // pod name
             'TST0',         // pod symbol
             'ipfs://test',  // baseURI
-            2,              // royaltyAmount
+            2,              // royaltyAmount (%)
             creator1,       // creator
             { from: admin });
+
+        const podAddress = await podERC721RoyaltyFactory.getPodAddressBySymbol('TST0');
+        erc721TokenContract = await PodERC721RoyaltyToken.at(podAddress);
     });
 
     /* ********************************************************************** 
@@ -123,7 +132,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         );
     });
 
-    it.only('createPod(): should create POD', async () => {
+    it('createPod(): should create POD', async () => {
         const tokensBefore = await podERC721RoyaltyFactory.getTotalTokenCreated();
 
         const txReceipt = await podERC721RoyaltyFactory.createPod(
@@ -274,7 +283,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         assert(podAddress !== ZERO_ADDRESS, 'pod token address should not be 0');
 
         expectEvent(txReceipt, 'PodCreated', {
-            //podId: '1',
+            podId: web3.utils.keccak256('1'),
             podTokenName: 'Test Token1',
             podTokenSymbol: 'TST1'
         });
@@ -301,112 +310,200 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
     /* ********************************************************************** 
     *                         CHECK mintPodTokenById() 
     * **********************************************************************/
-    /*
-        it('mintPodTokenById(): should not mint POD - missing MODERATOR_ROLE', async () => {
-            await expectRevert(
-                podERC721Factory.mintPodTokenById(
-                    '2',            // pod id
-                    investor1,      // to
-                    { from: hacker }
-                ),
-                'PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to invest for investor'
-            );
-        });
-    
-        it('mintPodTokenById(): should not mint POD - cannot be zero address', async () => {
-            await expectRevert(
-                podERC721Factory.mintPodTokenById(
-                    '2',            // pod id
-                    ZERO_ADDRESS,   // to
-                    { from: admin }
-                ),
-                'PRIVIPodERC721RoyaltyFactory: Account address should not be zero'
-            );
-        });
-    
-        it('mintPodTokenById(): should not mint POD - pod id does not exist', async () => {
-            await expectRevert.unspecified(
-                podERC721Factory.mintPodTokenById(
-                    'NON_EXISTING', // pod id
-                    investor1,      // to
-                    { from: admin }
-                )
-            );
-        });
-    
-        it('mintPodTokenById(): should mint POD', async () => {
-            const podAddress = await podERC721Factory.getPodAddressById('0');
-            const erc721TokenContract = await PodERC721Token.at(podAddress);
-    
-            const balanceInvestorBefore = await erc721TokenContract.balanceOf(investor1);
-    
-            await podERC721Factory.mintPodTokenById(
-                '0',            // pod id
+
+    it('mintPodTokenById(): should not mint POD - missing MODERATOR_ROLE', async () => {
+        await expectRevert(
+            podERC721RoyaltyFactory.mintPodTokenById(
+                '2',            // pod id
+                investor1,      // to
+                { from: hacker }
+            ),
+            'PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to invest for investor'
+        );
+    });
+
+    it('mintPodTokenById(): should not mint POD - cannot be zero address', async () => {
+        await expectRevert(
+            podERC721RoyaltyFactory.mintPodTokenById(
+                '2',            // pod id
+                ZERO_ADDRESS,   // to
+                { from: admin }
+            ),
+            'PRIVIPodERC721RoyaltyFactory: Account address should not be zero'
+        );
+    });
+
+    it('mintPodTokenById(): should not mint POD - pod id does not exist', async () => {
+        await expectRevert.unspecified(
+            podERC721RoyaltyFactory.mintPodTokenById(
+                'NON_EXISTING', // pod id
                 investor1,      // to
                 { from: admin }
-            );
-    
-            const balanceInvestorAfter = await erc721TokenContract.balanceOf(investor1);
-    
-            assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
-            assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
-        });
-    */
+            )
+        );
+    });
+
+    it('mintPodTokenById(): should mint POD', async () => {
+        const podAddress = await podERC721RoyaltyFactory.getPodAddressById('0');
+        const erc721TokenContract = await PodERC721RoyaltyToken.at(podAddress);
+
+        const balanceInvestorBefore = await erc721TokenContract.balanceOf(investor1);
+
+        await podERC721RoyaltyFactory.mintPodTokenById(
+            '0',            // pod id
+            investor1,      // to
+            { from: admin }
+        );
+
+        const balanceInvestorAfter = await erc721TokenContract.balanceOf(investor1);
+
+        assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
+        assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
+    });
+
     /* ********************************************************************** 
      *                         CHECK mintPodTokenBySymbol() 
      * **********************************************************************/
-    /*
-            it('mintPodTokenBySymbol(): should not mint POD - missing MODERATOR_ROLE', async () => {
-                await expectRevert(
-                    podERC721Factory.mintPodTokenBySymbol(
-                        'TST2',         // pod symbol
-                        investor1,      // to
-                        { from: hacker }
-                    ),
-                    'PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to invest for investor'
-                );
-            });
-    
-            it('mintPodTokenBySymbol(): should not mint POD - cannot be zero address', async () => {
-                await expectRevert(
-                    podERC721Factory.mintPodTokenBySymbol(
-                        'TST2',         // pod symbol
-                        ZERO_ADDRESS,   // to
-                        { from: admin }
-                    ),
-                    'PRIVIPodERC721RoyaltyFactory: Account address should not be zero'
-                );
-            });
-        
-            it('mintPodTokenBySymbol(): should not mint POD - pod id does not exist', async () => {
-                await expectRevert.unspecified(
-                    podERC721Factory.mintPodTokenBySymbol(
-                        '2',            // pod symbol
-                        investor1,      // to
-                        { from: admin }
-                    )
-                );
-            });
-    
-            it('mintPodTokenBySymbol(): should mint POD', async () => {
-                const podAddress = await podERC721Factory.getPodAddressBySymbol('TST0');
-                const erc721TokenContract = await PodERC721Token.at(podAddress);
-        
-                const balanceInvestorBefore = await erc721TokenContract.balanceOf(investor1);
-        
-                await podERC721Factory.mintPodTokenBySymbol(
-                    'TST0',         // pod symbol
-                    investor1,      // to
-                    { from: admin }
-                );
-        
-                const balanceInvestorAfter = await erc721TokenContract.balanceOf(investor1);
-        
-                assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
-                assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
-            });
-            */
 
+    it('mintPodTokenBySymbol(): should not mint POD - missing MODERATOR_ROLE', async () => {
+        await expectRevert(
+            podERC721RoyaltyFactory.mintPodTokenBySymbol(
+                'TST2',         // pod symbol
+                investor1,      // to
+                { from: hacker }
+            ),
+            'PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to invest for investor'
+        );
+    });
 
-            //TODO: check market sell
+    it('mintPodTokenBySymbol(): should not mint POD - cannot be zero address', async () => {
+        await expectRevert(
+            podERC721RoyaltyFactory.mintPodTokenBySymbol(
+                'TST2',         // pod symbol
+                ZERO_ADDRESS,   // to
+                { from: admin }
+            ),
+            'PRIVIPodERC721RoyaltyFactory: Account address should not be zero'
+        );
+    });
+
+    it('mintPodTokenBySymbol(): should not mint POD - pod id does not exist', async () => {
+        await expectRevert.unspecified(
+            podERC721RoyaltyFactory.mintPodTokenBySymbol(
+                '2',            // pod symbol
+                investor1,      // to
+                { from: admin }
+            )
+        );
+    });
+
+    it('mintPodTokenBySymbol(): should mint POD', async () => {
+        const balanceInvestorBefore = await erc721TokenContract.balanceOf(investor1);
+
+        await podERC721RoyaltyFactory.mintPodTokenBySymbol(
+            'TST0',         // pod symbol
+            investor1,      // to
+            { from: admin }
+        );
+
+        const balanceInvestorAfter = await erc721TokenContract.balanceOf(investor1);
+
+        assert(balanceInvestorBefore.toString() === '0', 'investors initial value should be 0');
+        assert(balanceInvestorAfter.toString() === '1', 'investors final value should be 1');
+    });
+
+    /* ********************************************************************** 
+     *                         CHECK marketSell() 
+     * **********************************************************************/
+
+    it('marketSell(): should not trade - nonexistent token', async () => {
+        await expectRevert(
+            erc721TokenContract.marketSell(
+                100,        // sell amount
+                0,          // token Id
+                seller1,   // from
+                buyer1,     // to
+                { from: admin, value: 100 }
+            ),
+            'ERC721: operator query for nonexistent token'
+        );
+    });
+
+    it('marketSell(): should not trade - caller is not owner or approved', async () => {
+        await podERC721RoyaltyFactory.mintPodTokenById(
+            '0',            // pod id
+            seller1,        // to
+            { from: admin }
+        );
+
+        await expectRevert(
+            erc721TokenContract.marketSell(
+                100,        // sell amount
+                0,          // token Id
+                seller1,    // from
+                buyer1,     // to
+                { from: hacker, value: 100 }
+            ),
+            'ERC721: transfer caller is not owner nor approved'
+        );
+    });
+
+    it('marketSell(): should trade', async () => {
+        const balanceCreatorBefore = await balance.current(creator1);
+        const balanceSellerBefore = await balance.current(seller1);
+        const balanceBuyerBefore = await balance.current(buyer1);
+
+        // Token id 0 is minted
+        await podERC721RoyaltyFactory.mintPodTokenById(
+            '0',        // pod id
+            seller1,    // to
+            { from: admin }
+        );
+
+        // Seller gives transfer approval to buyer
+        const txReceiptSeller = await erc721TokenContract.approve(buyer1, 0, { from: seller1 });
+
+        // Token id 0 is sold
+        const txReceiptBuyer = await erc721TokenContract.marketSell(
+            ether('5'), // sell amount
+            0,          // token Id
+            seller1,    // from
+            buyer1,     // to
+            { from: buyer1, value: ether('5') }
+        );
+
+        const balanceCreatorAfter = await balance.current(creator1);
+
+        // Balance of Buyer excluding tx cost
+        const txCostSeller = await getTxCost(txReceiptSeller);
+        const balanceSellerAfter = BN(await balance.current(seller1)).add(txCostSeller);
+
+        // Balance of Seller excluding tx cost
+        const txCostBuyer = await getTxCost(txReceiptBuyer);
+        const balanceBuyerAfter = BN(await balance.current(buyer1)).add(txCostBuyer);
+
+        // Logs
+        // console.log('Balance creator before:', web3.utils.fromWei(balanceCreatorBefore).toString());
+        // console.log('Balance creator after: ', web3.utils.fromWei(balanceCreatorAfter).toString());
+        // console.log('Balance seller before:', web3.utils.fromWei(balanceSellerBefore).toString());
+        // console.log('Balance seller after: ', web3.utils.fromWei(balanceSellerAfter).toString());
+        // console.log('Balance buyer before:', web3.utils.fromWei(balanceBuyerBefore).toString());
+        // console.log('Balance buyer after: ', web3.utils.fromWei(balanceBuyerAfter).toString());
+
+        // Creator earns 0,1 ETH royalties
+        assert(balanceCreatorBefore.eq(balanceCreatorAfter.sub(ether('0.1'))));
+
+        // Seller earns 5 ETH from sell minus 0.1 ETH royalties to the creator
+        assert(balanceSellerBefore.eq((balanceSellerAfter.sub(ether('5'))).add(ether('0.1'))));
+
+        // Buyer spends 5 ETH from the purchase to seller
+        assert(balanceBuyerBefore.eq(balanceBuyerAfter.add(ether('5'))));
+
+        expectEvent(txReceiptBuyer, 'RecievedRoyalties', {
+            creator: creator1,
+            buyer: buyer1,      
+            amount: ether('0.1') // (msg.value * royalty amnt) / 100 => (5 * 2) / 100 => 0.1 ETH
+        });
+    });
+
 });

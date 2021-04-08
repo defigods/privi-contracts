@@ -48168,7 +48168,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.2",
-  "updatedAt": "2021-04-07T13:52:55.674Z",
+  "updatedAt": "2021-04-07T14:51:47.749Z",
   "devdoc": {
     "author": "PRIVI*",
     "details": "Manages swaps and withdraws of Ether, ERC20 tokens, ERC721 tokens and ERC1155 tokens between Ethereum and PRIVI blockchains",

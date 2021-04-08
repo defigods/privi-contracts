@@ -92,13 +92,12 @@ contract PRIVIPodERC721RoyaltyToken is Context, ERC721Burnable, NFTRoyalty {
     );
 
     // pay creator
+    // TODO: needs testing for very low and hi amount
     uint256 creatorShare = (msg.value * royalty_amount) / 100;
-    //uint256 creatorShare = (msg.value.mul(royalty_amount)).div(100); // TODO: needs testing for very low and hi amount
     address payable royaltyOwner = payable(creator);
     royaltyOwner.transfer(creatorShare);
 
     // pay current owner
-    //payable(from).transfer(msg.value.sub(creatorShare));
     payable(from).transfer(msg.value - creatorShare);
 
     // transfer token
@@ -108,6 +107,7 @@ contract PRIVIPodERC721RoyaltyToken is Context, ERC721Burnable, NFTRoyalty {
     royaltiesRecieved(creator, to, creatorShare);
   }
 
+  /*
   function _beforeTokenTransfer(
     address from,
     address to,
@@ -115,4 +115,5 @@ contract PRIVIPodERC721RoyaltyToken is Context, ERC721Burnable, NFTRoyalty {
   ) internal virtual override(ERC721) {
     super._beforeTokenTransfer(from, to, tokenId);
   }
+  */
 }
