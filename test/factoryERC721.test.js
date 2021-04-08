@@ -1,5 +1,4 @@
-const { expectRevert, expectEvent, BN } = require('@openzeppelin/test-helpers');
-const web3 = require('web3');
+const { expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
 const assert = require('assert');
 
 // Artifacts
