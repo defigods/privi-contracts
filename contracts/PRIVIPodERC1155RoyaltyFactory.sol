@@ -15,7 +15,8 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
   bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
   address public bridgeManagerAddress;
   uint256 public totalPodCreated;
-  mapping(string => address) public podTokenAddresses;
+  mapping(string => address) public podTokenAddressesByUri;
+  mapping(string => address) public podTokenAddressesById;
 
   event PodCreated(string indexed uri, address podAddress);
 
@@ -53,7 +54,20 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
     view
     returns (address podAddress)
   {
-    podAddress = podTokenAddresses[uri];
+    podAddress = podTokenAddressesByUri[uri];
+  }
+
+  /**
+   * @notice Returns the contract address of the Pod token
+   * @param  podId The Pod Id
+   * @return podAddress The contract address of the Pod token
+   */
+  function getPodAddressById(string calldata podId)
+    external
+    view
+    returns (address podAddress)
+  {
+    podAddress = podTokenAddressesById[podId];
   }
 
   /**
@@ -66,6 +80,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
    */
   function createPod(
     string calldata uri,
+    string calldata podId,
     uint256 royaltyAmount,
     address creator
   ) external returns (address podAddress) {
@@ -75,8 +90,13 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
     //   "PRIVIPodERC1155Factory: must have MODERATOR_ROLE to create pod."
     // );
     require(
-      podTokenAddresses[uri] == address(0),
+      podTokenAddressesByUri[uri] == address(0),
       "PRIVIPodERC1155RoyaltyFactory: Pod already exists"
+    );
+
+    require(
+      podTokenAddressesById[podId] == address(0),
+      "PRIVIPodERC1155TokenFactory: Pod id already exists."
     );
 
     PRIVIPodERC1155RoyaltyToken podToken =
@@ -90,7 +110,8 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
 
     totalPodCreated += 1;
 
-    podTokenAddresses[uri] = podAddress;
+    podTokenAddressesByUri[uri] = podAddress;
+    podTokenAddressesById[podId] = podAddress;
 
     IBridgeManager(bridgeManagerAddress).registerTokenERC1155(
       uri,
@@ -113,6 +134,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
    */
   function createMultiCreatorPod(
     string calldata uri,
+    string calldata podId,
     uint256 royaltyAmount,
     uint256[] memory royaltyShares,
     address[] memory creators
@@ -123,8 +145,13 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
     //   "PRIVIPodERC20RoyaltyFactory: must have MODERATOR_ROLE to create pod."
     // );
     require(
-      podTokenAddresses[uri] == address(0),
+      podTokenAddressesByUri[uri] == address(0),
       "PRIVIPodERC1155RoyaltyFactory: Pod already exists"
+    );
+
+    require(
+      podTokenAddressesById[podId] == address(0),
+      "PRIVIPodERC1155TokenFactory: Pod id already exists."
     );
 
     MultiCreatorNftManager multiCreatorManager =
@@ -141,7 +168,8 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
 
     totalPodCreated += 1;
 
-    podTokenAddresses[uri] = podAddress;
+    podTokenAddressesByUri[uri] = podAddress;
+    podTokenAddressesById[podId] = podAddress;
 
     IBridgeManager(bridgeManagerAddress).registerTokenERC1155(
       uri,
@@ -163,7 +191,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
    * @param  amount The amount of tokens to be minted
    * @param  data The data to be added (currently not used)
    */
-  function podMint(
+  function mintPodTokenByUri(
     string calldata uri,
     address account,
     uint256 tokenId,
@@ -180,7 +208,43 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
     );
     require(amount > 0, "PRIVIPodERC1155RoyaltyFactory: amount should not be zero");
 
-    PRIVIPodERC1155RoyaltyToken(podTokenAddresses[uri]).mint(
+    PRIVIPodERC1155RoyaltyToken(podTokenAddressesByUri[uri]).mint(
+      account,
+      tokenId,
+      amount,
+      data
+    );
+  }
+
+  /**
+   * @notice Mints ERC1155 Pod tokens
+   * @dev    - The caller must be MODERATOR_ROLE
+   *         - destination address can't be zero
+   *         - amount to be minted must be greater than zero
+   * @param  podId The Pod Id
+   * @param  account The destination account to receive minted tokens
+   * @param  tokenId The Pod token identifier
+   * @param  amount The amount of tokens to be minted
+   * @param  data The data to be added (currently not used)
+   */
+  function mintPodTokenById(
+    string calldata podId,
+    address account,
+    uint256 tokenId,
+    uint256 amount,
+    bytes calldata data
+  ) external {
+    require(
+      hasRole(MODERATOR_ROLE, _msgSender()),
+      "PRIVIPodERC1155RoyaltyFactory: must have MODERATOR_ROLE to invest for investor"
+    );
+    require(
+      account != address(0),
+      "PRIVIPodERC1155RoyaltyFactory: Account address should not be zero"
+    );
+    require(amount > 0, "PRIVIPodERC1155RoyaltyFactory: amount should not be zero");
+
+    PRIVIPodERC1155RoyaltyToken(podTokenAddressesById[podId]).mint(
       account,
       tokenId,
       amount,
@@ -199,7 +263,7 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
    * @param  amounts An array of token amounts to be minted
    * @param  data The data to be added (currently not used)
    */
-  function podMintBatch(
+  function batchMintPodTokenByUri(
     string calldata uri,
     address account,
     uint256[] memory tokenIds,
@@ -215,7 +279,42 @@ contract PRIVIPodERC1155RoyaltyFactory is AccessControl {
       "PRIVIPodERC1155RoyaltyFactory: Account address should not be zero"
     );
     
-    PRIVIPodERC1155RoyaltyToken(podTokenAddresses[uri]).mintBatch(
+    PRIVIPodERC1155RoyaltyToken(podTokenAddressesByUri[uri]).mintBatch(
+      account,
+      tokenIds,
+      amounts,
+      data
+    );
+  }
+
+  /**
+   * @notice Mints a batch of ERC1155 Pod tokens
+   * @dev    - The caller must be MODERATOR_ROLE
+   *         - destination address can't be zero
+   *         - amount to be minted must be greater than zero
+   * @param  podId The Pod Id
+   * @param  account The destination account to receive minted tokens
+   * @param  tokenIds An array of Pod token identifiers
+   * @param  amounts An array of token amounts to be minted
+   * @param  data The data to be added (currently not used)
+   */
+  function batchMintPodTokenById(
+    string calldata podId,
+    address account,
+    uint256[] memory tokenIds,
+    uint256[] memory amounts,
+    bytes calldata data
+  ) external {
+    require(
+      hasRole(MODERATOR_ROLE, _msgSender()),
+      "PRIVIPodERC1155RoyaltyFactory: must have MODERATOR_ROLE to invest for investor"
+    );
+    require(
+      account != address(0),
+      "PRIVIPodERC1155RoyaltyFactory: Account address should not be zero"
+    );
+    
+    PRIVIPodERC1155RoyaltyToken(podTokenAddressesById[podId]).mintBatch(
       account,
       tokenIds,
       amounts,

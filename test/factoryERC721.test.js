@@ -148,6 +148,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
         await expectRevert(
             podERC721Factory.mintPodTokenById(
                 '2',            // pod id
+                0,
                 investor1,      // to
                 { from: hacker }
             ),
@@ -159,6 +160,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
         await expectRevert(
             podERC721Factory.mintPodTokenById(
                 '2',            // pod id
+                0,
                 ZERO_ADDRESS,   // to
                 { from: admin }
             ),
@@ -170,6 +172,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
         await expectRevert.unspecified(
             podERC721Factory.mintPodTokenById(
                 'NON_EXISTING', // pod id
+                0,
                 investor1,      // to
                 { from: admin }
             )
@@ -184,6 +187,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
 
         await podERC721Factory.mintPodTokenById(
             '0',            // pod id
+            0,
             investor1,      // to
             { from: admin }
         );
@@ -202,6 +206,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
             await expectRevert(
                 podERC721Factory.mintPodTokenBySymbol(
                     'TST2',         // pod symbol
+                    0,
                     investor1,      // to
                     { from: hacker }
                 ),
@@ -213,6 +218,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
             await expectRevert(
                 podERC721Factory.mintPodTokenBySymbol(
                     'TST2',         // pod symbol
+                    0,
                     ZERO_ADDRESS,   // to
                     { from: admin }
                 ),
@@ -224,6 +230,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
             await expectRevert.unspecified(
                 podERC721Factory.mintPodTokenBySymbol(
                     '2',            // pod symbol
+                    0,
                     investor1,      // to
                     { from: admin }
                 )
@@ -238,6 +245,7 @@ contract('PRIVI Pod Factory ERC721', (accounts) => {
     
             await podERC721Factory.mintPodTokenBySymbol(
                 'TST0',         // pod symbol
+                0,
                 investor1,      // to
                 { from: admin }
             );

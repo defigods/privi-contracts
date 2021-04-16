@@ -315,6 +315,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         await expectRevert(
             podERC721RoyaltyFactory.mintPodTokenById(
                 '2',            // pod id
+                '5',
                 investor1,      // to
                 { from: hacker }
             ),
@@ -326,6 +327,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         await expectRevert(
             podERC721RoyaltyFactory.mintPodTokenById(
                 '2',            // pod id
+                '5',
                 ZERO_ADDRESS,   // to
                 { from: admin }
             ),
@@ -337,6 +339,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         await expectRevert.unspecified(
             podERC721RoyaltyFactory.mintPodTokenById(
                 'NON_EXISTING', // pod id
+                '5',
                 investor1,      // to
                 { from: admin }
             )
@@ -351,6 +354,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
 
         await podERC721RoyaltyFactory.mintPodTokenById(
             '0',            // pod id
+            '5',
             investor1,      // to
             { from: admin }
         );
@@ -369,6 +373,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         await expectRevert(
             podERC721RoyaltyFactory.mintPodTokenBySymbol(
                 'TST2',         // pod symbol
+                '5',
                 investor1,      // to
                 { from: hacker }
             ),
@@ -380,6 +385,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         await expectRevert(
             podERC721RoyaltyFactory.mintPodTokenBySymbol(
                 'TST2',         // pod symbol
+                '5',
                 ZERO_ADDRESS,   // to
                 { from: admin }
             ),
@@ -391,6 +397,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         await expectRevert.unspecified(
             podERC721RoyaltyFactory.mintPodTokenBySymbol(
                 '2',            // pod symbol
+                '5',
                 investor1,      // to
                 { from: admin }
             )
@@ -402,6 +409,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
 
         await podERC721RoyaltyFactory.mintPodTokenBySymbol(
             'TST0',         // pod symbol
+            '5',
             investor1,      // to
             { from: admin }
         );
@@ -432,6 +440,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
     it('marketSell(): should not trade - caller is not owner or approved', async () => {
         await podERC721RoyaltyFactory.mintPodTokenById(
             '0',            // pod id
+            '5',
             seller1,        // to
             { from: admin }
         );
@@ -439,7 +448,7 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         await expectRevert(
             erc721TokenContract.marketSell(
                 100,        // sell amount
-                0,          // token Id
+                '5',          // token Id
                 seller1,    // from
                 buyer1,     // to
                 { from: hacker, value: 100 }
@@ -456,17 +465,18 @@ contract('PRIVI Pod Factory ERC721Royalty', (accounts) => {
         // Token id 0 is minted
         await podERC721RoyaltyFactory.mintPodTokenById(
             '0',        // pod id
+            '5',
             seller1,    // to
             { from: admin }
         );
 
         // Seller gives transfer approval to buyer
-        const txReceiptSeller = await erc721TokenContract.approve(buyer1, 0, { from: seller1 });
+        const txReceiptSeller = await erc721TokenContract.approve(buyer1, '5', { from: seller1 });
 
         // Token id 0 is sold
         const txReceiptBuyer = await erc721TokenContract.marketSell(
             ether('5'), // sell amount
-            0,          // token Id
+            '5',          // token Id
             seller1,    // from
             buyer1,     // to
             { from: buyer1, value: ether('5') }

@@ -209,7 +209,7 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
    * @param  podId The Pod token identifier
    * @param  account The destination account to receive minted tokens
    */
-  function mintPodTokenById(string calldata podId, address account) external {
+  function mintPodTokenById(string calldata podId, uint256 tokenId, address account) external {
     require(
       hasRole(MODERATOR_ROLE, _msgSender()),
       "PRIVIPodERC721RoyaltyFactory: must have MODERATOR_ROLE to invest for investor."
@@ -219,7 +219,7 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
       "PRIVIPodERC721RoyaltyFactory: Account address should not be zero."
     );
 
-    PRIVIPodERC721RoyaltyToken(podTokenAddressesById[podId]).mint(account);
+    PRIVIPodERC721RoyaltyToken(podTokenAddressesById[podId]).mint(account, tokenId);
   }
 
   /**
@@ -229,7 +229,7 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
    * @param  tokenSymbol The Pod token symbol (sticker)
    * @param  account The destination account to receive minted tokens
    */
-  function mintPodTokenBySymbol(string calldata tokenSymbol, address account)
+  function mintPodTokenBySymbol(string calldata tokenSymbol, uint256 tokenId, address account)
     external
   {
     require(
@@ -242,7 +242,8 @@ contract PRIVIPodERC721RoyaltyFactory is AccessControl {
     );
 
     PRIVIPodERC721RoyaltyToken(podTokenAddressesBySymbol[tokenSymbol]).mint(
-      account
+      account,
+      tokenId
     );
   }
 }
