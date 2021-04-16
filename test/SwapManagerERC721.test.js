@@ -59,7 +59,7 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         );
 
         // Mint TST token to investor1
-        await fakeERC721.mint(investor1, { from: admin });
+        await fakeERC721.mint(investor1, 0, { from: admin });
 
         // Register TEST token in Bridge
         await bridgeManagerContract.registerTokenERC721(
@@ -196,6 +196,7 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         // Mint 'TST2' token
         await podERC721RoyaltyFactory.mintPodTokenBySymbol(
             'TST2',                 // tokenId
+            0,
             newPodERC721address,    // contract address
             { from: admin }
         );
@@ -206,7 +207,7 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         const txReceipt = await swapManagerContract.withdrawERC721Token(
             'TST2',     // tokenSymbol
             investor1,  // to
-            0,          // tokenId (not checked when minting)
+            10,          // tokenId (not checked when minting)
             true,       // isPodMint
             true,       // isRoyalty
             { from: admin });
@@ -218,7 +219,7 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         expectEvent(txReceipt, 'WithdrawERC721Token', {
             //tokenSymbol: 'UNI',
             to: investor1,
-            tokenId: new BN(0),
+            tokenId: new BN(10),
         });
     });
 
@@ -233,7 +234,7 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         const newPodERC721address = await podERC721Factory.getPodAddressById(1);
 
         // Mint 'TST2' token
-        await podERC721Factory.mintPodTokenById(1, newPodERC721address, { from: admin });
+        await podERC721Factory.mintPodTokenById(1, '5', newPodERC721address, { from: admin });
         const newPodERC721 = await IERC721.at(newPodERC721address);
 
         // Check investor's balance before the withdrawal
@@ -243,7 +244,7 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         const txReceipt = await swapManagerContract.withdrawERC721Token(
             'TST2',     // tokenSymbol
             investor1,  // to
-            1,          // tokenId
+            '15',          // tokenId
             true,       // isPodMint
             false,      // isRoyalty
             { from: admin }
@@ -258,7 +259,7 @@ contract('SwapManager for ERC721 tokens', (accounts) => {
         expectEvent(txReceipt, 'WithdrawERC721Token', {
             //tokenSymbol: 'UNI',
             to: investor1,
-            tokenId: new BN(1),
+            tokenId: new BN(15),
         });
     });
 

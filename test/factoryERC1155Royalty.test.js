@@ -31,6 +31,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
         // TST Token creation
         await podERC1155RoyaltyFactory.createPod(
             'ipfs://test0', // uri
+            '6',
             2,              // royalty amount
             creator1,       // pod creator
             { from: admin });
@@ -56,6 +57,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
         await expectRevert(
             podERC1155RoyaltyFactory.createPod(
                 'ipfs://test0', // pod uri
+                '6',
                 2,              // royalty amount
                 creator1,       // pod creator
                 { from: admin }
@@ -68,6 +70,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
         await expectRevert(
             podERC1155RoyaltyFactory.createPod(
                 '',             // pod uri
+                '7',
                 2,              // royalty amount
                 creator1,       // pod creator
                 { from: admin }
@@ -81,6 +84,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
 
         const txReceipt = await podERC1155RoyaltyFactory.createPod(
             'ipfs://test1', // pod uri
+            '8',
             2,              // royalty amount
             creator1,       // pod creator
             { from: admin }
@@ -102,6 +106,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
     it('createPod(): should assign parent Factory to POD token contract', async () => {
         await podERC1155RoyaltyFactory.createPod(
             'ipfs://test2', // pod uri
+            '9',
             2,              // royalty amount
             creator1,       // pod creator
             { from: admin }
@@ -124,6 +129,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
         await expectRevert(
             podERC1155RoyaltyFactory.createMultiCreatorPod(
                 'ipfs://test0',         // pod uri
+                '10',
                 10,                     // royalty amount
                 [50, 50],               // royaltyShares
                 [creator1, creator2],   // pod creators
@@ -137,6 +143,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
         await expectRevert(
             podERC1155RoyaltyFactory.createMultiCreatorPod(
                 '',                     // pod uri
+                '11',
                 2,                      // royalty amount
                 [50, 50],               // royaltyShares
                 [creator1, creator2],   // pod creators
@@ -151,6 +158,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
         await expectRevert(
             podERC1155RoyaltyFactory.createMultiCreatorPod(
                 'ipfs://test1',         // pod uri
+                '12',
                 2,                      // royalty amount
                 [50, 25, 25],           // royaltyShares
                 [creator1, creator2],   // pod creators
@@ -165,6 +173,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
 
         const txReceipt = await podERC1155RoyaltyFactory.createMultiCreatorPod(
             'ipfs://test1',         // pod uri
+            '13',
             2,                      // royalty amount
             [50, 50],               // royaltyShares
             [creator1, creator2],   // pod creators
@@ -187,6 +196,7 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
     it('createMultiCreatorPod(): should assign parent Factory to POD token contract', async () => {
         await podERC1155RoyaltyFactory.createMultiCreatorPod(
             'ipfs://test2',         // pod uri
+            '15',
             2,                      // royalty amount
             [50, 50],               // royaltyShares
             [creator1, creator2],   // pod creators
@@ -201,12 +211,12 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
     });
 
     /* ********************************************************************** 
-    *                         CHECK podMint() 
+    *                         CHECK mintPodTokenByUri() 
     * **********************************************************************/
 
-        it('podMint(): should not mint POD - missing MODERATOR_ROLE', async () => {
+        it('mintPodTokenByUri(): should not mint POD - missing MODERATOR_ROLE', async () => {
             await expectRevert(
-                podERC1155RoyaltyFactory.podMint(
+                podERC1155RoyaltyFactory.mintPodTokenByUri(
                     'ipfs://test0', // pod uri
                     investor1,      // to
                     0,              // tokenId
@@ -218,9 +228,9 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
             );
         });
     
-        it('podMint(): should not mint POD - cannot be zero address', async () => {
+        it('mintPodTokenByUri(): should not mint POD - cannot be zero address', async () => {
             await expectRevert(
-                podERC1155RoyaltyFactory.podMint(
+                podERC1155RoyaltyFactory.mintPodTokenByUri(
                     'ipfs://test0', // pod uri
                     ZERO_ADDRESS,   // to
                     0,              // tokenId
@@ -232,9 +242,9 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
             );
         });
     
-        it('podMint(): should not mint POD - pod id does not exist', async () => {
+        it('mintPodTokenByUri(): should not mint POD - pod id does not exist', async () => {
             await expectRevert.unspecified(
-                podERC1155RoyaltyFactory.podMint(
+                podERC1155RoyaltyFactory.mintPodTokenByUri(
                     '',             // pod uri
                     investor1,      // to
                     0,              // tokenId
@@ -245,9 +255,9 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
             );
         });
     
-        it('podMint(): should not mint POD - amount must be greater than zero', async () => {
+        it('mintPodTokenByUri(): should not mint POD - amount must be greater than zero', async () => {
             await expectRevert.unspecified(
-                podERC1155RoyaltyFactory.podMint(
+                podERC1155RoyaltyFactory.mintPodTokenByUri(
                     'ipfs://test3', // pod uri
                     investor1,      // to
                     0,              // tokenId
@@ -258,13 +268,13 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
             );
         });
     
-        it('podMint(): should mint POD', async () => {
+        it('mintPodTokenByUri(): should mint POD', async () => {
             const podAddress = await podERC1155RoyaltyFactory.getPodAddressByUri('ipfs://test0');
             const erc1155RoyaltyTokenContract = await PodERC1155RoyaltyToken.at(podAddress);
     
             const balanceInvestorBefore = await erc1155RoyaltyTokenContract.balanceOf(investor1, 0);
     
-            await podERC1155RoyaltyFactory.podMint(
+            await podERC1155RoyaltyFactory.mintPodTokenByUri(
                 'ipfs://test0', // pod uri
                 investor1,      // to
                 0,              // tokenId
@@ -280,12 +290,12 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
         });
 
     /* ********************************************************************** 
-     *                         CHECK podMintBatch() 
+     *                         CHECK batchMintPodTokenByUri() 
      * **********************************************************************/
 
-        it('podMintBatch(): should not mint POD - missing MODERATOR_ROLE', async () => {
+        it('batchMintPodTokenByUri(): should not mint POD - missing MODERATOR_ROLE', async () => {
             await expectRevert(
-                podERC1155RoyaltyFactory.podMintBatch(
+                podERC1155RoyaltyFactory.batchMintPodTokenByUri(
                     'ipfs://test0', // pod uri
                     investor1,      // to
                     [0],            // tokenId
@@ -297,9 +307,9 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
             );
         });
     
-        it('podMintBatch(): should not mint POD - cannot be zero address', async () => {
+        it('batchMintPodTokenByUri(): should not mint POD - cannot be zero address', async () => {
             await expectRevert(
-                podERC1155RoyaltyFactory.podMintBatch(
+                podERC1155RoyaltyFactory.batchMintPodTokenByUri(
                     'ipfs://test0', // pod uri
                     ZERO_ADDRESS,   // to
                     [0],            // tokenId
@@ -311,9 +321,9 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
             );
         });
     
-        it('podMintBatch(): should not mint POD - pod id does not exist', async () => {
+        it('batchMintPodTokenByUri(): should not mint POD - pod id does not exist', async () => {
             await expectRevert.unspecified(
-                podERC1155RoyaltyFactory.podMintBatch(
+                podERC1155RoyaltyFactory.batchMintPodTokenByUri(
                     '',             // pod uri
                     investor1,      // to
                     [0],            // tokenId
@@ -324,9 +334,9 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
             );
         });
     
-        it('podMintBatch(): should not mint POD - amount must be greater than zero', async () => {
+        it('batchMintPodTokenByUri(): should not mint POD - amount must be greater than zero', async () => {
             await expectRevert.unspecified(
-                podERC1155RoyaltyFactory.podMintBatch(
+                podERC1155RoyaltyFactory.batchMintPodTokenByUri(
                     'ipfs://test3', // pod uri
                     investor1,      // to
                     [0,1],          // tokenId
@@ -337,13 +347,13 @@ contract('PRIVI Pod Factory ERC1155Royalty', (accounts) => {
             );
         });
     
-        it('podMintBatch(): should mint POD', async () => {
+        it('batchMintPodTokenByUri(): should mint POD', async () => {
             const podAddress = await podERC1155RoyaltyFactory.getPodAddressByUri('ipfs://test0');
             const erc1155RoyaltyTokenContract = await PodERC1155RoyaltyToken.at(podAddress);
     
             const balanceInvestorBefore = await erc1155RoyaltyTokenContract.balanceOf(investor1, 1);
     
-            await podERC1155RoyaltyFactory.podMintBatch(
+            await podERC1155RoyaltyFactory.batchMintPodTokenByUri(
                 'ipfs://test0', // pod uri
                 investor1,      // to
                 [0,1],          // tokenId

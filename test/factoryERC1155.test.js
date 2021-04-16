@@ -46,6 +46,7 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         await expectRevert(
             podERC1155Factory.createPod(
                 'ipfs://test0', // pod uri
+                '5',
                 { from: admin }
             ),
             'PRIVIPodERC1155Factory: Pod already exists'
@@ -56,6 +57,7 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         await expectRevert(
             podERC1155Factory.createPod(
                 '', // pod uri
+                '5',
                 { from: admin }
             ),
             `BridgeManager: token name and symbol can't be empty`
@@ -67,6 +69,7 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
 
         const txReceipt = await podERC1155Factory.createPod(
             'ipfs://test1', // pod uri
+            '5',
             { from: admin }
         );
 
@@ -84,7 +87,7 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
     });
 
     it('createPod(): should assign parent Factory to POD token contract', async () => {
-        await podERC1155Factory.createPod('ipfs://test2', { from: admin });
+        await podERC1155Factory.createPod('ipfs://test2', '5', { from: admin });
 
         const podAddress = await podERC1155Factory.getPodAddressByUri('ipfs://test2');
         const erc1155TokenContract = await PodERC1155Token.at(podAddress);
@@ -94,12 +97,12 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
     });
 
     /* ********************************************************************** 
-    *                         CHECK podMint() 
+    *                         CHECK mintPodTokenByUri() 
     * **********************************************************************/
 
-    it('podMint(): should not mint POD - missing MODERATOR_ROLE', async () => {
+    it('mintPodTokenByUri(): should not mint POD - missing MODERATOR_ROLE', async () => {
         await expectRevert(
-            podERC1155Factory.podMint(
+            podERC1155Factory.mintPodTokenByUri(
                 'ipfs://test0', // pod uri
                 investor1,      // to
                 0,              // tokenId
@@ -111,9 +114,9 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         );
     });
 
-    it('podMint(): should not mint POD - cannot be zero address', async () => {
+    it('mintPodTokenByUri(): should not mint POD - cannot be zero address', async () => {
         await expectRevert(
-            podERC1155Factory.podMint(
+            podERC1155Factory.mintPodTokenByUri(
                 'ipfs://test0', // pod uri
                 ZERO_ADDRESS,   // to
                 0,              // tokenId
@@ -125,9 +128,9 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         );
     });
 
-    it('podMint(): should not mint POD - pod id does not exist', async () => {
+    it('mintPodTokenByUri(): should not mint POD - pod id does not exist', async () => {
         await expectRevert.unspecified(
-            podERC1155Factory.podMint(
+            podERC1155Factory.mintPodTokenByUri(
                 '',             // pod uri
                 investor1,      // to
                 0,              // tokenId
@@ -138,9 +141,9 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         );
     });
 
-    it('podMint(): should not mint POD - amount must be greater than zero', async () => {
+    it('mintPodTokenByUri(): should not mint POD - amount must be greater than zero', async () => {
         await expectRevert.unspecified(
-            podERC1155Factory.podMint(
+            podERC1155Factory.mintPodTokenByUri(
                 'ipfs://test3', // pod uri
                 investor1,      // to
                 0,              // tokenId
@@ -151,13 +154,13 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         );
     });
 
-    it('podMint(): should mint POD', async () => {
+    it('mintPodTokenByUri(): should mint POD', async () => {
         const podAddress = await podERC1155Factory.getPodAddressByUri('ipfs://test0');
         const erc1155TokenContract = await PodERC1155Token.at(podAddress);
 
         const balanceInvestorBefore = await erc1155TokenContract.balanceOf(investor1, 0);
 
-        await podERC1155Factory.podMint(
+        await podERC1155Factory.mintPodTokenByUri(
             'ipfs://test0', // pod uri
             investor1,      // to
             0,              // tokenId
@@ -173,12 +176,12 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
     });
 
     /* ********************************************************************** 
-     *                         CHECK podMintBatch() 
+     *                         CHECK batchMintPodTokenByUri() 
      * **********************************************************************/
 
-    it('podMintBatch(): should not mint POD - missing MODERATOR_ROLE', async () => {
+    it('batchMintPodTokenByUri(): should not mint POD - missing MODERATOR_ROLE', async () => {
         await expectRevert(
-            podERC1155Factory.podMintBatch(
+            podERC1155Factory.batchMintPodTokenByUri(
                 'ipfs://test0', // pod uri
                 investor1,      // to
                 [0],            // tokenId
@@ -190,9 +193,9 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         );
     });
 
-    it('podMintBatch(): should not mint POD - cannot be zero address', async () => {
+    it('batchMintPodTokenByUri(): should not mint POD - cannot be zero address', async () => {
         await expectRevert(
-            podERC1155Factory.podMintBatch(
+            podERC1155Factory.batchMintPodTokenByUri(
                 'ipfs://test0', // pod uri
                 ZERO_ADDRESS,   // to
                 [0],            // tokenId
@@ -204,9 +207,9 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         );
     });
 
-    it('podMintBatch(): should not mint POD - pod id does not exist', async () => {
+    it('batchMintPodTokenByUri(): should not mint POD - pod id does not exist', async () => {
         await expectRevert.unspecified(
-            podERC1155Factory.podMintBatch(
+            podERC1155Factory.batchMintPodTokenByUri(
                 '',             // pod uri
                 investor1,      // to
                 [0],            // tokenId
@@ -217,9 +220,9 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         );
     });
 
-    it('podMintBatch(): should not mint POD - amount must be greater than zero', async () => {
+    it('batchMintPodTokenByUri(): should not mint POD - amount must be greater than zero', async () => {
         await expectRevert.unspecified(
-            podERC1155Factory.podMintBatch(
+            podERC1155Factory.batchMintPodTokenByUri(
                 'ipfs://test3', // pod uri
                 investor1,      // to
                 [0,1],          // tokenId
@@ -230,13 +233,13 @@ contract('PRIVI Pod Factory ERC1155', (accounts) => {
         );
     });
 
-    it('podMintBatch(): should mint POD', async () => {
+    it('batchMintPodTokenByUri(): should mint POD', async () => {
         const podAddress = await podERC1155Factory.getPodAddressByUri('ipfs://test0');
         const erc1155TokenContract = await PodERC1155Token.at(podAddress);
 
         const balanceInvestorBefore = await erc1155TokenContract.balanceOf(investor1, 1);
 
-        await podERC1155Factory.podMintBatch(
+        await podERC1155Factory.batchMintPodTokenByUri(
             'ipfs://test0', // pod uri
             investor1,      // to
             [0,1],          // tokenId

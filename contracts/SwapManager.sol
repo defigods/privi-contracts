@@ -227,7 +227,7 @@ contract SwapManager is AccessControl, ERC1155Holder {
             .getPodAddressBySymbol(tokenSymbol) != ZERO_ADDRESS
         ) {
           IPRIVIPodERC721RoyaltyFactory(erc721RoyaltyFactoryAddress)
-            .mintPodTokenBySymbol(tokenSymbol, to);
+            .mintPodTokenBySymbol(tokenSymbol, tokenId, to);
           emit WithdrawERC721Token(tokenSymbol, to, tokenId);
         } else {
           revert("SwapManager: cannot withdraw royalty token");
@@ -240,6 +240,7 @@ contract SwapManager is AccessControl, ERC1155Holder {
         ) {
           IPRIVIPodERC721Factory(erc721FactoryAddress).mintPodTokenBySymbol(
             tokenSymbol,
+            tokenId,
             to
           );
           emit WithdrawERC721Token(tokenSymbol, to, tokenId);
@@ -324,7 +325,7 @@ contract SwapManager is AccessControl, ERC1155Holder {
           IPRIVIPodERC1155RoyaltyFactory(erc1155RoyaltyFactoryAddress)
             .getPodAddressByUri(tokenURI) != ZERO_ADDRESS
         ) {
-          IPRIVIPodERC1155RoyaltyFactory(erc1155RoyaltyFactoryAddress).podMint(
+          IPRIVIPodERC1155RoyaltyFactory(erc1155RoyaltyFactoryAddress).mintPodTokenByUri(
             tokenURI,
             to,
             tokenId,
@@ -341,7 +342,7 @@ contract SwapManager is AccessControl, ERC1155Holder {
             tokenURI
           ) != ZERO_ADDRESS
         ) {
-          IPRIVIPodERC1155Factory(erc1155FactoryAddress).podMint(
+          IPRIVIPodERC1155Factory(erc1155FactoryAddress).mintPodTokenByUri(
             tokenURI,
             to,
             tokenId,
@@ -399,7 +400,7 @@ contract SwapManager is AccessControl, ERC1155Holder {
           tokenURI
         ) != ZERO_ADDRESS
       ) {
-        IPRIVIPodERC1155Factory(erc1155FactoryAddress).podMintBatch(
+        IPRIVIPodERC1155Factory(erc1155FactoryAddress).batchMintPodTokenByUri(
           tokenURI,
           to,
           tokenIds,

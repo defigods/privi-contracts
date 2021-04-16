@@ -202,6 +202,7 @@ contract('SwapManager for ERC1155 tokens', (accounts) => {
         // Create 'TST2' contract through PodERC1155 factory
         await podERC1155RoyaltyFactory.createPod(
             'ipfs://TST2',  // baseURI
+            '5',
             2,              // royaltyAmount
             creator,        // creator
             { from: admin });
@@ -247,6 +248,7 @@ contract('SwapManager for ERC1155 tokens', (accounts) => {
         // Create 'TST2' contract through PodERC1155 factory
         await podERC1155Factory.createPod(
             'ipfs://TST2',  // baseURI
+            5,
             { from: admin });
         const newPodERC1155address = await podERC1155Factory.getPodAddressByUri('ipfs://TST2');
         const newPodERC1155 = await IERC1155.at(newPodERC1155address);

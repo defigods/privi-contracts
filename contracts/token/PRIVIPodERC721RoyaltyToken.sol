@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "../abstracts/NFTRoyalty.sol";
@@ -15,8 +13,7 @@ import "../abstracts/NFTRoyalty.sol";
  *
  */
 contract PRIVIPodERC721RoyaltyToken is Context, ERC721Burnable, NFTRoyalty {
-  using Counters for Counters.Counter;
-  Counters.Counter private _tokenIdTracker;
+
   address public parentFactory;
 
   string private _baseTokenURI;
@@ -59,11 +56,10 @@ contract PRIVIPodERC721RoyaltyToken is Context, ERC721Burnable, NFTRoyalty {
    *
    * - the caller must be factory only.
    */
-  function mint(address to) public virtual onlyFactory {
+  function mint(address to, uint256 tokenId) public virtual onlyFactory {
     // We cannot just use balanceOf to create the new tokenId because tokens
-    // can be burned (destroyed), so we need a separate counter.
-    _mint(to, _tokenIdTracker.current());
-    _tokenIdTracker.increment();
+    // can be burned (destroyed)
+    _mint(to, tokenId);
   }
 
   /**
