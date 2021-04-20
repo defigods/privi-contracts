@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "../abstracts/NFTRoyalty.sol";
 
 /**
@@ -12,7 +13,7 @@ import "../abstracts/NFTRoyalty.sol";
  *  - a factoryOnly modifier, that grants mint capabilities only to factory who deployed this pod token contract
  *
  */
-contract PRIVIPodERC721RoyaltyToken is Context, ERC721Burnable, NFTRoyalty {
+contract PRIVIPodERC721RoyaltyToken is Context, ERC721Burnable, NFTRoyalty, ReentrancyGuard {
 
   address public parentFactory;
 
@@ -80,7 +81,7 @@ contract PRIVIPodERC721RoyaltyToken is Context, ERC721Burnable, NFTRoyalty {
     uint256 tokenId,
     address from,
     address to
-  ) public payable {
+  ) public payable nonReentrant {
     // make sure all the fund is deposited here first
     require(
       msg.value == sellAmount,
