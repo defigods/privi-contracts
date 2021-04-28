@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 
 pragma solidity ^0.8.0;
-pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -15,7 +14,6 @@ import "./AdminRole.sol";
  * @notice Primary sale auction contract for Refinable NFTs
  */
 contract ERC1155Auction is Context, ReentrancyGuard, AdminRole {
-    using SafeMath for uint256;
     using Address for address;
 
     /// @notice Event emitted only on construction. To be used by indexers
@@ -476,7 +474,7 @@ contract ERC1155Auction is Context, ReentrancyGuard, AdminRole {
         if (bidList.length != 0) {
             Bid memory prevHighestBid = bidList[bidList.length - 1];
             uint256 minBidRequired =
-                prevHighestBid.bidAmount.add(minBidIncrement);
+                prevHighestBid.bidAmount + minBidIncrement;
             require(
                 bidAmount >= minBidRequired,
                 "Auction.placeBid: Failed to outbid highest bidder"
@@ -509,8 +507,8 @@ contract ERC1155Auction is Context, ReentrancyGuard, AdminRole {
         }
 
         //Increase auction end time if bid time is more than 5 mins before end time
-        if(auctions[_tokenId][_owner].endTime <= newHighestBid.bidTime.add(bidLimitBeforeEndTime)) {
-            _updateAuctionEndTime(_tokenId, _owner, auctions[_tokenId][_owner].endTime.add(bidLimitBeforeEndTime));
+        if(auctions[_tokenId][_owner].endTime <= newHighestBid.bidTime + bidLimitBeforeEndTime) {
+            _updateAuctionEndTime(_tokenId, _owner, auctions[_tokenId][_owner].endTime + bidLimitBeforeEndTime);
         }
     }
 
@@ -522,7 +520,7 @@ contract ERC1155Auction is Context, ReentrancyGuard, AdminRole {
     function _payoutAuction(address _owner, Bid memory _highestBid) private {
         uint256 winningBidAmount = _highestBid.bidAmount;
         // Work out platform fee from above reserve amount
-        uint256 serviceFee = winningBidAmount.mul(serviceFeeBps).div(10000);
+        uint256 serviceFee = winningBidAmount * serviceFeeBps / 10000;
 
         // Send platform fee
         (bool platformTransferSuccess, ) =
@@ -535,7 +533,7 @@ contract ERC1155Auction is Context, ReentrancyGuard, AdminRole {
         // Send remaining to designer
         (bool ownerTransferSuccess, ) =
             _owner.call{
-                value: winningBidAmount.sub(serviceFee)
+                value: winningBidAmount - serviceFee
             }("");
         require(
             ownerTransferSuccess,
